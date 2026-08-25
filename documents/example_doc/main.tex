@@ -1,0 +1,201 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+\usepackage{capt-of}
+\usepackage[a4paper, total={7in, 8in}]{geometry}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{filecontents}
+\usepackage{booktabs}
+\usepackage{amssymb}
+\usepackage{pifont}
+
+% Capability-table marks: filled = supported/demonstrated, cross = absent,
+% half = partially supported (see per-column footnotes in the caption).
+\newcommand{\yes}{\textcolor{black!80}{\ding{51}}}
+\newcommand{\no}{\textcolor{black!35}{\ding{55}}}
+\newcommand{\partialmark}{\textcolor{black!60}{$\circ$}}
+
+\newcommand\ytl[2]{%
+  \parbox[c]{0.45\textwidth}{%
+      \color{blue}%
+      \textrm{\textbf{#1}}%
+      \color{gray}%
+      \leavevmode\xleaders\hbox{$\cdot$}\hfill\,%
+  }%
+  \makebox[0pt][c]{$\bullet$}\vrule
+  \parbox[c]{1em}{\color{gray}\leavevmode\xleaders\hbox{$\cdot$}\hfill\,}%
+  \raisebox{0.9ex}{
+  \parbox[c]{0.5\textwidth}{%
+    \vspace{7pt}%
+    \color{black}%
+    \raggedright%
+    \textrm{#2}.%
+    }%
+  }%
+  \\[-3pt]%
+}
+
+\begin{document}
+\title{Locomotion-Grounded Soccer Skills: A Unified Humanoid Policy for Free Navigation and Multi Motion-Guided Kicking Skills}
+\author{[Author Name]}
+\date{August 2026}
+\maketitle
+
+\section{Problem Description}
+
+\textbf{Task:} Learn a \emph{single} low-level policy for a 29-DoF humanoid that simultaneously (i) accepts arbitrary locomotion commands $(v_x, v_y, \omega_z)$ over varied terrain, and (ii) executes $N$ distinct motion-clip-derived kicking skills, with smooth bidirectional transitions between the locomotion mode and each skill.
+
+\textbf{Problem:} Recent humanoid soccer systems obtain whole-body stability by making \emph{motion tracking the substrate} and deriving locomotion from it, typically by steering a motion-reference anchor toward the ball \citep{robonaldo,paid,humanx}. This couples two limitations. First, because tracking rewards remain active throughout the approach, the reachable gait space is confined to a neighbourhood of the reference clip's own locomotion content, so behaviours absent from that clip---sustained lateral walking, backpedalling, spin-in-place, running---are neither trained nor evaluated. Second, these systems rely on a \emph{single} reference kick, which bounds the achievable strike repertoire: \citet{robonaldo} report a ``natural right-footed bias'' and degradation concentrated ``at extreme lateral and high targets'', and name multi-skill priors as their principal open problem. A real match, however, requires free navigation (repositioning, evading opponents, retreating) interleaved with a \emph{library} of strike types (inside-foot pass, instep drive, lateral flick, weak-foot strike).
+
+\textbf{Novelty:} We invert the architecture. A general, commandable locomotion policy is the substrate; $N$ motion-tracked kicking skills are task-gated layers on top of it. Concretely:
+\begin{itemize}
+  \item \textbf{Substrate inversion.} Skills are built \emph{on} locomotion rather than locomotion being built \emph{from} tracking, decoupling the reachable gait space from any reference clip.
+  \item \textbf{Locomotion as a composition hub.} Every skill initiates from and terminates into the same commandable locomotion state, so a library of $N$ skills requires $O(N)$ transition specifications rather than $O(N^2)$ pairwise ones.
+  \item \textbf{Learned handoff instead of a scripted stabilisation tail.} At the end of authored reference content, control is returned to the locomotion policy rather than tracking a synthetic recovery clip.
+  \item \textbf{A multi-skill strike library} that extends target-direction and ball-placement coverage beyond what a single forward reference can express, including passing, whose contact mechanics differ in kind---not merely in target location---from shooting.
+\end{itemize}
+
+We model the problem as a task-conditioned MDP. A permanent per-environment task assignment selects locomotion or one of $N$ skills; a task-mode variable $m_t \in \{\textsc{loco}, \textsc{kick}_1, \dots, \textsc{kick}_N\}$ gates both the observation (via a task/skill one-hot) and every reward and termination term. In locomotion mode the policy tracks $(v_x, v_y, \omega_z)$; in skill mode it tracks skill $i$'s retargeted human reference while the ball/target rewards shape contact and aim. A skill terminates when its authored reference content is exhausted, at which point $m_t$ returns to \textsc{loco} and the locomotion policy resumes control.
+
+\section{Background}
+
+\subsection{Humanoid Soccer and the Shooting Problem}
+RL has produced athletic sports behaviours for quadruped soccer, table tennis and badminton \citep{quadsoccer,hitter,badminton}, and a rapidly growing line of humanoid soccer systems \citep{haarnoja2024soccer,reactive,striker,humanx,paid,stoft,goalkeeper}. \citet{haarnoja2024soccer} demonstrated end-to-end multi-skill soccer (walk, turn, kick, get-up) with learned transitions on a miniature bipedal platform. On full-size humanoids, \citet{robonaldo} report the strongest shooting results to date---$0.73$\,m mean target error from $3$\,m and peak ball speeds of $13.10$\,m/s on a Unitree G1---via a three-stage motion-guided curriculum.
+
+\subsection{Motion Tracking and Imitation for Whole-Body Control}
+Reference-guided RL provides the whole-body coordination that pure task rewards struggle to discover \citep{deepmimic,amp}. Recent humanoid systems track retargeted human motion directly \citep{beyondmimic}, using video-based recovery \citep{gvhmr} and general motion retargeting \citep{gmr} to obtain references. Tracking supplies stability but constrains timing and contact selection, which is precisely the tension staged curricula are designed to resolve \citep{robonaldo}.
+
+\subsection{Commandable Locomotion Policies}
+Massively parallel simulation has made robust, velocity-commanded legged locomotion with terrain and disturbance curricula a well-established primitive \citep{rudin2022,isaaclab}. This line of work yields policies that track arbitrary commands over rough terrain---the capability our architecture places at the \emph{base} of the stack rather than deriving as a by-product of tracking.
+
+\subsection{Whole-Body Object Interaction}
+Contact-rich loco-manipulation typically assumes dwell-time contact and accumulates interaction reward over many steps \citep{hdmi,resmimic,intermimic,falcon}. Shooting instead involves a sub-$10$\,ms impulse with delayed ball--target feedback, motivating specialised interaction rewards \citep{robonaldo}.
+
+\subsection{Skill Composition and Transitions}
+The options framework formalises temporally extended actions through initiation sets, policies and termination conditions \citep{options}. A skill library is composable when each skill's termination set lies within the next skill's initiation set; our locomotion hub makes this condition hold by construction, since every skill terminates into the same commandable locomotion state.
+
+\section{Limitation and Novelty}
+
+\subsection*{Limitations of Prior Work}
+\begin{itemize}
+  \item \textbf{Gait space bounded by the reference clip.} In \citet{robonaldo}, motion-tracking rewards are discounted but never disabled during approach; locomotion is realised by steering the tracking anchor toward a predicted ball position. Gaits with no counterpart in the reference are therefore not reachable, independent of the command issued.
+  \item \textbf{Locomotion generality untested.} All reported experiments in \citep{robonaldo,paid,striker} are free-kick or moving-ball shooting. No locomotion metrics---command tracking, terrain, push recovery---are reported, so the command distribution outside ball approach is unevaluated.
+  \item \textbf{Single-skill repertoire.} \citet{robonaldo} rely on one right-footed side-foot reference and report a right-footed bias and degradation at extreme lateral and high targets; their Limitations section names multi-skill priors and learned skill selection as future work.
+  \item \textbf{Scripted post-skill stabilisation.} After contact, a synthetic stabilisation reference is held for $T_{\mathrm{stab}}$ steps. This component is load-bearing---removing it drops alive rate from $98.8\%$ to $24.4\%$---but it is momentum-blind, authored per clip, and does not generalise across a skill library.
+  \item \textbf{Handcrafted skill triggering.} Stage transitions and kick timing are governed by a rule-based planner, which \citet{robonaldo} identify as limiting autonomous decision making.
+\end{itemize}
+
+Table~\ref{tab:capabilities} summarises these gaps across the humanoid soccer literature. Two columns are empty for every prior system: no reported evaluation of locomotion as a general capability, and no strike repertoire extending beyond a single dominant-foot contact type. These are the two axes our architecture is designed to occupy.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{llcccccccc}
+\toprule
+& & \multicolumn{4}{c}{\textbf{Locomotion substrate}} & \multicolumn{4}{c}{\textbf{Skill repertoire \& transitions}} \\
+\cmidrule(lr){3-6}\cmidrule(lr){7-10}
+Method & Platform & Free & Omni & Terr. & Loco. & Multi & Weak & Pass & Loco.\ \\
+ & & cmd. & dir. & & eval. & skill & foot & & handoff \\
+\midrule
+Haarnoja et al.~\citep{haarnoja2024soccer} & Miniature & \yes & \partialmark & \no & \no & \yes & \no & \no & \yes \\
+STOFT~\citep{stoft}            & Bipedal  & \no & \no & \no & \no & \no & \no & \no & \no \\
+Reactive~\citep{reactive}      & Humanoid & \partialmark & \no & \no & \no & \partialmark & \no & \no & \no \\
+Striker~\citep{striker}        & Humanoid & \partialmark & \no & \no & \no & \no & \no & \no & \no \\
+Goalkeeper~\citep{goalkeeper}  & Humanoid & \no & \no & \no & \no & \no & \no & \no & \no \\
+HumanX~\citep{humanx}          & Humanoid & \no & \no & \no & \no & \yes & \no & \no & \no \\
+PAiD~\citep{paid}              & Humanoid & \partialmark & \no & \no & \no & \no & \no & \no & \no \\
+RoboNaldo~\citep{robonaldo}    & Humanoid & \partialmark & \no & \no & \no & \no & \no & \no & \partialmark \\
+\midrule
+\textbf{Ours (proposed)}       & Humanoid & \yes & \yes & \yes & \yes & \yes & \yes & \yes & \yes \\
+\bottomrule
+\end{tabular}
+\captionof{table}{\textbf{Capability comparison against prior humanoid soccer systems.}
+\yes~= supported and demonstrated; \partialmark~= mechanism present but restricted to the ball-approach regime, or not evaluated as a general capability; \no~= absent.
+\emph{Free cmd.}: policy accepts arbitrary externally issued velocity commands rather than commands emitted solely by a ball-approach planner.
+\emph{Omni dir.}: sustained lateral, backward and in-place rotation demonstrated.
+\emph{Terr.}: non-flat terrain.
+\emph{Loco.\ eval.}: locomotion metrics (command tracking, push recovery) actually reported.
+\emph{Multi skill}: more than one distinct strike/contact type.
+\emph{Weak foot}: strikes with both limbs.
+\emph{Pass}: weighted pass as a distinct contact modality, not a nearer shooting target.
+\emph{Loco.\ handoff}: post-strike control returns to a trained locomotion controller rather than a scripted stabilisation reference.
+Marks reflect capabilities \emph{as reported in each paper}; an unreported capability is scored \no\ or \partialmark\ rather than assumed absent. The \partialmark\ in RoboNaldo's \emph{Free cmd.}\ column reflects a locomotion-command interface whose commands originate from a ball-approach heuristic, with tracking rewards active throughout; its \partialmark\ under \emph{Loco.\ handoff} reflects a scripted per-clip stabilisation reference rather than a return to locomotion control.}
+\label{tab:capabilities}
+\end{table}
+
+\subsection*{Novelty}
+\begin{itemize}
+  \item \textbf{Locomotion-first architecture:} a commandable locomotion policy as substrate, with task-gated motion-tracked skills layered on top, yielding a reachable gait space independent of any clip.
+  \item \textbf{$O(N)$ skill composition} via a locomotion hub state shared by all skills.
+  \item \textbf{Learned-controller handoff} replacing scripted post-skill stabilisation, motivated by failure telemetry localising the dominant instability to this window.
+  \item \textbf{Multi-skill strike library} broadening target-direction and ball-placement coverage, and enabling passing as a distinct contact modality.
+  \item \textbf{Joint evaluation} of locomotion generality \emph{and} shooting quality in one policy---a combination not reported by prior humanoid soccer systems.
+\end{itemize}
+
+\section{Description of Database/Performance Measure/Current SOTA}
+
+\subsection{Platform, Data and Environments}
+\begin{itemize}
+  \item \textbf{Robot:} Unitree G1, 29 DoF. Policy at $50$\,Hz, deployed as ONNX with onboard inference.
+  \item \textbf{Motion data:} $N$ human kicking clips (inside-foot pass, instep drive, lateral/flick, weak-foot strike) recovered from video \citep{gvhmr} and retargeted \citep{gmr}, following the reference pipeline of \citep{robonaldo,beyondmimic}.
+  \item \textbf{Training:} IsaacLab \citep{isaaclab} with thousands of parallel environments, mixed terrain, and push/mass/friction randomisation.
+  \item \textbf{Sim-to-sim:} MuJoCo evaluation as a transfer gate prior to hardware.
+  \item \textbf{Hardware:} indoor calibrated trials and outdoor field demonstrations.
+\end{itemize}
+
+\subsection{Performance Measures}
+\begin{itemize}
+  \item \textbf{Shooting (comparable to prior work):} shot error (nearest post-contact ball--target distance), success rate at $0.5$\,m and $1.0$\,m, peak post-contact ball speed, contact rate, alive rate.
+  \item \textbf{Locomotion generality (not reported by prior soccer systems):} linear/angular command tracking error across the full command range including lateral and backward motion, terrain traversal success, push-recovery rate---measured \emph{with the skill library attached}, to demonstrate the base is not degraded.
+  \item \textbf{Transition quality:} post-skill fall rate, time-to-command-recovery after skill termination, and phase-resolved failure decomposition (fraction of failures occurring in approach, strike, and post-skill windows).
+  \item \textbf{Skill-library coverage:} target-direction and ball-placement heat maps per skill and for the library, quantifying the region where $N$ skills exceed single-skill coverage.
+\end{itemize}
+
+\subsection{Current SOTA}
+\begin{table}[H]
+\centering
+\begin{tabular}{lccccc}
+\toprule
+Method & Regime & suc.@$0.5$m (\%) & Shot err.\ (m) & $v^{\max}_{\mathrm{ball}}$ (m/s) & Alive (\%) \\
+\midrule
+PPO \citep{ppo}          & Free-kick & $0.0$  & $4.721$ & $0.780$  & $0.0$ \\
+AMP \citep{amp}          & Free-kick & $0.9$  & $3.733$ & $1.771$  & $41.6$ \\
+PAiD \citep{paid}        & Free-kick & $8.2$  & $1.850$ & $4.986$  & $67.3$ \\
+RoboNaldo \citep{robonaldo} & Free-kick & $\mathbf{28.8}$ & $\mathbf{0.899}$ & $\mathbf{14.792}$ & $\mathbf{100.0}$ \\
+RoboNaldo \citep{robonaldo} & Moving    & $32.4$ & $1.131$ & $13.875$ & $98.8$ \\
+\bottomrule
+\end{tabular}
+\captionof{table}{Simulation SOTA for humanoid soccer shooting, as reported by \citet{robonaldo}. On hardware, RoboNaldo attains $0.73$\,m free-kick error from $3$\,m with $91.2\%$ contact and $13.10$\,m/s peak ball speed. \citet{striker} (ICRA 2026) and \citet{paid} additionally target egocentric perception. No system in this table reports locomotion-generality metrics.}
+\end{table}
+
+Our target is to match shooting quality within the single-skill regime while demonstrating two capabilities absent from the table: arbitrary commanded locomotion with the skill library attached, and a multi-skill strike repertoire with measurably broader placement coverage.
+
+\section{Target Conference/Journal}
+\begin{itemize}
+  \item ICRA 2027 (submission approx.\ September 2026) --- primary target; note \citet{striker} appeared at ICRA 2026, so positioning against it is required.
+\end{itemize}
+\emph{Deadlines above are approximate and should be verified against official calls.}
+
+\section*{Timeline (from August 2026)}
+\begin{minipage}[t]{1\linewidth}
+  \color{gray}\rule{\linewidth}{1pt}
+  \ytl{Aug 12 -- Aug 25, 2026}{Retarget $N{=}3$--$4$ additional kick clips (weak-foot, inside-foot pass, lateral flick); validate each in isolation on the existing single-skill stack}
+  \ytl{Aug 26 -- Sep 08, 2026}{Train the multi-skill shared policy; ablate the skill-conditioning interface; verify no locomotion degradation with skills attached}
+  \ytl{Sep 09 -- Sep 22, 2026}{Handoff ablation: scripted stabilisation tail vs.\ learned locomotion handoff, across all skills; phase-resolved failure decomposition}
+  \ytl{Sep 23 -- Oct 06, 2026}{Locomotion-generality benchmark (command tracking, terrain, push recovery) and skill-coverage heat maps}
+  \ytl{Oct 07 -- Oct 27, 2026}{Sim-to-sim gating in MuJoCo; hardware bring-up; indoor calibrated trials}
+  \ytl{Oct 28 -- Nov 17, 2026}{Outdoor demonstration: commanded navigation interleaved with multi-skill strikes under a high-level controller}
+  \ytl{Nov 18 -- Dec 01, 2026}{Baseline reproduction, final ablations, plots, and write-up}
+  \bigskip
+  \rule{\linewidth}{1pt}
+  \color{black}%
+  \captionof{table}{Work plan. The critical path is hardware validation; the multi-skill and handoff experiments are the two that carry the contribution.}
+\end{minipage}
+
+\bibliographystyle{plainnat}
+\bibliography{reference}
+\end{document}

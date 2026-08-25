@@ -1,0 +1,498 @@
+<title>Ball Trajectory Scrubber</title>
+<style>
+  :root{
+    --bg:#12151b; --panel:#1a1f28; --panel-2:#20262f; --border:#2b323f;
+    --text:#e7eaf0; --text-dim:#8b93a5; --text-faint:#5c6472;
+    --path:#7dd3fc; --path-dim:#284a5c;
+    --marker-a:#fb923c; --marker-b:#c084fc; --playhead:#f4f6fa;
+    --speed-curve:#fb7185;
+    --hold-tint:rgba(251,146,60,0.14);
+    --ok:#5eead4; --muted:#5c6472;
+  }
+  :root[data-theme="light"]{
+    --bg:#f4f5f7; --panel:#ffffff; --panel-2:#eef0f3; --border:#dde1e7;
+    --text:#1a1e26; --text-dim:#5b6472; --text-faint:#9aa2b1;
+    --path:#0284c7; --path-dim:#bfe2f2;
+    --marker-a:#d9660b; --marker-b:#9333ea; --playhead:#111318;
+    --speed-curve:#e11d48;
+    --hold-tint:rgba(217,102,11,0.10);
+    --ok:#0f9c8c; --muted:#9aa2b1;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#f4f5f7; --panel:#ffffff; --panel-2:#eef0f3; --border:#dde1e7;
+      --text:#1a1e26; --text-dim:#5b6472; --text-faint:#9aa2b1;
+      --path:#0284c7; --path-dim:#bfe2f2;
+      --marker-a:#d9660b; --marker-b:#9333ea; --playhead:#111318;
+      --speed-curve:#e11d48;
+      --hold-tint:rgba(217,102,11,0.10);
+      --ok:#0f9c8c; --muted:#9aa2b1;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font:14px/1.5 ui-monospace,"SF Mono",Consolas,monospace;
+    padding:20px; min-height:100vh;
+  }
+  .label{
+    font:600 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim);
+  }
+  h1{
+    font:600 18px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    margin:0 0 2px; color:var(--text);
+  }
+  .sub{color:var(--text-dim); font-size:12px; margin-bottom:18px;
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+  .wrap{max-width:1180px; margin:0 auto}
+
+  .tabs{display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap}
+  .tab{
+    display:flex; align-items:center; gap:7px;
+    padding:8px 16px; background:var(--panel); border:1px solid var(--border);
+    border-radius:8px; cursor:pointer; color:var(--text-dim);
+    font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  .tab.active{background:var(--panel-2); color:var(--text); border-color:var(--path)}
+  .tab-dot{width:7px; height:7px; border-radius:50%; background:var(--muted); flex:none}
+  .tab-dot.kicked{background:var(--ok)}
+
+  .views{display:flex; gap:12px; margin-bottom:14px}
+  .view{
+    background:var(--panel); border:1px solid var(--border); border-radius:10px;
+    padding:10px; flex:1 1 auto;
+  }
+  .view .view-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:6px}
+  canvas{width:100%; display:block; border-radius:6px; background:var(--panel-2)}
+  #cTop{aspect-ratio:1/1}
+  .badge{
+    font:600 10px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    text-transform:uppercase; letter-spacing:.06em; padding:3px 7px; border-radius:4px;
+    background:var(--panel-2); border:1px solid var(--border); color:var(--muted);
+  }
+  .badge.kicked{color:var(--ok); border-color:var(--ok)}
+
+  .timeline-card{
+    background:var(--panel); border:1px solid var(--border); border-radius:10px;
+    padding:16px; margin-bottom:14px;
+  }
+  .timeline-card .label{margin-bottom:8px}
+  #chart{width:100%; height:140px; display:block; cursor:crosshair; border-radius:6px; background:var(--panel-2)}
+  .legend{display:flex; gap:16px; margin-top:8px; font-size:11px; color:var(--text-dim); flex-wrap:wrap;
+          font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+  .legend span{display:inline-flex; align-items:center; gap:5px}
+  .swatch{width:10px; height:2px; display:inline-block; border-radius:1px}
+  .swatch.dot{width:8px; height:8px; border-radius:50%}
+  .swatch.tint{width:10px; height:10px; border-radius:2px}
+
+  .controls{display:flex; align-items:center; gap:14px; margin-top:12px}
+  #slider{flex:1; accent-color:var(--path)}
+  #frameReadout{
+    font-weight:600; min-width:64px; text-align:right; color:var(--text);
+    font-variant-numeric:tabular-nums;
+  }
+  .playbtn{
+    background:var(--panel-2); border:1px solid var(--border); color:var(--text);
+    border-radius:6px; padding:6px 10px; cursor:pointer; font-size:12px;
+  }
+  .playbtn:hover{border-color:var(--path)}
+
+  .bottom{display:flex; gap:14px; flex-wrap:wrap}
+  .readout-card, .marker-card{
+    background:var(--panel); border:1px solid var(--border); border-radius:10px;
+    padding:16px; flex:1 1 260px;
+  }
+  .readout-row{display:flex; justify-content:space-between; padding:4px 0; font-size:13px}
+  .readout-row .k{color:var(--text-dim)}
+  .readout-row .v{font-variant-numeric:tabular-nums; font-weight:600}
+
+  .marker-card .card-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px}
+  .marker-row{padding:8px 0; border-bottom:1px solid var(--border)}
+  .marker-row:last-of-type{border-bottom:none}
+  .marker-top{display:flex; align-items:center; justify-content:space-between}
+  .marker-head{display:flex; align-items:center; gap:8px}
+  .marker-dot{width:9px; height:9px; border-radius:50%; display:inline-block; flex:none}
+  .marker-name{font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--text)}
+  .marker-btn{
+    background:var(--panel-2); border:1px solid var(--border); color:var(--text-dim);
+    border-radius:5px; padding:4px 9px; cursor:pointer; font-size:11px;
+  }
+  .marker-btn:hover{color:var(--text); border-color:var(--path)}
+  .marker-coords{color:var(--text-dim); font-size:12px; margin-top:4px; font-variant-numeric:tabular-nums}
+
+  .snippet{
+    margin-top:12px; background:var(--panel-2); border:1px solid var(--border);
+    border-radius:6px; padding:10px 12px; font-size:12px; color:var(--path);
+    white-space:pre; overflow-x:auto;
+  }
+  .copybtn{
+    margin-top:8px; background:var(--panel-2); border:1px solid var(--border); color:var(--text-dim);
+    border-radius:5px; padding:5px 10px; cursor:pointer; font-size:11px; width:100%;
+  }
+  .copybtn:hover{color:var(--text); border-color:var(--path)}
+
+  ::selection{background:var(--path); color:var(--bg)}
+</style>
+
+<div class="wrap">
+  <h1>Ball Trajectory Scrubber</h1>
+  <div class="sub">Every recorded row, drawn continuously in logged order — scrub to read off the kick and landing (x, y) for calibrating ball spawn / target.</div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="views">
+    <div class="view">
+      <div class="view-head">
+        <div class="label">Top &middot; X&ndash;Y (full recorded path)</div>
+        <span class="badge" id="kickedBadge">&mdash;</span>
+      </div>
+      <canvas id="cTop" width="640" height="640"></canvas>
+    </div>
+  </div>
+
+  <div class="timeline-card">
+    <div class="label">Height &amp; speed timeline (click / drag to scrub)</div>
+    <canvas id="chart" width="1100" height="140"></canvas>
+    <div class="legend" id="legend">
+      <span><span class="swatch" style="background:var(--path)"></span>ball height z (m)</span>
+      <span><span class="swatch" style="background:var(--speed-curve)"></span>planar speed (m/s)</span>
+      <span id="legHold"><span class="swatch tint" style="background:var(--hold-tint)"></span>hold phase</span>
+      <span><span class="swatch dot" style="background:var(--marker-a)"></span>kick</span>
+      <span id="legLanding"><span class="swatch dot" style="background:var(--marker-b)"></span>landing</span>
+    </div>
+    <div class="controls">
+      <button class="playbtn" id="playBtn">&#9654; Play</button>
+      <input type="range" id="slider" min="0" max="1" value="0" step="1">
+      <div id="frameReadout">0 / 0</div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="readout-card">
+      <div class="label" style="margin-bottom:10px">Current tick</div>
+      <div class="readout-row"><span class="k">tick</span><span class="v" id="rTick">0</span></div>
+      <div class="readout-row"><span class="k">time</span><span class="v" id="rTime">0.00s</span></div>
+      <div class="readout-row"><span class="k">x</span><span class="v" id="rX">0.000 m</span></div>
+      <div class="readout-row"><span class="k">y</span><span class="v" id="rY">0.000 m</span></div>
+      <div class="readout-row"><span class="k">z</span><span class="v" id="rZ">0.000 m</span></div>
+      <div class="readout-row"><span class="k">speed</span><span class="v" id="rSpeed">0.00 m/s</span></div>
+      <div class="readout-row"><span class="k">phase</span><span class="v" id="rPhase">&mdash;</span></div>
+    </div>
+    <div class="marker-card">
+      <div class="card-head"><div class="label">Calibration markers</div></div>
+      <div class="marker-row">
+        <div class="marker-top">
+          <div class="marker-head"><span class="marker-dot" style="background:var(--marker-a)"></span><span class="marker-name">kick</span></div>
+          <button class="marker-btn" id="setA">set to current</button>
+        </div>
+        <div class="marker-coords" id="coordA">&mdash;</div>
+      </div>
+      <div class="marker-row">
+        <div class="marker-top">
+          <div class="marker-head"><span class="marker-dot" style="background:var(--marker-b)"></span><span class="marker-name">landing</span></div>
+          <button class="marker-btn" id="setB">set to current</button>
+        </div>
+        <div class="marker-coords" id="coordB">&mdash;</div>
+      </div>
+      <div class="snippet" id="snippet"></div>
+      <button class="copybtn" id="copyBtn">Copy snippet</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = /*__TRAJECTORY_DATA__*/;
+
+let trialIdx = Object.keys(DATA.trials)[0];
+let frame = 0;
+let playing = false;
+let markers = {};
+for (const k in DATA.trials) {
+  const t = DATA.trials[k];
+  markers[k] = { a: t.kickTick, b: t.landingTick };
+}
+
+function trial(){ return DATA.trials[trialIdx]; }
+
+// ---- bounds (computed once per trial from the FULL path, so the view never rescales while
+// scrubbing -- "continuous" means the frame you're on is a window into a fixed space, not a
+// moving one) ----
+const _boundsCache = {};
+function bounds(){
+  if (_boundsCache[trialIdx]) return _boundsCache[trialIdx];
+  const t = trial();
+  let minX = 0, maxX = 0, minY = 0, maxY = 0; // always include the robot origin
+  for (let i = 0; i < t.T; i++) {
+    if (t.x[i] < minX) minX = t.x[i]; if (t.x[i] > maxX) maxX = t.x[i];
+    if (t.y[i] < minY) minY = t.y[i]; if (t.y[i] > maxY) maxY = t.y[i];
+  }
+  const span = Math.max(maxX - minX, maxY - minY, 0.5) * 1.15;
+  const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+  const b = { minX: cx - span/2, maxX: cx + span/2, minY: cy - span/2, maxY: cy + span/2, span };
+  _boundsCache[trialIdx] = b;
+  return b;
+}
+
+function niceStep(span){
+  const raw = span / 5;
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  for (const m of [1, 2, 5, 10]) if (raw <= m * mag) return m * mag;
+  return 10 * mag;
+}
+
+// ---- tabs ----
+const tabsEl = document.getElementById('tabs');
+for (const k in DATA.trials) {
+  const t = DATA.trials[k];
+  const btn = document.createElement('div');
+  btn.className = 'tab' + (k === trialIdx ? ' active' : '');
+  const dot = document.createElement('span');
+  dot.className = 'tab-dot' + (t.kicked ? ' kicked' : '');
+  btn.appendChild(dot);
+  btn.appendChild(document.createTextNode(t.name));
+  btn.dataset.k = k;
+  btn.onclick = () => { trialIdx = k; frame = trial().T - 1; refreshTabs(); render(); };
+  tabsEl.appendChild(btn);
+}
+function refreshTabs(){
+  [...tabsEl.children].forEach(el => el.classList.toggle('active', el.dataset.k === trialIdx));
+}
+
+const slider = document.getElementById('slider');
+const frameReadout = document.getElementById('frameReadout');
+const playBtn = document.getElementById('playBtn');
+
+function worldToScreen(px, py, W, H){
+  const b = bounds();
+  const scale = Math.min(W, H) / b.span;
+  const ox = W/2 - (b.minX + b.maxX)/2 * scale;
+  const oy = H/2 + (b.minY + b.maxY)/2 * scale;
+  return [ox + px*scale, oy - py*scale, scale];
+}
+
+function drawTop(){
+  const cv = document.getElementById('cTop');
+  const W = cv.width, H = cv.height;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const t = trial();
+  const style = getComputedStyle(document.documentElement);
+  const b = bounds();
+
+  // grid
+  const step = niceStep(b.span);
+  ctx.strokeStyle = style.getPropertyValue('--border').trim();
+  ctx.fillStyle = style.getPropertyValue('--text-faint').trim();
+  ctx.font = '10px ui-monospace,monospace';
+  ctx.lineWidth = 1;
+  for (let gx = Math.ceil(b.minX/step)*step; gx <= b.maxX; gx += step) {
+    const [sx] = worldToScreen(gx, 0, W, H);
+    ctx.beginPath(); ctx.moveTo(sx, 0); ctx.lineTo(sx, H); ctx.stroke();
+    ctx.fillText(gx.toFixed(step < 1 ? 1 : 0), sx + 3, H - 4);
+  }
+  for (let gy = Math.ceil(b.minY/step)*step; gy <= b.maxY; gy += step) {
+    const [, sy] = worldToScreen(0, gy, W, H);
+    ctx.beginPath(); ctx.moveTo(0, sy); ctx.lineTo(W, sy); ctx.stroke();
+    ctx.fillText(gy.toFixed(step < 1 ? 1 : 0), 4, sy - 3);
+  }
+
+  // full path, dim (always fully visible -- the whole recorded trace)
+  ctx.strokeStyle = style.getPropertyValue('--path-dim').trim();
+  ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  for (let i = 0; i < t.T; i++) {
+    const [sx, sy] = worldToScreen(t.x[i], t.y[i], W, H);
+    if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+  }
+  ctx.stroke();
+
+  // revealed path up to current tick, bright
+  ctx.strokeStyle = style.getPropertyValue('--path').trim();
+  ctx.lineWidth = 2.2;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  for (let i = 0; i <= frame; i++) {
+    const [sx, sy] = worldToScreen(t.x[i], t.y[i], W, H);
+    if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+  }
+  ctx.stroke();
+
+  // robot origin + heading (+x)
+  const [ox, oy] = worldToScreen(0, 0, W, H);
+  ctx.strokeStyle = style.getPropertyValue('--text-dim').trim();
+  ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.moveTo(ox-7, oy); ctx.lineTo(ox+7, oy); ctx.moveTo(ox, oy-7); ctx.lineTo(ox, oy+7); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(ox+22, oy); ctx.lineTo(ox+10, oy-5); ctx.lineTo(ox+10, oy+5); ctx.closePath();
+  ctx.fillStyle = style.getPropertyValue('--text-dim').trim();
+  ctx.fill();
+  ctx.fillText('robot', ox + 10, oy + 18);
+
+  // kick / landing markers
+  function markerDot(tick, color, name){
+    const [mx, my] = worldToScreen(t.x[tick], t.y[tick], W, H);
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(mx, my, 5, 0, 7); ctx.fill();
+    ctx.strokeStyle = style.getPropertyValue('--panel-2').trim();
+    ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = style.getPropertyValue('--text-dim').trim();
+    ctx.fillText(name, mx + 8, my - 8);
+  }
+  markerDot(markers[trialIdx].a, style.getPropertyValue('--marker-a').trim(), 'kick');
+  if (t.kicked) markerDot(markers[trialIdx].b, style.getPropertyValue('--marker-b').trim(), 'landing');
+
+  // current position
+  const [cx2, cy2] = worldToScreen(t.x[frame], t.y[frame], W, H);
+  ctx.fillStyle = style.getPropertyValue('--playhead').trim();
+  ctx.beginPath(); ctx.arc(cx2, cy2, 4.5, 0, 7); ctx.fill();
+}
+
+function drawChart(){
+  const cv = document.getElementById('chart');
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  ctx.clearRect(0,0,W,H);
+  const t = trial();
+  const T = t.T;
+  const style = getComputedStyle(document.documentElement);
+
+  const pad = 4;
+  const plotH = H - pad*2;
+  const x = i => (i/(T-1)) * W;
+
+  if (t.hasPhase) {
+    ctx.fillStyle = style.getPropertyValue('--hold-tint').trim();
+    let runStart = -1;
+    for (let i = 0; i <= T; i++) {
+      const isHold = i < T && t.phase[i] === 'hold';
+      if (isHold && runStart < 0) runStart = i;
+      if (!isHold && runStart >= 0) { ctx.fillRect(x(runStart), 0, x(i) - x(runStart), H); runStart = -1; }
+    }
+  }
+
+  function arrMax(arr){ let mx = -Infinity; for (const v of arr) if (v > mx) mx = v; return mx; }
+  const zMax = arrMax(t.z) * 1.1 || 1;
+  const speedMax = arrMax(t.speed) * 1.1 || 1;
+  function drawCurve(arr, maxVal, color){
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    for (let i=0;i<T;i++){
+      const y = H - pad - (arr[i]/maxVal)*plotH;
+      if (i===0) ctx.moveTo(x(i), y); else ctx.lineTo(x(i), y);
+    }
+    ctx.stroke();
+  }
+  drawCurve(t.z, zMax, style.getPropertyValue('--path').trim());
+  drawCurve(t.speed, speedMax, style.getPropertyValue('--speed-curve').trim());
+
+  function vline(idx, color, dash){
+    ctx.strokeStyle = color;
+    ctx.lineWidth = dash ? 1.4 : 2;
+    ctx.setLineDash(dash ? [4,3] : []);
+    ctx.beginPath();
+    ctx.moveTo(x(idx), 0); ctx.lineTo(x(idx), H);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  const m = markers[trialIdx];
+  vline(m.a, style.getPropertyValue('--marker-a').trim(), true);
+  if (t.kicked) vline(m.b, style.getPropertyValue('--marker-b').trim(), true);
+  vline(frame, style.getPropertyValue('--playhead').trim(), false);
+}
+
+function fmtXY(t, tick){
+  return 'x=' + t.x[tick].toFixed(3) + '  y=' + t.y[tick].toFixed(3) + '  (tick ' + tick + ')';
+}
+
+function updateSnippet(){
+  const t = trial();
+  const m = markers[trialIdx];
+  let s = 'BALL_XY   = (' + t.x[m.a].toFixed(3) + ', ' + t.y[m.a].toFixed(3) + ')   # kick marker -> SkillConfig x / y\n';
+  if (t.kicked) {
+    s += 'TARGET_XY = (' + t.x[m.b].toFixed(3) + ', ' + t.y[m.b].toFixed(3) + ')   # landing marker -> configs/skill2.yaml target_x / target_y';
+  } else {
+    s += 'TARGET_XY = n/a   # no kick detected in this trial -- drag-only';
+  }
+  document.getElementById('snippet').textContent = s;
+}
+
+function render(){
+  const t = trial();
+  slider.max = t.T - 1;
+  slider.value = frame;
+  frameReadout.textContent = frame + ' / ' + (t.T - 1);
+
+  document.getElementById('rTick').textContent = t.tick[frame];
+  document.getElementById('rTime').textContent = t.t[frame].toFixed(2) + 's';
+  document.getElementById('rX').textContent = t.x[frame].toFixed(3) + ' m';
+  document.getElementById('rY').textContent = t.y[frame].toFixed(3) + ' m';
+  document.getElementById('rZ').textContent = t.z[frame].toFixed(3) + ' m';
+  document.getElementById('rSpeed').textContent = t.speed[frame].toFixed(2) + ' m/s';
+  document.getElementById('rPhase').textContent = t.hasPhase ? t.phase[frame] : 'n/a';
+
+  const badge = document.getElementById('kickedBadge');
+  badge.textContent = t.kicked ? 'kicked' : 'drag only';
+  badge.classList.toggle('kicked', t.kicked);
+
+  document.getElementById('legHold').style.display = t.hasPhase ? '' : 'none';
+  document.getElementById('legLanding').style.opacity = t.kicked ? '1' : '0.35';
+
+  document.getElementById('coordA').textContent = fmtXY(t, markers[trialIdx].a);
+  document.getElementById('coordB').textContent = t.kicked ? fmtXY(t, markers[trialIdx].b) : 'n/a -- no kick detected';
+
+  drawTop();
+  drawChart();
+  updateSnippet();
+}
+
+slider.addEventListener('input', () => { frame = Number(slider.value); render(); });
+
+const chartCanvas = document.getElementById('chart');
+let dragging = false;
+function chartToFrame(evt){
+  const rect = chartCanvas.getBoundingClientRect();
+  const x = (evt.touches ? evt.touches[0].clientX : evt.clientX) - rect.left;
+  const frac = Math.max(0, Math.min(1, x / rect.width));
+  return Math.round(frac * (trial().T - 1));
+}
+chartCanvas.addEventListener('mousedown', e => { dragging = true; frame = chartToFrame(e); render(); });
+window.addEventListener('mousemove', e => { if (dragging) { frame = chartToFrame(e); render(); } });
+window.addEventListener('mouseup', () => dragging = false);
+chartCanvas.addEventListener('touchstart', e => { dragging = true; frame = chartToFrame(e); render(); });
+chartCanvas.addEventListener('touchmove', e => { if (dragging) { frame = chartToFrame(e); render(); e.preventDefault(); } }, {passive:false});
+window.addEventListener('touchend', () => dragging = false);
+
+document.getElementById('setA').onclick = () => { markers[trialIdx].a = frame; render(); };
+document.getElementById('setB').onclick = () => { markers[trialIdx].b = frame; render(); };
+
+document.getElementById('copyBtn').onclick = () => {
+  navigator.clipboard.writeText(document.getElementById('snippet').textContent);
+  const btn = document.getElementById('copyBtn');
+  const orig = btn.textContent; btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = orig, 1000);
+};
+
+let playTimer = null;
+playBtn.onclick = () => {
+  playing = !playing;
+  playBtn.innerHTML = playing ? '&#9724; Pause' : '&#9654; Play';
+  if (playing) {
+    playTimer = setInterval(() => {
+      frame = (frame + 1) % trial().T;
+      render();
+    }, 1000/30);
+  } else {
+    clearInterval(playTimer);
+  }
+};
+
+window.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') { frame = Math.min(trial().T-1, frame+1); render(); }
+  if (e.key === 'ArrowLeft') { frame = Math.max(0, frame-1); render(); }
+});
+
+frame = trial().T - 1; // default: show the full continuous recorded path, not just tick 0
+render();
+</script>

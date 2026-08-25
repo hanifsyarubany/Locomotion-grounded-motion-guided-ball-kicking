@@ -1,0 +1,53 @@
+# ==============================================================================
+# 2026-08-16: relaunch config for the "stageCB-2skills-high-ratio" run, reconstructed from its
+# saved holosoma_config.yaml so a restart (picking up the video-interval and mujoco-timeout fixes)
+# reproduces the exact same hyperparameters. Identical to configs/multi_skills.yaml except the two
+# motion_training_ratio values below (l2sp_weight/skill_replay_weights already match: off).
+# Launch with HOLOSOMA_TASK_CONFIG=configs/task_config_stageC1.yaml.
+# ==============================================================================
+task_config: task_config_stageC1
+
+base_robot:
+  target_height: 0.742 # previously 0.76 ->recommend 0.742
+  deadzone: 0.015
+
+l2sp_weight: 0.0                  # parameter side: anchor the actor toward --training.checkpoint
+skill_replay_weights: [1.0, 1.0]   # data side: per-skill gradient weight, indexed by skill_id
+
+motion_skill_1:
+  motion_npz: ../../locomotion_and_motion_tracking/video2robot/data/video_012/npz_holosoma/robot_motion_track_1.npz
+  x: 1.39
+  y: 0.02
+  # 2026-08-22: CALIBRATED against a real MuJoCo rollout of this exact (x,y) spawn's own
+  # trained Stage B checkpoint (skill_012 Stage B checkpoint (model_0350000.onnx)) -- see scripts/calibrate_nominal_bearing.py.
+  # Real measured departure bearing: -16.91 deg. target_x/target_y below encode that
+  # bearing at D=5.0m (kick_aim_nominal_distance_m's default) -- NOT the original authored
+  # value, which was never measured against real contact physics.
+  target_x: 6.174
+  target_y: -1.434
+  strike_start_frame: 120   # auto-estimate, T=250 @ 50fps -- verify visually
+  stand_start_frame: 154    # auto-estimate, T=250 @ 50fps
+  motion_training_ratio: 0.9
+  kick_foot: right
+  kick_aim_enabled: true
+  kick_ankle_pitch_correction_enabled: true  # 2026-08-08: self-calibrating strike-window ankle-pitch fix, see kick_ankle_pitch_correction.py
+  task_config: task_config_stageC1
+
+motion_skill_2:
+  motion_npz: ../../locomotion_and_motion_tracking/video2robot/data/video_011/npz_holosoma/robot_motion_track_1.npz
+  x: 1.3
+  y: -0.06
+  # 2026-08-22: CALIBRATED against a real MuJoCo rollout of this exact (x,y) spawn's own
+  # trained Stage B checkpoint (stageB-skill2 Stage B checkpoint (model_0165000.onnx)) -- see scripts/calibrate_nominal_bearing.py.
+  # Real measured departure bearing: +41.35 deg. target_x/target_y below encode that
+  # bearing at D=5.0m (kick_aim_nominal_distance_m's default) -- NOT the original authored
+  # value, which was never measured against real contact physics.
+  target_x: 5.053
+  target_y: 3.243
+  strike_start_frame: 170   # auto-estimate, T=232 @ 50fps -- verify visually
+  stand_start_frame: 215    # auto-estimate, T=232 @ 50fps -- verify visually
+  motion_training_ratio: 0.05
+  kick_foot: right
+  kick_aim_enabled: true
+  kick_ankle_pitch_correction_enabled: true
+  task_config: task_config_stageB

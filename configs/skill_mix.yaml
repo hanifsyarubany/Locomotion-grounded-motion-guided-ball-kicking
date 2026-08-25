@@ -1,0 +1,20 @@
+# Skill-mix configuration for the unified locomotion + ball-kicking policy.
+# Edit this value and re-run/resume training — no code changes needed.
+#
+# Each episode, on reset, an eligible env is assigned kick-mode with this probability (otherwise
+# locomotion-mode). "Eligible" means the env's terrain tile is flat — a freely-simulated ball
+# needs flat ground to rest at its configured position, so kick-mode is never assigned to envs on
+# rough/obstacle terrain, regardless of this probability.
+#
+# This means the REALIZED global kick fraction (over all envs) is:
+#   (fraction of envs on flat terrain) x kick_probability
+# capped at the flat-terrain fraction no matter how high kick_probability goes. See
+# terrain_unified_mix's terrain_config proportions (config_values/terrain.py) to change the
+# eligible fraction itself.
+#
+# To bootstrap a locomotion-first policy before adding kicking, start with a low (or 0.0) value,
+# train, then increase this value and resume training from that checkpoint — the observation/
+# action space doesn't change with this value, only which reward/termination/command paths are
+# active per episode, so resuming works cleanly.
+
+kick_probability: 0.0

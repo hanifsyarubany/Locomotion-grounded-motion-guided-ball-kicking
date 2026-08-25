@@ -1,0 +1,210 @@
+% ---------------------------------------------------------------------------
+% References for the multi-skill humanoid soccer proposal.
+%
+% Entries below were transcribed from the bibliography of RoboNaldo
+% (arXiv:2606.11092v3, 11 Jun 2026), which cites all of the humanoid-soccer
+% work relevant here. Verify each against the official venue listing before
+% submission -- several are arXiv preprints that may since have appeared at a
+% conference.
+% ---------------------------------------------------------------------------
+
+@article{robonaldo,
+  title   = {RoboNaldo: Accurate, Stable and Powerful Humanoid Soccer Shooting via Motion-Guided Curriculum Reinforcement Learning},
+  author  = {Zhong, Yichao and Lu, Yidan and Lu, Yuhang and Tang, Tianyang and Mai, Haoguang and Pan, Yixuan and Li, Tianyu and Chen, Li and Wang, Jingbo and Li, Zhongyu and Lu, Peng and Li, Hongyang},
+  journal = {arXiv preprint arXiv:2606.11092},
+  year    = {2026}
+}
+
+@article{paid,
+  title   = {Learning Soccer Skills for Humanoid Robots: A Progressive Perception-Action Framework},
+  author  = {Kong, J. and Liu, X. and Lin, Y. and Han, J. and Schwertfeger, S. and Bai, C. and Li, X.},
+  journal = {arXiv preprint arXiv:2602.05310},
+  year    = {2026}
+}
+
+@inproceedings{striker,
+  title     = {Learning Agile Striker Skills for Humanoid Soccer Robots from Noisy Sensory Input},
+  author    = {Xu, Z. and Seo, M. and Lee, D. and Fu, H. and Hu, J. and Cui, J. and Jiang, Y. and Wang, Z. and Brund, A. and Biswas, J. and Stone, P.},
+  booktitle = {IEEE International Conference on Robotics and Automation (ICRA)},
+  year      = {2026},
+  note      = {arXiv:2512.06571}
+}
+
+@article{humanx,
+  title   = {HumanX: Toward Agile and Generalizable Humanoid Interaction Skills from Human Videos},
+  author  = {Wang, Y. and Zhao, Q. and Lau, Y. F. and Yu, R. and Tsui, H. W. and Chen, Q. and Wang, J. and Pang, J. and Tan, P.},
+  journal = {arXiv preprint arXiv:2602.02473},
+  year    = {2026}
+}
+
+@article{haarnoja2024soccer,
+  title   = {Learning Agile Soccer Skills for a Bipedal Robot with Deep Reinforcement Learning},
+  author  = {Haarnoja, Tuomas and Moran, Ben and Lever, Guy and Huang, Sandy H. and Tirumala, Dhruva and Humplik, Jan and Wulfmeier, Markus and Tunyasuvunakool, Saran and Siegel, Noah Y. and Hafner, Roland and others},
+  journal = {Science Robotics},
+  volume  = {9},
+  number  = {89},
+  pages   = {eadi8022},
+  year    = {2024}
+}
+
+@article{reactive,
+  title   = {Learning Vision-Driven Reactive Soccer Skills for Humanoid Robots},
+  author  = {Wang, Y. and Luo, C. and Chen, P. and Liu, J. and Sun, W. and Guo, T. and Yang, K. and Hu, B. and Zhang, Y. and Zhao, M.},
+  journal = {arXiv preprint arXiv:2511.03996},
+  year    = {2025}
+}
+
+@inproceedings{stoft,
+  title     = {Like Playing a Video Game: Spatial-Temporal Optimization of Foot Trajectories for Controlled Football Kicking in Bipedal Robots},
+  author    = {Li, W. and Ma, J. and Lu, M. and Lu, P.},
+  booktitle = {IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)},
+  pages     = {3565--3572},
+  year      = {2025}
+}
+
+@article{goalkeeper,
+  title   = {Humanoid Goalkeeper: Learning from Position Conditioned Task-Motion Constraints},
+  author  = {Ren, J. and Long, J. and Huang, T. and Wang, H. and Wang, Z. and Jia, F. and Zhang, W. and Wang, J. and Luo, P. and Pang, J.},
+  journal = {arXiv preprint arXiv:2510.18002},
+  year    = {2025}
+}
+
+@article{deepmimic,
+  title   = {DeepMimic: Example-Guided Deep Reinforcement Learning of Physics-Based Character Skills},
+  author  = {Peng, Xue Bin and Abbeel, Pieter and Levine, Sergey and van de Panne, Michiel},
+  journal = {ACM Transactions on Graphics (TOG)},
+  volume  = {37},
+  number  = {4},
+  pages   = {1--14},
+  year    = {2018}
+}
+
+@article{amp,
+  title   = {AMP: Adversarial Motion Priors for Stylized Physics-Based Character Control},
+  author  = {Peng, Xue Bin and Ma, Ze and Abbeel, Pieter and Levine, Sergey and Kanazawa, Angjoo},
+  journal = {ACM Transactions on Graphics (TOG)},
+  volume  = {40},
+  number  = {4},
+  pages   = {1--20},
+  year    = {2021}
+}
+
+@article{beyondmimic,
+  title   = {BeyondMimic: From Motion Tracking to Versatile Humanoid Control via Guided Diffusion},
+  author  = {Liao, Q. and Truong, T. E. and Huang, X. and Gao, Y. and Tevet, G. and Sreenath, K. and Liu, C. K.},
+  journal = {arXiv preprint arXiv:2508.08241},
+  year    = {2025}
+}
+
+@article{hdmi,
+  title   = {HDMI: Learning Interactive Humanoid Whole-Body Control from Human Videos},
+  author  = {Weng, H. and Li, Y. and Sobanbabu, N. and Wang, Z. and Luo, Z. and He, T. and Ramanan, D. and Shi, G.},
+  journal = {arXiv preprint arXiv:2509.16757},
+  year    = {2025}
+}
+
+@article{resmimic,
+  title   = {ResMimic: From General Motion Tracking to Humanoid Whole-Body Loco-Manipulation via Residual Learning},
+  author  = {Zhao, S. and Ze, Y. and Wang, Y. and Liu, C. K. and Abbeel, P. and Shi, G. and Duan, R.},
+  journal = {arXiv preprint arXiv:2510.05070},
+  year    = {2025}
+}
+
+@inproceedings{intermimic,
+  title     = {InterMimic: Towards Universal Whole-Body Control for Physics-Based Human-Object Interactions},
+  author    = {Xu, S. and Ling, H. Y. and Wang, Y.-X. and Gui, L.-Y.},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {12266--12277},
+  year      = {2025}
+}
+
+@inproceedings{falcon,
+  title     = {FALCON: Learning Force-Adaptive Humanoid Loco-Manipulation},
+  author    = {Zhang, Y. and Yuan, Y. and Gurunath, P. and Gupta, I. and Omidshafiei, S. and Agha-mohammadi, A. and Vazquez-Chanlatte, M. and Pedersen, L. and He, T. and Shi, G.},
+  booktitle = {Learning for Dynamics and Control Conference (L4DC)},
+  year      = {2026},
+  note      = {arXiv:2505.06776}
+}
+
+@inproceedings{quadsoccer,
+  title     = {Toward Real-World Cooperative and Competitive Soccer with Quadrupedal Robot Teams},
+  author    = {Su, Z. and Gao, Y. and Lukas, E. and Li, Y. and Cai, J. and Tulbah, F. and Gao, F. and Yu, C. and Li, Z. and Wu, Y. and Sreenath, K.},
+  booktitle = {Conference on Robot Learning (CoRL)},
+  year      = {2025},
+  note      = {arXiv:2505.13834}
+}
+
+@article{hitter,
+  title   = {HITTER: A HumanoId Table TEnnis Robot via Hierarchical Planning and Learning},
+  author  = {Su, Z. and Zhang, B. and Rahmanian, N. and Gao, Y. and Liao, Q. and Regan, C. and Sreenath, K. and Sastry, S. S.},
+  journal = {arXiv preprint arXiv:2508.21043},
+  year    = {2025}
+}
+
+@article{badminton,
+  title   = {Learning Coordinated Badminton Skills for Legged Manipulators},
+  author  = {Ma, Y. and Cramariuc, A. and Farshidian, F. and Hutter, M.},
+  journal = {Science Robotics},
+  volume  = {10},
+  number  = {102},
+  pages   = {eadu3922},
+  year    = {2025}
+}
+
+@inproceedings{rudin2022,
+  title     = {Learning to Walk in Minutes Using Massively Parallel Deep Reinforcement Learning},
+  author    = {Rudin, Nikita and Hoeller, David and Reist, Philipp and Hutter, Marco},
+  booktitle = {Conference on Robot Learning (CoRL)},
+  pages     = {91--100},
+  year      = {2022}
+}
+
+@article{isaaclab,
+  title   = {Orbit: A Unified Simulation Framework for Interactive Robot Learning Environments},
+  author  = {Mittal, Mayank and Yu, Calvin and Yu, Qinxi and Liu, Jingzhou and Rudin, Nikita and Hoeller, David and Yuan, Jia Lin and Singh, Ritvik and Guo, Yunrong and Mazhar, Hammad and others},
+  journal = {IEEE Robotics and Automation Letters},
+  volume  = {8},
+  pages   = {3740--3747},
+  year    = {2023}
+}
+
+@inproceedings{gvhmr,
+  title     = {World-Grounded Human Motion Recovery via Gravity-View Coordinates},
+  author    = {Shen, Z. and Pi, H. and Xia, Y. and Cen, Z. and Peng, S. and Hu, Z. and Bao, H. and Hu, R. and Zhou, X.},
+  booktitle = {SIGGRAPH Asia 2024 Conference Papers},
+  year      = {2024}
+}
+
+@article{gmr,
+  title   = {Retargeting Matters: General Motion Retargeting for Humanoid Motion Tracking},
+  author  = {Ara{\'u}jo, J. P. and Ze, Y. and Xu, P. and Wu, J. and Liu, C. K.},
+  journal = {arXiv preprint arXiv:2510.02252},
+  year    = {2025}
+}
+
+@article{ppo,
+  title   = {Proximal Policy Optimization Algorithms},
+  author  = {Schulman, John and Wolski, Filip and Dhariwal, Prafulla and Radford, Alec and Klimov, Oleg},
+  journal = {arXiv preprint arXiv:1707.06347},
+  year    = {2017}
+}
+
+@article{options,
+  title   = {Between MDPs and semi-MDPs: A Framework for Temporal Abstraction in Reinforcement Learning},
+  author  = {Sutton, Richard S. and Precup, Doina and Singh, Satinder},
+  journal = {Artificial Intelligence},
+  volume  = {112},
+  number  = {1-2},
+  pages   = {181--211},
+  year    = {1999}
+}
+
+@article{curriculumsurvey,
+  title   = {Curriculum Learning for Reinforcement Learning Domains: A Framework and Survey},
+  author  = {Narvekar, S. and Peng, B. and Leonetti, M. and Sinapov, J. and Taylor, M. E. and Stone, P.},
+  journal = {Journal of Machine Learning Research},
+  volume  = {21},
+  number  = {181},
+  pages   = {1--50},
+  year    = {2020}
+}

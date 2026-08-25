@@ -1,0 +1,14 @@
+# Post-kick stabilization timing for the ball-kicking task.
+# Edit these values and re-run training — no code changes needed.
+#
+# After the kick motion clip ends, the reference pose the policy is rewarded for tracking does
+# two things in sequence:
+#   1. recovery_duration_s — smoothly transitions from the clip's ending pose back to the robot's
+#      default standing pose (a moving target the policy tracks, same as the rest of the clip).
+#   2. hold_duration_s — then holds completely still at that default pose (zero reference velocity)
+#      for this long. This is the "stand stably without falling" requirement.
+#
+# Total stabilization time = recovery_duration_s + hold_duration_s.
+
+recovery_duration_s: 1.0  # seconds
+hold_duration_s: 2.0      # seconds — 1.0 + 2.0 = 3s total, matching the ~3s post-kick stability target

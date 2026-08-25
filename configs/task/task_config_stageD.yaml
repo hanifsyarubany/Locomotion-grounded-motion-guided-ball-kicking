@@ -1,0 +1,451 @@
+# ==============================================================================
+# Stage D v1 (2026-08-09, boundary settled 2026-08-10 after three iterations):
+# post-swing -> locomotion handoff.
+#
+# Same reward mechanism as Stage C1 (every field/weight below is copied verbatim
+# from task_config_stageC1.yaml) -- Stage D is NOT a reward-curriculum step like
+# B->C1->C2. It's a targeted mechanism swap for the boundary where the WHOLE
+# authored/raw clip ends: the instant a kick-mode env's motion crosses
+# pre_recovery_motion_end_idx (approach + strike + the actor's own captured
+# post-kick follow-through all done -- BEFORE the synthetic recovery-transition
+# + static-hold tail that gets appended after it), UnifiedManager flips that
+# env's task_mode from KICK to LOCOMOTION and pins its velocity command to exact
+# zero for the rest of the episode (see
+# UnifiedManager._maybe_flip_kick_recovery_to_locomotion / LocomotionCommand.
+# pin_zero). Because task_mode already drives both the task_mode_onehot
+# observation and every reward/termination term's task_mode_mask gating, this
+# reuses the existing locomotion reward (alive, tracking_lin_vel/ang_vel,
+# standard posture/safety) wholesale once it takes over -- no new reward terms,
+# no observation-width change.
+#
+# **2026-08-13 SYNC**: this file had drifted stale relative to task_config_
+# stageC1.yaml (missing the 2026-08-12 three flip-fixes, the kick_penalty_
+# unstable/kick_no_fly retunes, motion_strike_dof_pos_error_exp, and current
+# deadzone values) -- resynced verbatim from C1's live content below. Read
+# task_config_stageC1.yaml directly if this drifts again; that file is the one
+# actually launched from (HOLOSOMA_TASK_CONFIG), this one mirrors it plus the
+# Stage-D/handoff-specific fields documented in this header.
+#
+# v1 scope, deliberately: no randomized walking after the flip -- the command
+# stays pinned at deterministic zero for the whole episode. Resume this stage
+# from a current Stage C1/C2 checkpoint, same warm-start pattern as every prior
+# stage transition -- launch with the g1_29dof_unified_fast_sac_stageD
+# experiment preset (config_values/unified/g1/experiment.py), which doubles
+# max_episode_length_s (20.0s -> 40.0s) so there's a meaningful window to
+# actually hold the post-flip zero-velocity stand, since task_config_stageC1.
+# yaml/*C2.yaml cannot set this field at all (it's a SimEngineConfig field, not
+# MultiSkillConfig/yaml-driven -- see that preset's own comment).
+#
+# ------------------------------------------------------------------------------
+# LOCOMOTION -> KICK direction (the mirror of the flip above), 2026-08-13.
+# Full design: https://claude.ai/code/artifact/53c1da51-d841-4979-8bf8-efd5ea652e06
+# and memory locomotion_to_kick_handoff_design_settled.md (decisions D1-D8).
+#
+# **2026-08-13: ALL FOUR INCREMENTS IMPLEMENTED, OFFLINE-TESTED (849 passed,
+# same 2 pre-existing unrelated failures throughout this whole file's history),
+# AND LIVE-VERIFIED on real IsaacSim (GPU 2, 64 envs, skills1.yaml).**
+#
+# 1. Reference re-anchoring (MotionCommand.enter_at_frame +
+#    _apply_ref_anchor_pos/_rot/_vec) -- exact 0.0m position match at the
+#    anchored entry tick, zero cross-env leakage.
+# 2. The handoff mechanism -- entry-point search (_build_entry_search_table/
+#    search_entry_point, skill-constrained per D2), ball placement at handoff
+#    (ball_rel_at_frame/place_ball_at_entry), the turning-point fire/decline
+#    decision (UnifiedManager._maybe_enter_kick_from_locomotion, D3), the
+#    decel-and-retry fallback (LocomotionCommand.pin/unpin, D8), the reward
+#    ramp (kick_scale_wrappers._pre_kick_reward_ramp_multiplier) and
+#    termination grace (managers/termination/terms/locomotion._pre_kick_grace_
+#    active + wbt.BadTracking's pre_kick_grace_steps param). Live: 21-25/64
+#    envs fired within 40 ticks under zero actions; D8 fallback separately
+#    verified (26 envs entered it, 11 correctly declined via timeout).
+# 3. Reference-side blend (MotionCommand.capture_ref_blend/_apply_ref_blend,
+#    pre_kick_reference_blend_steps) -- blends the 4 relative-body targets
+#    (motion_relative_body_position/_orientation_error_exp, motion_global_
+#    body_lin_vel/_ang_vel) from the robot's own captured pose toward the
+#    clip's raw target, instead of an instant snap. Live: at-fire error vs the
+#    robot's live pose exactly 0.0m/0.0m/s, quat dot 1.0; ratio measurably
+#    progresses afterward (0.95 by ~16 ticks post-fire in a 20-tick window).
+# 4. Fixed ball + geometry-aware search (mid_episode_kick_entry_ball_fixed,
+#    D2b -- closes the "ball doesn't move at deploy" training-scaffold gap):
+#    ball placed ONCE at reset (MotionCommand.place_ball_at_reset_pending,
+#    anchored to the clip's own frame-0 pose, not the robot's), never moved
+#    again at fire; the entry search gains 2 ball-geometry columns (7 total,
+#    pooled-z-scored with the 5 gait ones). Live: table confirmed 7-wide,
+#    ball_spawn_pos_w drift across a fire tick exactly 0.0m (place_ball_at_
+#    entry correctly skipped).
+#
+# All 10 fields below are wired end-to-end (MultiSkillConfig -> command_cfg
+# [-> MotionConfig for the 2 setup-time fields] -> UnifiedManager/reward.py/
+# termination.py, same direct-read pattern as kick_recovery_locomotion_flip_
+# enabled) and validated at load time. Full design:
+# https://claude.ai/code/artifact/53c1da51-d841-4979-8bf8-efd5ea652e06 and
+# memory locomotion_to_kick_handoff_design_settled.md (decisions D1-D8).
+#
+# ******************************************************************************
+# RUN-1 LAUNCH VALUES (2026-08-13) -- first real training run of this mechanism.
+# Everything ABOVE this block is byte-identical to task_config_stageC1.yaml
+# (verified field-by-field, not assumed) so this run differs from the live C1
+# baseline in EXACTLY the handoff mechanism and nothing else.
+#
+# mid_episode_kick_entry_prob 0.3 -- top of D6's recommended 0.2-0.3 opening
+#   range. D6's own stated reason for the cap (walk-in envs bypass reset()'s
+#   critical_frame_oversampling_prob, MEASURED to shrink the swing-error tail,
+#   peak 1.25 vs 3.43) is actually MOOT here: that field is 0.0 in C1, so
+#   nothing is being bypassed. The cap is kept anyway for the independent
+#   reason that this mechanism has never been trained with -- at 0.3, ~70% of
+#   kick-partitioned envs keep the validated teleport-at-reset path, so the
+#   proven data stream stays the majority and holds the policy together if
+#   walk-in destabilizes.
+#
+# min_steps 100 -- 2.0s at 50Hz before the search is even attempted; the robot
+#   settles into a genuine steady-state gait first. Cheap against this preset's
+#   40s (2000-tick) episodes.
+#
+# max_residual 2.0 -- ABORT ceiling, NOT a fire threshold (D3: firing is at the
+#   residual turning point). Measured NN residual is median 0.84 sigma and FLAT
+#   across forward speed (0.74 @ vx=0 -> 0.90 @ vx=1.0), so 2.0 is ~2.4x the
+#   median: the common case fires, only the genuinely uncovered tail declines.
+#   THIS IS THE LEAST-EVIDENCED VALUE HERE -- that residual distribution was
+#   measured over CLIP content, not over the live policy's real walking states
+#   under randomized lateral/yaw commands. Watch the decline rate; if envs are
+#   declining often, loosen this before touching anything else.
+#
+# pre_kick_decel_* / fallback_timeout ALL 0.0 -- D8's decel-and-retry fallback
+#   deliberately OFF for run 1. It is only load-bearing under increment 4's
+#   fixed ball (which is also off, below), and it adds command-pinning that
+#   interacts with locomotion training. One variable at a time; turn it on in
+#   run 2 if the ceiling above declines more than expected.
+#
+# reward_ramp / termination_grace 50.0 -- exact mirrors of the LIVE, already-
+#   validated post_flip_reward_decay_steps / post_flip_termination_grace_steps
+#   (both 50.0 above, Stage D's own 2026-08-12 flip-fixes). D5 checked 50-tick
+#   ramps against the Stage-D-overlap gap (clip_T - entry_frame): min 130 ticks
+#   for video_012, the only skill in skills1.yaml -- comfortably clear.
+#
+# reference_blend 50.0 -- matched to the reward ramp on purpose: the target
+#   finishes gliding onto the clip exactly as the reward reaches full strength,
+#   so the policy is never asked at full weight for a pose it is still being
+#   eased toward. No independent evidence for this length beyond that coherence
+#   argument (increment 3 has no post-flip counterpart to mirror).
+#
+# ball_fixed FALSE -- D2's training scaffold (ball placed AT the handoff), not
+#   increment 4's deploy-faithful fixed ball. Deliberate: with a fixed ball the
+#   robot must walk into a +/-0.1m box at a specific bearing to be in the kick
+#   policy's trained distribution, which D2b's own measurement says "would have
+#   produced almost no usable data." Fixed-ball is a LATER run, after walk-in
+#   itself is shown to train.
+#
+# GUARD METRICS (same discipline as the stability-block retune): kick_ball_
+#   hit_rate (0.374 on the live C1 baseline) MUST NOT drop -- abort condition.
+#   kick_topple_frac (0.067) should not rise. Watch kick_early_term_frac
+#   (0.946) too: it is already the dominant failure mode and walk-in entries
+#   are the states most likely to add bad_tracking terminations.
+# ******************************************************************************
+mid_episode_kick_entry_prob: 0.3
+mid_episode_kick_entry_min_steps: 100
+mid_episode_kick_entry_max_residual: 2.0
+pre_kick_decel_steps: 0.0
+pre_kick_decel_target: 0.1
+pre_kick_fallback_timeout_steps: 0.0
+pre_kick_reward_ramp_steps: 50.0
+pre_kick_termination_grace_steps: 50.0
+pre_kick_reference_blend_steps: 50.0
+mid_episode_kick_entry_ball_fixed: false
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Ball physics -- not RoboNaldo-scaled, physical constant
+# ------------------------------------------------------------------------------
+ball:
+  radius: 0.11
+  mass: 0.43
+
+# ------------------------------------------------------------------------------
+# Own-design knobs with no RoboNaldo counterpart -- unchanged from current
+# (live) Stage C1.
+# ------------------------------------------------------------------------------
+shooting_reward_scale_ramp_iters: 5000
+shooting_reward_scale_hold_iters: 0
+ball_obs_noise: 0.05
+ball_obs_noise_range_coefficient: 0.03
+ball_obs_delay_steps_min: 0
+ball_obs_delay_steps_max: 3
+ood_spawn_probability: 0.05
+ood_region_multiplier: 3.0
+ball_static_obs_probability: 0.05
+ball_obs_stale_probability: 0.01  # per-CONTROL-TICK chance of reusing the previous frame (dropped-packet model); RoboNaldo's own value once staged in (their Stage 3); enabled uniformly here rather than staged, 2026-08-23 user decision -- see ObsTermCfg.stale_probability for the mechanism
+bad_tracking_swing_only: false
+kick_recovery_termination_handoff: true
+kick_recovery_drift_deadzone: 0.4
+bad_tracking_swing_threshold_multiplier: 1.0
+swing_tracking_sigma_multiplier: 1.0
+balance_potential_weight: 1.0
+use_foot_strike_pitch_reference_relative: true
+kick_contact_force_penalty_floor: 3.0
+kick_contact_force_penalty_k: 4.0
+kick_contact_force_threshold_bodyweight_multiplier: 3.0
+start_at_timestep_zero_prob: 0.5
+rsi_scope_to_authored_clip: true
+critical_frame_oversampling_prob: 0.0
+critical_frame_sampling_window: 10
+kick_target_entropy_ratio: 0.8
+kick_gamma: 0.99
+
+kick_recovery_locomotion_flip_enabled: true
+motion_head_velocity_smoothing_frames: 3
+
+# 2026-08-12 three flip-fixes, unchanged from current Stage C1 -- see that
+# file's own header for the full measured rationale (FLIP-vs-NOFLIP diagnostic).
+penalty_curriculum_enabled: false
+post_flip_termination_grace_steps: 50.0
+post_flip_reward_decay_steps: 50.0
+
+# ------------------------------------------------------------------------------
+# l2sp_weight: L2-SP ("L2 toward Starting Point") continual-learning anchor for
+# the ACTOR. After every actor optimizer step, each actor parameter is pulled a
+# little way back toward the value it had in the checkpoint THIS RUN RESUMED
+# FROM:   p += actor_learning_rate * l2sp_weight * (anchor - p)
+#
+# What it is for: adding motion skill N+1 on top of a checkpoint that already
+# knows skills 1..N trains ONE shared Actor/Critic (there are no per-skill heads)
+# from a UNIFORMLY sampled shared replay buffer, so every gradient step moves the
+# weights that encode the older skills. Lowering an old skill's
+# motion_training_ratio does NOT protect it -- that knob only sets what fraction
+# of envs (hence of the buffer) the skill occupies, so lowering it means LESS
+# rehearsal and FASTER forgetting. Retention has to come from the parameter side
+# instead, which is what this does.
+#
+# Same decoupled mechanism as AdamW's own weight_decay (0.001), just aimed at
+# theta_anchor instead of at 0 -- which is why weight_decay is the natural
+# reference scale for choosing a value here.
+#
+# VALUES TO TRY:
+#   0.0    OFF (default). The right choice for JOINT training of all skills at
+#          once -- catastrophic forgetting is a problem created by SEQUENTIAL
+#          training, so training every skill together avoids it outright and
+#          none of this machinery is needed.
+#   0.001  == weight_decay. Almost certainly too weak to change anything;
+#          useful only as a sanity/A-B rung.
+#   0.01   10x weight_decay. START HERE if you do need it.
+#   0.1    100x weight_decay; roughly the ratio the L2-SP paper used relative to
+#          its own decay. Treat as the practical upper end -- if this still shows
+#          no retention benefit, anchor strength is not the problem and raising
+#          it further will not help.
+#
+# HOW TO TUNE: watch the per-skill EMAs already logged under Kick_skills_{i}
+# (success / topple). An older skill's EMA is the retention signal; the new
+# skill's learning curve is the plasticity cost. Take the LARGEST value that has
+# not yet visibly slowed the new skill. When enabled the run also logs
+# `l2sp_drift` (||theta - theta_anchor||) -- expect it to plateau once the pull
+# balances the gradients, rather than growing without bound.
+#
+# REQUIRES RESUMING from a checkpoint (that checkpoint IS the anchor). Setting
+# this > 0 on a from-scratch run raises at startup rather than silently
+# regularizing toward a randomly initialized actor. See FastSACConfig.l2sp_weight
+# for the full design. NOT yet validated by a training run -- opt-in A/B.
+# ------------------------------------------------------------------------------
+# l2sp_weight: 0.01
+
+# joint_pos_sanity_check_enabled: true
+# joint_pos_sanity_threshold: 20.0
+# replay_buffer_sanitize_enabled: true
+
+# RoboNaldo-derived: progressive ee_body_pos termination threshold. Unchanged
+# from current Stage C1 (S2a values) -- this stage doesn't touch the strike/
+# approach termination boundaries, only the post-swing handoff.
+bad_motion_body_pos_threshold: 0.35
+ee_body_pos_warmup_threshold: 0.7
+
+# kick_recovery_posture_reward's own deadzone params. Unchanged from current
+# Stage C1.
+kick_recovery_stand_height_deadzone: 0.02
+kick_recovery_stand_orientation_deadzone: 0.035
+kick_recovery_stand_feet_width_deadzone: 0.04
+kick_recovery_stand_knee_width_deadzone: 0.04
+
+# 2026-08-12 swing-stability deadzones, unchanged from current Stage C1.
+kick_swing_orientation_deadzone: 0.44
+kick_swing_torso_orientation_deadzone: 0.26
+
+# RoboNaldo-derived: ball spawn randomization. Unchanged from current Stage C1.
+randomize_x: 0.1
+randomize_y: 0.1
+
+# Formerly per-skill fields, now shared/global. Unchanged from current Stage C1.
+# 2026-08-22: randomize_target_x/y REMOVED (azimuth-aim refactor) -- independent target
+# randomization has no replacement; kick_aim_enabled=True (every skill in this project) derives
+# all aim variation from kick_aim_theta instead.
+# 2026-08-24: kick_ball_velocity_v_ref -- SET FOR THE FIRST TIME. This field has never appeared in
+# any task config, so every run to date silently used shooting.py::ball_velocity's own 5.0 default,
+# which puts the Lorentzian s^2/(s^2+v_ref^2) deep in its FLAT TAIL at the speeds these policies
+# actually reach: at the measured ~1.8 m/s it returns 0.115, and rew_kick_ball_velocity realized
+# 0.00005 per episode (skill012/014) -- a rounding error, not a reward. MultiSkillConfig.
+# kick_ball_velocity_v_ref's own docstring already derived the answer from live measurement ("at
+# the measured 1.6 m/s operating point, v_ref=5.0 sits deep in the flat tail (value 0.093, gradient
+# 0.105 per m/s); 2.0 gives 0.390 and 0.297 -- 2.8x steeper exactly where the policy lives"); it
+# was analysed, written down, and then never actually put in a config. This applies it.
+kick_ball_velocity_v_ref: 2.0
+success_radius: 0.5
+shooting_reward_scale: 0.5
+kick_ball_over_line_require_has_kicked: true
+motion_tracking_reward_scale: 2.0
+root_tracking_reward_scale: 1.0
+recovery_tracking_scale: 1.0
+kick_recovery_posture_reward_scale: 1.0
+kick_safety_reward_scale: 1.0
+kick_alive_reward_scale: 1.0
+kick_alive_pre_kick_ratio: 0.1
+observation_bias: 0.05
+recovery_duration_s: 1.0
+hold_duration_s: 1.0
+
+# ==============================================================================
+# Reward-term weights -- IDENTICAL to current Stage C1 (S2a values). Stage D's
+# whole point is to reuse this exact reward mechanism, not retune it -- see
+# this file's own header comment.
+#
+# 2026-08-14: reconciled against task_config_stageC1.yaml (had silently drifted --
+# 3 fields below were missing/stale here). See that file's own inline comments
+# for the full dated reasoning behind each value; not repeated here per this
+# section's own "reuse, don't retune" principle.
+# ==============================================================================
+
+motion_tracking_reward:
+  motion_global_ref_position_error_exp: 1.0
+  motion_global_ref_orientation_error_exp: 0.5
+  motion_relative_body_position_error_exp: 1.0
+  motion_relative_body_orientation_error_exp: 1.0
+  motion_global_body_lin_vel: 1.0
+  motion_global_body_ang_vel: 1.0
+  motion_global_feet_lin_vel: 1.0
+  motion_strike_dof_pos_error_exp: 1.0
+  motion_strike_leg_null_dof_pos_error_exp: 1.0
+
+shooting_reward:
+  kick_ball_proximity: 2.0
+  kick_contact_orientation: 4.0
+  kick_foot_strike_pitch: 1.0
+  # 2026-08-24: 1.0 -> 10.0. Sized together with the new kick_ball_velocity_v_ref: 2.0 above --
+  # the two multiply, so neither alone tells you the resulting magnitude. Measured motivation:
+  # across skill012/013/014 the realized rew_kick_ball_velocity was 0.00005 / 0.01545 / 0.00004,
+  # while shot power tracked rew_motion_global_feet_lin_vel (0.161 / 0.291 / 0.086 -> ball speed
+  # 1.76 / 1.90 / 1.27 m/s) almost monotonically -- i.e. the clip, not this term, was doing all the
+  # work. 10.0 is deliberately between the old 1.0 (which realized nothing) and skill013's 40.0
+  # (which crowded the shooting budget: its contact/velocity terms realized 18x the sibling runs'
+  # while producing LOWER ball speed than skill012 at weight 1.0). NOT yet validated by a run.
+  kick_ball_velocity: 10.0
+  kick_error_ball_to_target: 20.0
+  # 2026-08-23: 0.0 -> 5.0, turned ON. This is the DENSE directional signal (its own docstring
+  # calls it "the credit-assignment workhorse"): every step the ball is moving it extends the
+  # ball's current velocity ray forward and rewards the predicted closest approach to the target,
+  # so the policy gets feedback on where the shot is HEADING from the instant of contact instead
+  # of waiting for the ball to finish rolling. With it at 0.0, the ONLY aiming signal was
+  # kick_error_ball_to_target -- a LATCHED, end-of-trajectory quantity -- and that one was itself
+  # nearly flat at the old sigma=4.2 (see the _sigma block below), so BOTH directional learning
+  # channels were effectively disabled at once. 5.0 is deliberately a quarter of
+  # kick_error_ball_to_target's 20.0: a real gradient without displacing the outcome term as the
+  # primary objective. Its own sigma stays at the function's 1.0 default (NOT raised to 2.0 like
+  # the outcome term): it measures a velocity-ray projection rather than a settled position, and
+  # a sharper kernel there pairs with the outcome term's broader basin -- broad basin to get the
+  # shot roughly right, sharp dense term to refine it. NOT yet validated by a completed run.
+  kick_predicted_error_ball_to_target: 5.0
+  kick_goal_success_burst: 0.0
+  kick_ball_contact_hit: 2.0
+  kick_ball_approach_stance: 2.0
+  kick_ball_over_line: 1.0
+  kick_robot_com_ball_distance: 2.0
+  kick_robot_torso_ball_distance: 2.0
+  kick_penalize_weak_foot_contact: -1.0
+  kick_penalize_self_contact_feet: -0.4
+  _sigma:
+    # 2026-08-23: 4.2 -> 2.0. This sigma is an ANGULAR tolerance, not a distance one: for a
+    # kick_aim_enabled skill the target sits at a FIXED D=kick_aim_nominal_distance_m (5.0) along
+    # the commanded ray, so a shot that is `a` degrees off misses by 2*D*sin(a/2) and this term
+    # pays exp(-miss^2/sigma^2). MEASURED at the old 4.2, over the +/-15 deg range the policy is
+    # actually commanded to steer within, the reward was nearly FLAT -- 20 deg off still paid
+    # 0.843, 30 deg off paid 0.684 -- i.e. almost no gradient telling the policy to aim. Three
+    # Stage C runs (skill012/013/014, 2026-08-23, ~130k steps each) confirmed the consequence:
+    # sim2sim ball-CONTACT rate climbed to 0.95 while kick_direction_success_rate plateaued at
+    # 0.35-0.38 (skill013: 0.05). 4.2 was a correct fix for its own era ("gradient-dead-kernel":
+    # when the policy missed by ~5 m, exp(-25/1) was 0 and gave nothing to learn from) but it has
+    # outlived that regime -- contact is now solved, aiming is not. At 2.0: 20 deg off pays 0.471
+    # and 45 deg off still pays 0.026, so there is a real gradient across the commanded range
+    # without going dead on a genuinely wild shot. NOT yet validated by a completed run.
+    # 2026-08-24: 2.0 -> 3.0. The 4.2 -> 2.0 cut made the day before was WRONG and this reverses
+    # it with a rule instead of a guess. That cut was chosen by looking only at how sharply the
+    # kernel discriminates across the +/-15 deg commanded range, without checking how far the
+    # policy was ACTUALLY missing. Measured from the batch-one/batch-two realized-reward ratio
+    # (same skill, same steps, only sigma changed): the real miss is ~3.0 m for skill012/013 and
+    # ~4.6 m for skill014. At those distances sigma=2.0 put the operating point in the DEAD TAIL --
+    # realized rew_kick_error_ball_to_target fell 0.17x / 0.27x / 0.01x, i.e. skill014 lost 99% of
+    # its aiming signal -- and sim2sim direction success fell with it (-0.22 / -0.20 at matched
+    # steps). That is the same gradient-dead-kernel failure the original 4.2 existed to fix,
+    # recreated from the other side.
+    #
+    # THE RULE (use this, don't guess again): the learning signal is the GRADIENT,
+    #   |d/dd exp(-d^2/sigma^2)| = (2d/sigma^2) exp(-d^2/sigma^2),
+    # which for a given miss distance d is MAXIMISED at sigma = d. So sigma should track the
+    # policy's current typical miss, and be revisited as that shrinks -- 4.2 was near-optimal when
+    # misses were ~5 m and simply went stale. Recompute from the survival scan's own
+    # direction/miss telemetry rather than re-deriving by eye.
+    kick_error_ball_to_target: 3.0
+
+kick_recovery_posture_reward:
+  penalty_kick_recovery_stance_asymmetry: -20.0
+  penalty_kick_recovery_yaw_drift: -2.0
+  penalty_kick_recovery_stand_height: -40.0
+  penalty_kick_recovery_stand_orientation: -20.0
+  penalty_kick_recovery_stand_feet_width: -20.0
+  penalty_kick_recovery_stand_knee_width: -20.0
+
+kick_safety_reward:
+  kick_penalty_excess_contact_force: -1.0
+  kick_penalty_hard_landing: -1.0
+  kick_penalty_excess_base_lin_vel: -1.0
+
+  kick_penalty_swing_orientation: -0.04
+  kick_penalty_swing_torso_orientation: -0.04
+  kick_feet_slip: -0.02
+  action_rate_l2: -0.04
+  kick_arm_default_pose: -0.04
+  kick_feet_air_time: 50.0
+  kick_swing_feet_clearance: -20.0
+  kick_no_fly: -0.1
+  kick_penalty_unstable: -0.5
+  kick_feet_contact_time: -0.5
+  kick_penalty_lin_vel_z: -0.1
+  # 2026-08-14: was -3e-5 -- stale, calibrated for the PRE-bug-fix signed-power formula. The
+  # function itself (managers/reward/terms/locomotion.py:penalty_kick_dof_vel) squares the power
+  # term regardless of which yaml loads it, so this stage was silently running the new (much
+  # larger-magnitude) formula at the old weight -- see task_config_stageC1.yaml's own comment on
+  # this line for the bug and the live-measured recalibration behind -5e-8.
+  kick_penalty_dof_vel: -5e-8
+  kick_penalty_torque: -2e-7
+  # 2026-08-14: strike-phase joint-acceleration smoothness penalty -- see
+  # task_config_stageC1.yaml's own comment on this line for the live-measured calibration.
+  kick_penalty_strike_dof_acc: -5e-8
+  # 2026-08-14: locomotion-approach counterpart of the line above -- separate term (not the same
+  # gate widened) because approach and strike want opposite things from joint acceleration; see
+  # penalty_kick_approach_dof_acc's own docstring (managers/reward/terms/locomotion.py).
+  #
+  # LIVE-MEASURED (real IsaacSim, ckpt 352000 of 20260813_005001-stageC1-1skill-locoflip-
+  # shooting05-new-fixes-3, 512 envs x 30s): approach-phase raw sum(dof_acc^2) mean=295927,
+  # median=22035, p90=215529, max=217602880 -- essentially the SAME order of magnitude as the
+  # strike term's own calibration mean (340248, see that line's comment), so the same -5e-8
+  # weight lands at a comparably small "guardrail" magnitude here too: mean weighted ~-0.0148
+  # (vs strike's ~-0.0159), well below kick_action_smoothness's ~0.086.
+  #
+  # Heavier right skew than strike: median is 4x SMALLER than strike's (22035 vs 84202) but max
+  # is ~3x LARGER (217.6M vs 78.7M) -- a typical approach tick is calmer than a typical strike
+  # tick, but the worst approach ticks are worse. Consistent with the hooked topple probe finding
+  # falls concentrate in this window (19.2% of topples) -- the tail here likely reflects real
+  # loss-of-balance events, not measurement noise, and is already priced in via the mean-based
+  # calibration (matches SAC's expected-reward objective). Reasoned from real measurement, still
+  # training-unvalidated like every weight in this file.
+  kick_penalty_approach_dof_acc: -5e-8
+  kick_undesired_contacts: -0.1
+  kick_penalty_ee_body_pos_divergence: -100.0
+  kick_action_smoothness: -0.1
+
+kick_alive_reward:
+  kick_alive: 4.0

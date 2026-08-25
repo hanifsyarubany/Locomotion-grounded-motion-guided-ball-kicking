@@ -1,0 +1,383 @@
+<title>Kick Clip Phase Scrubber</title>
+<style>
+  :root{
+    --bg:#12151b; --panel:#1a1f28; --panel-2:#20262f; --border:#2b323f;
+    --text:#e7eaf0; --text-dim:#8b93a5; --text-faint:#5c6472;
+    --skeleton:#5eead4; --skeleton-dim:#2f6f68;
+    --marker-a:#fb923c; --marker-b:#c084fc; --playhead:#f4f6fa;
+    --root-curve:#7dd3fc; --leg-curve:#fb7185;
+  }
+  :root[data-theme="light"]{
+    --bg:#f4f5f7; --panel:#ffffff; --panel-2:#eef0f3; --border:#dde1e7;
+    --text:#1a1e26; --text-dim:#5b6472; --text-faint:#9aa2b1;
+    --skeleton:#0f9c8c; --skeleton-dim:#bfe9e3;
+    --marker-a:#d9660b; --marker-b:#9333ea; --playhead:#111318;
+    --root-curve:#0284c7; --leg-curve:#e11d48;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#f4f5f7; --panel:#ffffff; --panel-2:#eef0f3; --border:#dde1e7;
+      --text:#1a1e26; --text-dim:#5b6472; --text-faint:#9aa2b1;
+      --skeleton:#0f9c8c; --skeleton-dim:#bfe9e3;
+      --marker-a:#d9660b; --marker-b:#9333ea; --playhead:#111318;
+      --root-curve:#0284c7; --leg-curve:#e11d48;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font:14px/1.5 ui-monospace,"SF Mono",Consolas,monospace;
+    padding:20px; min-height:100vh;
+  }
+  .label{
+    font:600 11px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim);
+  }
+  h1{
+    font:600 18px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    margin:0 0 2px; color:var(--text);
+  }
+  .sub{color:var(--text-dim); font-size:12px; margin-bottom:18px;
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+  .wrap{max-width:1180px; margin:0 auto}
+
+  .tabs{display:flex; gap:6px; margin-bottom:16px}
+  .tab{
+    padding:8px 16px; background:var(--panel); border:1px solid var(--border);
+    border-radius:8px; cursor:pointer; color:var(--text-dim);
+    font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  .tab.active{background:var(--panel-2); color:var(--text); border-color:var(--skeleton)}
+
+  .views{display:flex; gap:12px; margin-bottom:14px; flex-wrap:wrap}
+  .view{
+    background:var(--panel); border:1px solid var(--border); border-radius:10px;
+    padding:10px; flex:1 1 260px; min-width:220px;
+  }
+  .view .label{margin-bottom:6px}
+  canvas{width:100%; display:block; border-radius:6px; background:var(--panel-2)}
+
+  .timeline-card{
+    background:var(--panel); border:1px solid var(--border); border-radius:10px;
+    padding:16px; margin-bottom:14px;
+  }
+  .timeline-card .label{margin-bottom:8px}
+  #chart{width:100%; height:140px; display:block; cursor:crosshair; border-radius:6px; background:var(--panel-2)}
+  .legend{display:flex; gap:16px; margin-top:8px; font-size:11px; color:var(--text-dim);
+          font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;}
+  .legend span{display:inline-flex; align-items:center; gap:5px}
+  .swatch{width:10px; height:2px; display:inline-block; border-radius:1px}
+
+  .controls{display:flex; align-items:center; gap:14px; margin-top:12px}
+  #slider{flex:1; accent-color:var(--skeleton)}
+  #frameReadout{
+    font-weight:600; min-width:64px; text-align:right; color:var(--text);
+    font-variant-numeric:tabular-nums;
+  }
+  .playbtn{
+    background:var(--panel-2); border:1px solid var(--border); color:var(--text);
+    border-radius:6px; padding:6px 10px; cursor:pointer; font-size:12px;
+  }
+  .playbtn:hover{border-color:var(--skeleton)}
+
+  .bottom{display:flex; gap:14px; flex-wrap:wrap}
+  .readout-card, .marker-card{
+    background:var(--panel); border:1px solid var(--border); border-radius:10px;
+    padding:16px; flex:1 1 260px;
+  }
+  .readout-row{display:flex; justify-content:space-between; padding:4px 0; font-size:13px}
+  .readout-row .k{color:var(--text-dim)}
+  .readout-row .v{font-variant-numeric:tabular-nums; font-weight:600}
+
+  .marker-row{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:8px 0; border-bottom:1px solid var(--border);
+  }
+  .marker-row:last-child{border-bottom:none}
+  .marker-dot{width:9px; height:9px; border-radius:50%; display:inline-block; margin-right:8px}
+  .marker-name{font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--text)}
+  .marker-btns{display:flex; gap:6px}
+  .marker-btn{
+    background:var(--panel-2); border:1px solid var(--border); color:var(--text-dim);
+    border-radius:5px; padding:4px 9px; cursor:pointer; font-size:11px;
+  }
+  .marker-btn:hover{color:var(--text); border-color:var(--skeleton)}
+  .marker-val{font-variant-numeric:tabular-nums; font-weight:600; min-width:36px; text-align:right}
+
+  .snippet{
+    margin-top:12px; background:var(--panel-2); border:1px solid var(--border);
+    border-radius:6px; padding:10px 12px; font-size:12px; color:var(--skeleton);
+    white-space:pre; overflow-x:auto;
+  }
+  .copybtn{
+    margin-top:8px; background:var(--panel-2); border:1px solid var(--border); color:var(--text-dim);
+    border-radius:5px; padding:5px 10px; cursor:pointer; font-size:11px; width:100%;
+  }
+  .copybtn:hover{color:var(--text); border-color:var(--skeleton)}
+
+  ::selection{background:var(--skeleton); color:var(--bg)}
+</style>
+
+<div class="wrap">
+  <h1>Kick Clip Phase Scrubber</h1>
+  <div class="sub">Root-centered skeleton from body_pos_w — scrub to find the approach&rarr;strike and strike&rarr;standing boundaries.</div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="views">
+    <div class="view"><div class="label">Top &middot; X&ndash;Y</div><canvas id="cTop" width="260" height="260"></canvas></div>
+    <div class="view"><div class="label">Front &middot; X&ndash;Z</div><canvas id="cFront" width="260" height="260"></canvas></div>
+    <div class="view"><div class="label">Side &middot; Y&ndash;Z</div><canvas id="cSide" width="260" height="260"></canvas></div>
+  </div>
+
+  <div class="timeline-card">
+    <div class="label">Speed timeline (click / drag to scrub)</div>
+    <canvas id="chart" width="1100" height="140"></canvas>
+    <div class="legend">
+      <span><span class="swatch" style="background:var(--root-curve)"></span>root planar speed (m/s)</span>
+      <span><span class="swatch" style="background:var(--leg-curve)"></span>peak leg-joint speed (rad/s)</span>
+      <span><span class="swatch" style="background:var(--marker-a)"></span>strike start</span>
+      <span><span class="swatch" style="background:var(--marker-b)"></span>standing start</span>
+    </div>
+    <div class="controls">
+      <button class="playbtn" id="playBtn">&#9654; Play</button>
+      <input type="range" id="slider" min="0" max="1" value="0" step="1">
+      <div id="frameReadout">0 / 0</div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="readout-card">
+      <div class="label" style="margin-bottom:10px">Current frame</div>
+      <div class="readout-row"><span class="k">clip frame</span><span class="v" id="rClipFrame">0</span></div>
+      <div class="readout-row"><span class="k">time</span><span class="v" id="rTime">0.00s</span></div>
+      <div class="readout-row"><span class="k">root speed</span><span class="v" id="rRoot">0.00 m/s</span></div>
+      <div class="readout-row"><span class="k">leg speed</span><span class="v" id="rLeg">0.00 rad/s</span></div>
+      <div class="readout-row"><span class="k">phase (est.)</span><span class="v" id="rPhase">&mdash;</span></div>
+    </div>
+    <div class="marker-card">
+      <div class="label" style="margin-bottom:6px">Boundaries</div>
+      <div class="marker-row">
+        <div><span class="marker-dot" style="background:var(--marker-a)"></span><span class="marker-name">strike start</span></div>
+        <div class="marker-btns">
+          <button class="marker-btn" id="setA">set to current</button>
+          <span class="marker-val" id="valA">0</span>
+        </div>
+      </div>
+      <div class="marker-row">
+        <div><span class="marker-dot" style="background:var(--marker-b)"></span><span class="marker-name">standing start</span></div>
+        <div class="marker-btns">
+          <button class="marker-btn" id="setB">set to current</button>
+          <span class="marker-val" id="valB">0</span>
+        </div>
+      </div>
+      <div class="snippet" id="snippet">STRIKE_START_CLIP_FRAME = {0: 165, 1: 140}
+STAND_START_CLIP_FRAME  = {0: 226, 1: 185}</div>
+      <button class="copybtn" id="copyBtn">Copy snippet</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = /*__MOTION_DATA__*/;
+
+const bones = DATA.bones;
+let skill = 0;
+let frame = 0;
+let playing = false;
+let markers = {};
+for (const sk in DATA.clips) {
+  markers[sk] = { a: DATA.defaults[sk].strikeStart, b: DATA.defaults[sk].standStart };
+}
+
+const tabsEl = document.getElementById('tabs');
+for (const sk in DATA.clips) {
+  const c = DATA.clips[sk];
+  const btn = document.createElement('div');
+  btn.className = 'tab' + (Number(sk) === skill ? ' active' : '');
+  btn.textContent = c.name + ' (skill ' + sk + ')';
+  btn.dataset.sk = sk;
+  btn.onclick = () => { skill = Number(sk); frame = 0; refreshTabs(); render(); };
+  tabsEl.appendChild(btn);
+}
+function refreshTabs(){
+  [...tabsEl.children].forEach(el => el.classList.toggle('active', Number(el.dataset.sk) === skill));
+}
+
+const slider = document.getElementById('slider');
+const frameReadout = document.getElementById('frameReadout');
+const playBtn = document.getElementById('playBtn');
+
+function clip(){ return DATA.clips[skill]; }
+
+function project(p, axes){
+  // axes like ['x','z'] -> pick 2 of [x,y,z], flip vertical for screen coords
+  const map = {x:0, y:1, z:2};
+  return [p[map[axes[0]]], p[map[axes[1]]]];
+}
+
+function drawSkeleton(canvasId, axes, flipY){
+  const cv = document.getElementById(canvasId);
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  ctx.clearRect(0,0,W,H);
+  const c = clip();
+  const pts = c.points[frame];
+  const scale = 100; // px per meter
+  const cx = W/2, cy = flipY ? H*0.85 : H/2;
+
+  const style = getComputedStyle(document.documentElement);
+  const skColor = style.getPropertyValue('--skeleton').trim();
+
+  ctx.strokeStyle = skColor;
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  for (const [pi, ci] of bones) {
+    const [ax, ay] = project(pts[pi], axes);
+    const [bx, by] = project(pts[ci], axes);
+    ctx.beginPath();
+    ctx.moveTo(cx + ax*scale, cy - ay*scale);
+    ctx.lineTo(cx + bx*scale, cy - by*scale);
+    ctx.stroke();
+  }
+  ctx.fillStyle = skColor;
+  for (const p of pts) {
+    const [px, py] = project(p, axes);
+    ctx.beginPath();
+    ctx.arc(cx + px*scale, cy - py*scale, 2.6, 0, 7);
+    ctx.fill();
+  }
+  // ground line for views with z as vertical
+  if (axes[1] === 'z') {
+    ctx.strokeStyle = style.getPropertyValue('--border').trim();
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, cy); ctx.lineTo(W, cy);
+    ctx.stroke();
+  }
+}
+
+function drawChart(){
+  const cv = document.getElementById('chart');
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  ctx.clearRect(0,0,W,H);
+  const c = clip();
+  const T = c.T;
+  const style = getComputedStyle(document.documentElement);
+
+  const pad = 4;
+  const plotH = H - pad*2;
+  const x = i => (i/(T-1)) * W;
+
+  function drawCurve(arr, maxVal, color){
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    for (let i=0;i<T;i++){
+      const y = H - pad - (arr[i]/maxVal)*plotH;
+      if (i===0) ctx.moveTo(x(i), y); else ctx.lineTo(x(i), y);
+    }
+    ctx.stroke();
+  }
+  drawCurve(c.rootSpeed, c.rootSpeedMax*1.1, style.getPropertyValue('--root-curve').trim());
+  drawCurve(c.legSpeed, c.legSpeedMax*1.1, style.getPropertyValue('--leg-curve').trim());
+
+  function vline(idx, color, dash){
+    ctx.strokeStyle = color;
+    ctx.lineWidth = dash ? 1.4 : 2;
+    ctx.setLineDash(dash ? [4,3] : []);
+    ctx.beginPath();
+    ctx.moveTo(x(idx), 0); ctx.lineTo(x(idx), H);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  const m = markers[skill];
+  vline(m.a, style.getPropertyValue('--marker-a').trim(), true);
+  vline(m.b, style.getPropertyValue('--marker-b').trim(), true);
+  vline(frame, style.getPropertyValue('--playhead').trim(), false);
+}
+
+function estPhase(){
+  const m = markers[skill];
+  if (frame < m.a) return 'approach';
+  if (frame < m.b) return 'strike';
+  return 'standing';
+}
+
+function updateSnippet(){
+  const a0 = markers[0].a, a1 = markers[1].a;
+  const b0 = markers[0].b, b1 = markers[1].b;
+  document.getElementById('snippet').textContent =
+    'STRIKE_START_CLIP_FRAME = {0: ' + a0 + ', 1: ' + a1 + '}\n' +
+    'STAND_START_CLIP_FRAME  = {0: ' + b0 + ', 1: ' + b1 + '}';
+}
+
+function render(){
+  const c = clip();
+  slider.max = c.T - 1;
+  slider.value = frame;
+  frameReadout.textContent = frame + ' / ' + (c.T - 1);
+  document.getElementById('rClipFrame').textContent = frame;
+  document.getElementById('rTime').textContent = (frame / c.fps).toFixed(2) + 's';
+  document.getElementById('rRoot').textContent = c.rootSpeed[frame].toFixed(2) + ' m/s';
+  document.getElementById('rLeg').textContent = c.legSpeed[frame].toFixed(2) + ' rad/s';
+  document.getElementById('rPhase').textContent = estPhase();
+  document.getElementById('valA').textContent = markers[skill].a;
+  document.getElementById('valB').textContent = markers[skill].b;
+
+  drawSkeleton('cTop', ['x','y'], false);
+  drawSkeleton('cFront', ['x','z'], true);
+  drawSkeleton('cSide', ['y','z'], true);
+  drawChart();
+  updateSnippet();
+}
+
+slider.addEventListener('input', () => { frame = Number(slider.value); render(); });
+
+const chartCanvas = document.getElementById('chart');
+let dragging = false;
+function chartToFrame(evt){
+  const rect = chartCanvas.getBoundingClientRect();
+  const x = (evt.touches ? evt.touches[0].clientX : evt.clientX) - rect.left;
+  const frac = Math.max(0, Math.min(1, x / rect.width));
+  return Math.round(frac * (clip().T - 1));
+}
+chartCanvas.addEventListener('mousedown', e => { dragging = true; frame = chartToFrame(e); render(); });
+window.addEventListener('mousemove', e => { if (dragging) { frame = chartToFrame(e); render(); } });
+window.addEventListener('mouseup', () => dragging = false);
+chartCanvas.addEventListener('touchstart', e => { dragging = true; frame = chartToFrame(e); render(); });
+chartCanvas.addEventListener('touchmove', e => { if (dragging) { frame = chartToFrame(e); render(); e.preventDefault(); } }, {passive:false});
+window.addEventListener('touchend', () => dragging = false);
+
+document.getElementById('setA').onclick = () => { markers[skill].a = frame; render(); };
+document.getElementById('setB').onclick = () => { markers[skill].b = frame; render(); };
+
+document.getElementById('copyBtn').onclick = () => {
+  navigator.clipboard.writeText(document.getElementById('snippet').textContent);
+  const btn = document.getElementById('copyBtn');
+  const orig = btn.textContent; btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = orig, 1000);
+};
+
+let playTimer = null;
+playBtn.onclick = () => {
+  playing = !playing;
+  playBtn.innerHTML = playing ? '&#9724; Pause' : '&#9654; Play';
+  if (playing) {
+    playTimer = setInterval(() => {
+      frame = (frame + 1) % clip().T;
+      render();
+    }, 1000/30);
+  } else {
+    clearInterval(playTimer);
+  }
+};
+
+window.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') { frame = Math.min(clip().T-1, frame+1); render(); }
+  if (e.key === 'ArrowLeft') { frame = Math.max(0, frame-1); render(); }
+});
+
+render();
+</script>

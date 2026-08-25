@@ -1,0 +1,146 @@
+# Ball configuration for the kicking task.
+# Edit these values and re-run training — no code changes needed.
+#
+# x, y are the ball's NOMINAL spawn position, relative to each environment's own origin
+# (x = forward from the robot, y = lateral). z is not configurable here — it's always
+# set to `radius`, so the ball rests on the ground regardless of size.
+
+radius: 0.11  # meters
+mass: 0.43    # kg
+
+# 2026-08-22: DUPLICATE-KEY HAZARD FOUND (fixed here) -- all four KICK blocks below used to be
+# uncommented simultaneously. In a flat YAML mapping, only the LAST occurrence of a repeated key
+# survives yaml.safe_load; KICK 1/2/3's x/y were silently DEAD the whole time regardless of which
+# one a reader's eye landed on -- KICK 4 (x=0.6, y=0.21) was the only one ever actually active.
+# Only ONE of these four blocks may be uncommented at a time; the others must stay commented out.
+#
+# KICK 1 (calibrated bearing +41.35 deg at this spawn, see scripts/calibrate_nominal_bearing.py --
+# matches configs/skill2.yaml's own real-measured value; target_x/target_y below assume KICK 4 is
+# active, re-run calibration if you switch to this one)
+# x: 1.3
+# y: -0.06
+
+# KICK 2 (calibrated bearing -16.91 deg at this spawn -- matches configs/skill1.yaml/skill_012.yaml)
+# x: 1.39
+# y: 0.02
+
+# KICK 3 (NEVER calibrated -- no Stage B checkpoint has been trained at this exact spawn; run
+# scripts/calibrate_nominal_bearing.py against a real rollout before enabling kick_aim here)
+# x: 2.1
+# y: -0.13
+
+# KICK 4 (ACTIVE -- the only spawn actually in effect before this comment-out fix, matching
+# configs/skill_014.yaml's own real-measured +75.39 deg bearing)
+x: 0.6
+y: 0.21
+
+# --- Shooting-task settings (RoboNaldo-Stage-2-style rewards) ---------------------------------
+
+# Per-episode uniform randomization of the spawn position: the actual spawn is drawn from
+# [x - randomize_x, x + randomize_x] × [y - randomize_y, y + randomize_y] at every reset (and at
+# every mid-episode clip replay). 0.0 disables randomization on that axis (previous behavior).
+#
+# A run straight at full Stage-C values (0.75/0.75, target 1.0/2.0, from the Stage-B checkpoint)
+# was tried and failed: zero goal_success_burst in 198k steps, ball barely ever moved, and
+# Env/motion/error_body_pos stayed flat at the Stage-B *tracking-only* level the whole run --
+# the policy never adapted at all, it just kept tracking the clip and ignoring the ball.
+#
+# Root cause (confirmed by reading the actual reward magnitudes, not guessed): this is NOT a
+# hard termination wall -- bad_tracking uses BadTrackingZOnly, whose position checks are Z-AXIS
+# ONLY (see managers/termination/terms/wbt.py), so reaching sideways for a displaced ball doesn't
+# trip it, and episode length stayed healthy (~980/1000) the whole failed run, confirming episodes
+# weren't dying on reach attempts. The real blocker is reward MAGNITUDE: the dense motion-tracking
+# terms (raw ~14/episode for body-position tracking alone, ~13-17/episode each for lin/ang vel
+# tracking) penalize ANY deviation from the reference clip continuously, while the shooting terms
+# combined are only ~3.4/episode raw at shooting_reward_scale=0.8. Reaching 0.75m off-clip costs
+# real, certain tracking reward against a small, uncertain shooting payoff -- SAC correctly
+# learned that's a bad trade at this envelope size. (The old CAUTION here about the policy not
+# observing the ball is stale -- kick_ball_pos_b/kick_target_pos_b have been real observations
+# since v7; that was never the actual constraint.)
+#
+# Fix: ramp the envelope up gradually (mirrors the paper's own curriculum), resuming from the
+# previous stage's checkpoint via --training.checkpoint each time -- small deviations cost
+# proportionally little tracking reward, so early stages give the shooting gradient room to act
+# before the tracking cost gets large enough to dominate it. Watch (before ramping further):
+#   RawEpisode/raw_rew_kick_ball_velocity   -- rising = contact is happening
+#   Episode/rew_kick_goal_success_burst     -- any nonzero value = a real learning signal exists
+#   Env/motion/error_body_pos               -- should rise slightly above the pure-tracking
+#                                               baseline (~0.10) -- deviation is now intentional
+# --- STAGE B ---
+# randomize_x: 0.0  # ± meters -- 0.0 = Stage B (pure kick tracking, no shooting adaptation)
+# randomize_y: 0.0  # ± meters
+# --- STAGE C, ramp step 1 (start here, resume from the Stage B checkpoint) ---
+randomize_x: 0.10
+randomize_y: 0.10
+# --- STAGE C, ramp step 2 (resume once step 1 shows nonzero goal_success_burst) ---
+# randomize_x: 0.25
+# randomize_y: 0.25
+# --- STAGE C, ramp step 3 ---
+# randomize_x: 0.5
+# randomize_y: 0.5
+# --- STAGE C, ramp step 4 (full paper-matching envelope -- this is what the failed run used) ---
+# randomize_x: 0.75
+# randomize_y: 0.75
+
+# Which foot the kick relies on — the shooting rewards (foot-ball proximity, contact
+# orientation) are computed for this foot only. Must be "left" or "right". The current kick
+# motion clip swings the right foot.
+kick_foot: right
+
+# 2026-08-22: CALIBRATED against a real MuJoCo rollout of KICK 4's own trained Stage B checkpoint
+# (skill_014 Stage B checkpoint, model_0180000.onnx) -- see scripts/calibrate_nominal_bearing.py.
+# Real measured departure bearing: +75.39 deg (matches configs/skill_014.yaml). target_x/target_y
+# below encode that bearing at D=5.0m (kick_aim_nominal_distance_m's default) -- NOT the original
+# authored 7.84/-0.46, which was never measured against real contact physics (and, per the
+# duplicate-key fix above, was authored against a DIFFERENT spawn than the one actually active).
+# If you switch which KICK block is uncommented above, this target is WRONG until recalibrated.
+target_x: 1.861  # meters
+target_y: 5.048  # meters
+
+kick_aim_enabled: true
+# 2026-08-22: randomize_target_x/y REMOVED (azimuth-aim refactor) -- independent target
+# randomization has no replacement; kick_aim_enabled=True derives all aim variation from
+# kick_aim_theta instead (kick_aim_theta_max_deg, MultiSkillConfig/BallConfig). The old ramp-step
+# progression that used to live here (steps 2/3/4, up to 1.0/2.0) is obsolete -- there is no
+# equivalent knob to ramp anymore; kick_aim_theta_max_deg is the analogous ramp axis now.
+
+# A shot "succeeds" (fires the one-shot goal burst reward) when the ball passes within this
+# distance of the target. RoboNaldo Stage 2 uses 0.5 m.
+success_radius: 0.5  # meters
+
+# Global scale on all six shooting reward terms — RoboNaldo's stage-wise task weight w_g.
+# Staged bootstrap protocol (train from scratch, resume between stages via
+# --training.checkpoint; see config_values/unified/g1/experiment.py):
+#   Stage A (locomotion):      skill_mix kick_probability 0.0 — shooting terms inert regardless.
+#   Stage B (kick tracking):   kick_probability up (e.g. 0.7), shooting_reward_scale 0.0,
+#                              randomize_x/y 0.0 — pure motion tracking learns a stable kick
+#                              (RoboNaldo Stage 1, w_g = 0).
+#   Stage C (shooting):        shooting_reward_scale 0.8, randomize_x/y on, kick_aim_theta_max_deg
+#                              on — the tracked kick adapts for contact and aim (RoboNaldo
+#                              Stage 2, w_g = 0.8).
+#
+# THIS FILE IS CURRENTLY SET FOR STAGE C, RAMP STEP 1 (randomize_x/y=0.10,
+# shooting_reward_scale=0.8) -- resume from the Stage B checkpoint.
+# ALWAYS re-run `python src/holosoma/holosoma/print_active_kick_rewards.py` after editing this
+# file (before spending GPU time) to confirm which terms/values are actually active, rather than
+# trusting this comment or the file's own values by eye -- see the script's own docstring for why:
+# a prior Stage B training run was accidentally launched with this file still at Stage C's values
+# (shooting_reward_scale 0.8, full randomization), silently training the kick task against
+# motion-tracking AND full shooting-adaptation pressure simultaneously from a locomotion-only
+# checkpoint -- degraded post-kick stabilization was the visible symptom, since task_mode stays
+# "kick" (and so did the shooting terms, in particular kick_ball_proximity) for the ENTIRE kick
+# episode, including the ~3s recovery-to-neutral-stance + hold tail that's supposed to be pure
+# stabilization. That failure mode is exactly why this trailing summary must be kept honest and
+# double-checked with the script rather than assumed from memory or a stale comment (this block
+# itself was previously stale, claiming Stage B while shooting_reward_scale was already at 0.8).
+# --- STAGE B ---
+# shooting_reward_scale: 0.0
+# --- STAGE C (all ramp steps use the same scale; only the two randomize_* blocks above change) ---
+#
+# RAISED 0.8 -> 3.0 on 2026-07-19, mirroring configs/ball_stageC.yaml (the file Stage-C training
+# actually loads via HOLOSOMA_BALL_CONFIG) -- kept in sync so this file doesn't silently disagree.
+# Measured per kick episode on kickalive-kick1@239000: motion tracking +43.63 vs shooting +4.62, i.e.
+# shooting was only 7.4% of the reward budget, which is why goal_success_burst sat at 0.033 after
+# 240k steps. Ramping the randomize_* envelope controls the COST of deviating; it cannot fix how
+# little shooting PAYS. See ball_stageC.yaml for the full note.
+shooting_reward_scale: 0.8

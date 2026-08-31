@@ -132,8 +132,28 @@ class TerrainLocomotion(TerrainTermBase):
         # Which envs sit on flat terrain — static for the run (terrain-to-env assignment is never
         # resampled), used to gate tasks that need flat ground (e.g. a freely-simulated ball) to
         # only the envs that actually have it.
-        is_flat = self.terrain.get_terrain_type_names(levels, types) == "flat"
+        type_names = self.terrain.get_terrain_type_names(levels, types)
+        is_flat = type_names == "flat"
         self._env_terrain_is_flat = torch.from_numpy(is_flat).to(self.device).bool()
+
+        # Kick eligibility is a SEPARATE, configurable question from literal flatness (2026-08-27).
+        # env_terrain_is_flat above keeps meaning exactly "flat" -- it has its own unrelated
+        # consumer (UnifiedManager's kick-mode video-recorder env selection), which must not
+        # silently change meaning when the kick gate is widened.
+        eligible_names = tuple(getattr(self._cfg, "kick_eligible_terrain_types", ("flat",)))
+        is_eligible = np.isin(type_names, np.array(eligible_names, dtype=object))
+        self._env_terrain_kick_eligible = torch.from_numpy(is_eligible).to(self.device).bool()
+
+    @property
+    def env_terrain_kick_eligible(self) -> torch.Tensor:
+        """Bool tensor [num_envs]: whether each env's (static, never-resampled) terrain tile is one
+        a kick-mode env may be assigned to, per ``TerrainTermCfg.kick_eligible_terrain_types``.
+
+        Defaults to exactly ``env_terrain_is_flat`` (the config default is ``("flat",)``). Widening
+        it -- e.g. to ``("flat", "light_rough")`` -- is what lets kick-mode envs train on gentle
+        terrain variation; see that config field's docstring for why this is deliberately not the
+        same switch as generating the tier."""
+        return self._env_terrain_kick_eligible
 
     @property
     def env_terrain_is_flat(self) -> torch.Tensor:

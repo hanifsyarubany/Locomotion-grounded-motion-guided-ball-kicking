@@ -39,7 +39,7 @@
 }
 
 \begin{document}
-\title{Skills on Top of Locomotion: A Unified Humanoid Policy for Free Locomotion Control and $N$ Motion-Guided Kicking Skills}
+\title{Locomotion-Grounded Soccer Skills: A Unified Humanoid Policy for Free Navigation and Multi Motion-Guided Kicking Skills}
 \author{[Author Name]}
 \date{August 2026}
 \maketitle
@@ -88,29 +88,30 @@ The options framework formalises temporally extended actions through initiation 
   \item \textbf{Handcrafted skill triggering.} Stage transitions and kick timing are governed by a rule-based planner, which \citet{robonaldo} identify as limiting autonomous decision making.
 \end{itemize}
 
-Table~\ref{tab:capabilities} summarises these gaps across the humanoid soccer literature. Excluding Haarnoja et al.'s miniature precedent, no full-size system demonstrates omnidirectional locomotion, accurate off-axis strike targeting, or a genuine two-way handoff between locomotion and a kicking skill -- RoboNaldo's own reported degradation at extreme lateral targets and its scripted, non-learned return from a kick are representative of the field, not an outlier. These are the axes our architecture is designed to occupy.
+Table~\ref{tab:capabilities} summarises these gaps across the humanoid soccer literature. Two columns are empty for every prior system: no reported evaluation of locomotion as a general capability, and no strike repertoire extending beyond a single dominant-foot contact type. These are the two axes our architecture is designed to occupy.
+
 
 \begin{table}[H]
 \centering
 \small
-\setlength{\tabcolsep}{6pt}
-\begin{tabular}{llcccccc}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{llccccccc}
 \toprule
-& & \multicolumn{2}{c}{\textbf{Locomotion substrate}} & \multicolumn{4}{c}{\textbf{Skill repertoire \& transitions}} \\
-\cmidrule(lr){3-4}\cmidrule(lr){5-8}
-Method & Platform & Free & Omni & Multi & Lateral & Loco$\to$ & Kick$\to$ \\
- & & cmd. & dir. & skill & tgt. & Kick & Loco \\
+& & \multicolumn{2}{c}{\textbf{Locomotion substrate}} & \multicolumn{5}{c}{\textbf{Skill repertoire \& transitions}} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-9}
+Method & Platform & Free & Omni & Multi & Motion & Lateral & Loco$\to$ & Kick$\to$ \\
+ & & cmd. & dir. & skill & guided & tgt. & Kick & Loco \\
 \midrule
-Haarnoja et al.~\citep{haarnoja2024soccer} & Miniature & \yes & \partialmark & \yes & \partialmark & \yes & \yes \\
-STOFT~\citep{stoft}            & Bipedal  & \no & \no & \no & \no & \no & \no \\
-Reactive~\citep{reactive}      & Humanoid & \partialmark & \no & \partialmark & \no & \no & \no \\
-Striker~\citep{striker}        & Humanoid & \partialmark & \no & \no & \partialmark & \no & \no \\
-Goalkeeper~\citep{goalkeeper}  & Humanoid & \no & \no & \no & \no & \no & \no \\
-HumanX~\citep{humanx}          & Humanoid & \no & \no & \yes & \no & \no & \no \\
-PAiD~\citep{paid}              & Humanoid & \partialmark & \no & \no & \partialmark & \no & \no \\
-RoboNaldo~\citep{robonaldo}    & Humanoid & \partialmark & \no & \no & \partialmark & \no & \partialmark \\
+Haarnoja et al.~\citep{haarnoja2024soccer} & Miniature & \no$^{\dagger}$ & \partialmark & \no$^{\ddagger}$ & \no & \partialmark & \yes & \yes \\
+STOFT~\citep{stoft}            & Bipedal  & \no & \no & \no & \no & \no & \no & \no \\
+Reactive~\citep{reactive}      & Humanoid & \partialmark & \no & \partialmark & \yes & \no & \no & \no \\
+Striker~\citep{striker}        & Humanoid & \partialmark & \no & \no & \no & \partialmark & \no & \no \\
+Goalkeeper~\citep{goalkeeper}  & Humanoid & \no & \no & \no & \yes & \no & \no & \no \\
+HumanX~\citep{humanx}          & Humanoid & \no & \no & \yes & \yes & \no & \no & \no \\
+PAiD~\citep{paid}              & Humanoid & \partialmark & \no & \no & \yes & \partialmark & \no & \no \\
+RoboNaldo~\citep{robonaldo}    & Humanoid & \partialmark & \no & \no & \yes & \partialmark & \no & \partialmark \\
 \midrule
-\textbf{Ours (proposed)}       & Humanoid & \yes & \yes & \yes & \yes & \yes & \yes \\
+\textbf{Ours (proposed)}       & Humanoid & \yes & \yes & \yes & \yes & \yes & \yes & \yes \\
 \bottomrule
 \end{tabular}
 \captionof{table}{\textbf{Capability comparison against prior humanoid soccer systems.}
@@ -118,10 +119,11 @@ RoboNaldo~\citep{robonaldo}    & Humanoid & \partialmark & \no & \no & \partialm
 \emph{Free cmd.}: policy accepts arbitrary externally issued velocity commands rather than commands emitted solely by a ball-approach planner.
 \emph{Omni dir.}: sustained lateral, backward and in-place rotation demonstrated.
 \emph{Multi skill}: more than one distinct strike/contact type.
+\emph{Motion guided}: the skill's reward is shaped by tracking or matching human reference motion (frame-exact clip tracking or adversarial motion-prior matching), rather than emerging purely from a task/outcome reward or a non-learned trajectory.
 \emph{Lateral tgt.}: demonstrated strike accuracy to off-axis, non-forward-cone targets, not just a narrow forward target.
 \emph{Loco$\to$Kick}: entry into a kicking skill is a handoff from a trained locomotion controller, rather than a kick-tracking reward that stays active throughout approach with no separate locomotion-mode substrate to hand off from.
 \emph{Kick$\to$Loco}: post-strike control returns to a trained locomotion controller rather than a scripted stabilisation reference.
-Marks reflect capabilities \emph{as reported in each paper}; an unreported capability is scored \no\ or \partialmark\ rather than assumed absent. The \partialmark\ in RoboNaldo's \emph{Free cmd.}\ column reflects a locomotion-command interface whose commands originate from a ball-approach heuristic, with tracking rewards active throughout; its \partialmark\ under \emph{Lateral tgt.} reflects reported degradation at extreme lateral and high targets rather than uniform coverage; its \no\ under \emph{Loco$\to$Kick} reflects that the same always-active tracking reward leaves no separate locomotion-mode substrate to hand off from; and its \partialmark\ under \emph{Kick$\to$Loco} reflects a scripted per-clip stabilisation reference rather than a return to a trained locomotion controller.}
+Marks reflect capabilities \emph{as reported in each paper}; an unreported capability is scored \no\ or \partialmark\ rather than assumed absent. The \partialmark\ in RoboNaldo's \emph{Free cmd.}\ column reflects a locomotion-command interface whose commands originate from a ball-approach heuristic, with tracking rewards active throughout; its \partialmark\ under \emph{Lateral tgt.} reflects reported degradation at extreme lateral and high targets rather than uniform coverage; its \no\ under \emph{Loco$\to$Kick} reflects that the same always-active tracking reward leaves no separate locomotion-mode substrate to hand off from; and its \partialmark\ under \emph{Kick$\to$Loco} reflects a scripted per-clip stabilisation reference rather than a return to a trained locomotion controller. $^{\dagger}$Haarnoja et al.'s policy receives full egocentric game state (ball/opponent/goal position and velocity) rather than an externally issued velocity command, and has no command interface for a human or high-level planner to direct locomotion independent of the game -- it is autonomous game-state-conditioned behaviour, not free command tracking as defined above. $^{\ddagger}$Their agent exhibits a behaviour repertoire (walk, turn, kick, get up) but a single scoring strike learned against a stationary opponent, with no second contact type reported; the \emph{Multi skill} column tracks strike/contact-type diversity specifically, not behavioural diversity.}
 \label{tab:capabilities}
 \end{table}
 
@@ -175,8 +177,6 @@ Our target is to match shooting quality within the single-skill regime while dem
 \section{Target Conference/Journal}
 \begin{itemize}
   \item ICRA 2027 (submission approx.\ September 2026) --- primary target; note \citet{striker} appeared at ICRA 2026, so positioning against it is required.
-  \item IROS 2027 (submission approx.\ March 2027) --- fallback with additional hardware time.
-  \item CoRL 2027 --- alternative if the emphasis shifts toward the skill-composition formalism.
 \end{itemize}
 \emph{Deadlines above are approximate and should be verified against official calls.}
 
@@ -195,6 +195,9 @@ Our target is to match shooting quality within the single-skill regime while dem
   \color{black}%
   \captionof{table}{Work plan. The critical path is hardware validation; the multi-skill and handoff experiments are the two that carry the contribution.}
 \end{minipage}
+
+
+
 
 \bibliographystyle{plainnat}
 \bibliography{reference}

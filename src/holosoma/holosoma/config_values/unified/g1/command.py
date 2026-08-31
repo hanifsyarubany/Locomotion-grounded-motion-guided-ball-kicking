@@ -74,6 +74,12 @@ if _multi_skill_cfg is not None:
     # partition), which only exists in N-skill mode. Legacy single-skill configs always see the
     # off-defaults below, same as never setting these fields at all -- a deliberate scope choice,
     # not an oversight.
+    # Kick ABORT (2026-08-28): kick->locomotion flip at a randomized MID-CLIP tick, generalising
+    # kick_recovery_locomotion_flip_enabled's single always-identical arrival pose into a
+    # distribution over the clip. Same N-skill-only scoping as the fields below.
+    _kick_abort_prob = _multi_skill_cfg.kick_abort_prob
+    _kick_abort_delay_min_steps = _multi_skill_cfg.kick_abort_delay_min_steps
+    _kick_abort_delay_max_steps = _multi_skill_cfg.kick_abort_delay_max_steps
     _mid_episode_kick_entry_prob = _multi_skill_cfg.mid_episode_kick_entry_prob
     _mid_episode_kick_entry_min_steps = _multi_skill_cfg.mid_episode_kick_entry_min_steps
     _mid_episode_kick_entry_max_residual = _multi_skill_cfg.mid_episode_kick_entry_max_residual
@@ -107,6 +113,9 @@ else:
     _motion_head_velocity_smoothing_frames = _legacy_ball_cfg.motion_head_velocity_smoothing_frames
     _kick_recovery_locomotion_flip_enabled = _legacy_ball_cfg.kick_recovery_locomotion_flip_enabled
     # No legacy counterpart -- see the MultiSkillConfig branch's own comment above.
+    _kick_abort_prob = 0.0
+    _kick_abort_delay_min_steps = 10
+    _kick_abort_delay_max_steps = 60
     _mid_episode_kick_entry_prob = 0.0
     _mid_episode_kick_entry_min_steps = 100
     _mid_episode_kick_entry_max_residual = 0.0
@@ -324,6 +333,11 @@ g1_29dof_unified_command = CommandManagerCfg(
         # command_cfg.mid_episode_kick_entry_prob, in UnifiedManager._resample_task_mode), same
         # no-op guarantee at the 0.0 default. See MultiSkillConfig.mid_episode_kick_entry_prob's
         # own docstring for the full mechanism.
+        # Kick abort -- read by UnifiedManager._resample_task_mode (draw) and
+        # _maybe_flip_kick_recovery_to_locomotion (fire). 0.0 default = exact no-op.
+        "kick_abort_prob": _kick_abort_prob,
+        "kick_abort_delay_min_steps": _kick_abort_delay_min_steps,
+        "kick_abort_delay_max_steps": _kick_abort_delay_max_steps,
         "mid_episode_kick_entry_prob": _mid_episode_kick_entry_prob,
         "mid_episode_kick_entry_min_steps": _mid_episode_kick_entry_min_steps,
         "mid_episode_kick_entry_max_residual": _mid_episode_kick_entry_max_residual,

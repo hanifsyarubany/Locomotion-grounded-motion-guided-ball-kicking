@@ -1,616 +1,169 @@
-# ==============================================================================
-# DRAFT / FOR DISCUSSION -- not yet consumed by any code path.
-#
-# Stage C1 = RoboNaldo's Stage 2a (task_params_1.yaml): motion_weight=1.0,
-# goal_weight=0.8, reg_weight=0.2. Ball task turns on; regularization
-# simultaneously quadruples (0.05->0.2) in lockstep with the destabilizing task
-# reward -- that pairing is RoboNaldo's own curriculum design, not something
-# this file invents.
-#
-# All values cross-checked directly against the cloned RoboNaldo source
-# (tracking_env_cfg.py's base RewTerm formulas + task_params_1.yaml's
-# reward_overrides), not just ROBONALDO_PORT_SCOPE.md's tables -- one small
-# discrepancy was found and corrected here vs. the currently-staged generic
-# value: unstable_penalty is -0.04 (RoboNaldo-verified), not the -0.05
-# currently staged in kicking_motion_reward_tuning.yaml.
-# ==============================================================================
-
 # ------------------------------------------------------------------------------
-# Ball physics -- not RoboNaldo-scaled, physical constant
+# BALL MAIN SETTINGS
+# Radius, mass, and position randomization
 # ------------------------------------------------------------------------------
 ball:
   radius: 0.11
   mass: 0.43
+randomize_x: 0.1
+randomize_y: 0.1
 
 # ------------------------------------------------------------------------------
-# Own-design knobs with no RoboNaldo counterpart -- left UNCHANGED across all 3
-# stage files. Values match today's live config.
+# BALL OBSERVATION SETTINGS
+# Sensor Noise configuration and OOD Settings
 # ------------------------------------------------------------------------------
-shooting_reward_scale_ramp_iters: 5000
-shooting_reward_scale_hold_iters: 0
 ball_obs_noise: 0.05
 ball_obs_noise_range_coefficient: 0.03
 ball_obs_delay_steps_min: 0
-ball_obs_delay_steps_max: 3
+ball_obs_delay_steps_max: 6
+ball_obs_hold_steps_min: 1
+ball_obs_hold_steps_max: 4
 ood_spawn_probability: 0.05
 ood_region_multiplier: 3.0
 ball_static_obs_probability: 0.05
-ball_obs_stale_probability: 0.01  # per-CONTROL-TICK chance of reusing the previous frame (dropped-packet model); RoboNaldo's own value once staged in (their Stage 3); enabled uniformly here rather than staged, 2026-08-23 user decision -- see ObsTermCfg.stale_probability for the mechanism
+ball_obs_stale_probability: 0.01 
+observation_bias: 0.05
+
+# ------------------------------------------------------------------------------
+# BAD TRACKING CONFIG & HANDOFF
+# Bad Tracking, Kick Recovery, and Swing Tracking
+# ------------------------------------------------------------------------------
 bad_tracking_swing_only: false
 kick_recovery_termination_handoff: true
-# 2026-08-06, drift sibling to kick_recovery_termination_handoff above -- only takes effect when
-# that flag is True (both install together). Euclidean XY radius (meters) the robot may drift from
-# its own base position at the instant it enters recovery/hold before terminating. 0.15 is the
-# user-specified starting point, cross-checked against ~4-6cm typical drift for envs that survived
-# cleanly in a live diagnostic -- see kick_recovery_drift_sustained's own docstring
-# (managers/termination/terms/wbt.py). Currently inert (handoff itself is off above).
 kick_recovery_drift_deadzone: 0.4
 bad_tracking_swing_threshold_multiplier: 1.0
 swing_tracking_sigma_multiplier: 1.0
-# 2026-08-09: 1.0 -> 50.0. At 1.0 this term was measurably INERT -- live telemetry over the
-# 20260808_050313 run put its weighted contribution at -0.0042, ~0.03% of the kick budget, against
-# a per-kick-env budget of roughly tracking ~7.1 / alive ~1.9 / shooting ~3.0 / whole safety block
-# ~0.08. 50.0 is this term's OWN reasoned value (managers/reward/terms/balance_potential.py's
-# module docstring + memory capture_point_potential_shaping_implemented), derived from measured
-# reward magnitudes and never yet validated by a training run -- this is that A/B.
-#
-# Why this term and not another scalar: a phase-resolved probe of ckpt 303000 (1024 envs, flat-
-# terrain-eligible envs only, matching the env_terrain_is_flat rule the task_mode partition itself
-# uses -- validated against training's own kick_topple_frac, 0.0267 vs 0.028-0.031) localized the
-# residual ~3% topple to a BALANCE failure with no reward defending it: 91.8% of falls are in
-# cycle 0, median episode length at topple 52 steps, 0% after ball contact, and a locomotion
-# control arm under identical terrain/push/DR toppled 0/1847 episodes. Potential-based shaping is
-# also the only class of addition that PROVABLY cannot trade kick quality for stability
-# (Ng/Harada/Russell) -- every prior scalar retune on this task backfired in both directions
-# (loosening bad_tracking tripled hazard; halving kick_alive raised topple 37-76%).
-#
-# Guard metrics for the A/B, in priority order: kick_ball_hit_rate MUST NOT drop (abort condition),
-# kick_min_base_height should rise (continuous, moves before the thresholded topple metric),
-# kick_topple_frac should fall. Sanity-check raw_rew_kick_balance_potential lands near -0.2
-# weighted rather than -0.004.
+
+# ------------------------------------------------------------------------------
+# CONTACT, FRAME, AND BALANCING CONFIG
+# Balance potential, frame randomization/sampling, Kick Contact
+# ------------------------------------------------------------------------------
 balance_potential_weight: 1.0
-# 2026-08-09: rescopes kick_foot_strike_pitch from an ABSOLUTE toe-down target to a target relative
-# to the reference clip's OWN pitch at each frame -- see shooting.py::foot_strike_pitch's
-# reference_relative docstring for the exact reward formula. Motivation: kick_ankle_pitch_correction
-# raises the clip's own ankle pitch toward toe-down during the strike but is joint-limit-bounded
-# (measured live: video_012's worst point only reaches -52.8deg despite a +10deg target, the ankle
-# already near its physical ceiling there). At those residual frames the absolute reward and
-# motion-tracking reward directly oppose each other for zero net benefit -- perfectly imitating the
-# reference already scores this term negatively. NOT yet validated by a training run; A/B this
-# against false (the prior absolute behavior) rather than assuming it helps.
 use_foot_strike_pitch_reference_relative: true
 kick_contact_force_penalty_floor: 3.0
 kick_contact_force_penalty_k: 4.0
 kick_contact_force_threshold_bodyweight_multiplier: 3.0
-start_at_timestep_zero_prob: 0.5   # NOT a literal port of RoboNaldo's start_time_sampling_fraction (0.05 in S2a) -- see note below
+start_at_timestep_zero_prob: 0.5   
 rsi_scope_to_authored_clip: true
 critical_frame_oversampling_prob: 0.0
 critical_frame_sampling_window: 10
 kick_target_entropy_ratio: 0.8
-kick_gamma: 0.99
+kick_gamma: 0.99  
 
+# ------------------------------------------------------------------------------
+# TERRAIN CONFIG
+# Kicking terrain rough settings
+# ------------------------------------------------------------------------------
+kick_terrain_light_rough_proportion: 0.0    
+kick_terrain_light_rough_max_height: 0.008  
+kick_eligible_terrain_types: ["flat"]       
+
+# ------------------------------------------------------------------------------
+# PUSH RANDOMIZATION CONFIG
+# Body push pertubation collision
+# ------------------------------------------------------------------------------
+body_push_enabled: true
+body_push_interval_min_s: 4.0   
+body_push_interval_max_s: 8.0
+body_push_force_min: 20.0      
+body_push_force_max: 80.0       
+body_push_duration_min_s: 0.05 
+body_push_duration_max_s: 0.20 
+body_push_vertical_fraction: 0.2  
+
+# ------------------------------------------------------------------------------
+# HANDOFF/PENALTY/POST-FLIP CONFIG
+# Kick recovery, motion-vel smoothing, penalty, post-flip settings
+# ------------------------------------------------------------------------------
 kick_recovery_locomotion_flip_enabled: true
 motion_head_velocity_smoothing_frames: 3
-
-# ------------------------------------------------------------------------------
-# 2026-08-12: three fixes for a mechanism specific to kick_recovery_locomotion_
-# flip_enabled=true above, each independently toggleable, each defaulting to the
-# PRE-2026-08-12 behavior when commented out/removed -- see the matched FLIP-vs-
-# NOFLIP checkpoint diagnostic this session (same clip, same [204,300) pre-flip
-# mechanism in both) that motivated all three:
-#   - Env/penalty_scale led Env/kick_alive_frac at lag+10, r=-0.753 (FIX 1)
-#   - contact alone was 600/643 (93.3%) of post-flip terminations (FIX 2)
-#   - termination-condition rates in the SHARED pre-boundary [204,300) window
-#     were 2.5x-6.6x higher for the FLIP-trained policy than NOFLIP's own,
-#     despite byte-identical mechanism there -- evidence the instant post-flip
-#     reward cliff destabilizes behavior even before the boundary (FIX 4)
-#
-# FIX 1: freeze the penalty_curriculum ramp entirely (ramp thresholds were
-# calibrated against average_episode_length, fed ONLY by the locomotion
-# partition -- post-flip kick envs are scaled by a signal they can't move).
-# Appropriate here because this stage always resumes an already-mature
-# checkpoint; the ramp-from-easy rationale doesn't apply.
 penalty_curriculum_enabled: false
-
-# FIX 2: 50-step (1.0s) grace on contact/low_height for envs within that many
-# ticks of their own flip -- mirrors kick_recovery_low_height_sustained/
-# kick_recovery_drift_sustained's own grace_steps at the OTHER kick-recovery
-# boundary (itself mirroring _kick_recovery_gate). contact has no
-# sustained-duration concept of its own; an incidental >1N touch the instant a
-# still-asymmetric post-kick pose lands in locomotion mode is otherwise an
-# instant kill.
 post_flip_termination_grace_steps: 50.0
-
-# 2026-08-24, THE ACTUAL BLOCKER FOR THIS SKILL -- raise the `contact` termination's force
-# threshold off the inherited locomotion baseline of 1.0 N. SKILL011 ONLY for now (skill012
-# has the same measured problem but is deliberately left at the default as a control; skill013
-# does NOT have it -- its probe fired `contact` zero times; skill014 untouched).
-#
-# WHY. This skill's alive_frac has been pinned at ~0.05 and DEAD FLAT for 70k steps, immune to
-# every reward change tried (sigma retune, v_ref/kick_ball_velocity, post_flip_obs_ramp -- the
-# last of which is documented as falsified further down this file). A termination-term probe on
-# this run's own checkpoint (model_0196000, 1363 kick-episode ends, 40s @ 512 envs) found why:
-#     contact           62.1%   <-- ordinary LOCOMOTION fall detector, 1.0 N threshold
-#     bad_tracking      23.6%
-#     kick_low_height   12.4%
-#     topple_frac       19.4%   <-- so >=69% of contact firings CANNOT be falls
-# That is the exact failure MultiSkillConfig.contact_termination_force_threshold's own docstring
-# documents from a 927-episode probe (2026-08-18): contact caused 78.9% of terminations with the
-# robot UPRIGHT 100% of the time at the firing tick (base height mean 0.779 m vs 0.76 target, 0%
-# below 0.3 m -- "not one of these was a fall"), forces median 25.8 N / p90 205 N, i.e. the
-# kicking leg's hip link striking the pelvis or stance leg during the swing, which the retargeted
-# clip makes largely unavoidable. Its verdict -- "the policy loses ~4 of every 5 kick episodes to
-# a self-collision while standing upright, and cannot accumulate the post-kick experience it
-# needs -- matching that run's flat topple curve across 120k steps" -- describes this run exactly.
-# The mechanism has existed since 2026-08-18 and had never been enabled in ANY config here.
-#
-# COROLLARY worth remembering: kick_topple_frac STRUCTURALLY UNDERCOUNTS failure on this skill --
-# `contact` ends the episode long before the base can descend past the 0.40 m that metric needs.
-# Do not read a low topple_frac here as "not falling" until this is off the 1.0 N default.
-#
-# WHY 50.0. Read straight off that probe's measured force distribution, not invented: 73.1% of
-# observed firings are below it (so it removes ~3/4 of the spurious kills) while genuinely hard
-# impacts still terminate (p90 205 N, max 456 N). Genuine falls remain covered by the two height
-# terms (kick_low_height / low_height), which this does not touch. Terminating on self-collision
-# force at all is the wrong tool -- a mechanical-wear concern belongs in a PENALTY, and the reward
-# block already has kick_penalize_self_contact_feet for that.
-#
-# NOT YET VALIDATED BY A TRAINING RUN -- same formal status the falsified post_flip_obs_ramp had.
-# The difference, and the reason it is worth the run: that one had a mechanism argument, this has
-# a 927-episode measurement of the precise failure mode, independently reproduced on this very
-# checkpoint. It also changes NO observation the policy sees, so unlike the obs-ramp there is no
-# warm-start OOD hazard -- which is what killed that attempt.
-# TO CHECK: rerun the termination probe and confirm `contact`'s share actually drops and
-# alive_frac finally moves off 0.05. If alive rises but kick_topple_frac rises to match, the
-# episodes were failing anyway and this only relocated the accounting -- say so and revert.
-contact_termination_force_threshold: 50.0
-
-# FIX 4: ramp motion-tracking reward to zero over 50 steps (1.0s) post-flip
-# instead of the instant cliff -- gives SAC's bootstrapped critic a smooth
-# target across the boundary instead of a discontinuity it has to propagate
-# backward through the whole pre-flip trajectory. Same 50-step scale as FIX 2,
-# not independently tuned.
 post_flip_reward_decay_steps: 50.0
-
-# 2026-08-24: TRIED AT 50.0, FALSIFIED BY A CLEAN SINGLE-VARIABLE RUN, REVERTED TO 0.0
-# (the field's own landed default). Kept as a record so it is not retried blind.
-#
-# THE HYPOTHESIS. post_flip_obs_ramp_steps was landed 2026-08-18 as a verified no-op and never
-# enabled anywhere. A termination-term probe on the batch-three checkpoint (model_0196000, 1363
-# kick-episode ends, 40s @ 512 envs) found the "contact" term -- the ORDINARY LOCOMOTION fall
-# detector, live only after task_mode flips KICK->LOCOMOTION at the post-kick boundary -- firing
-# on 62% of all endings, dwarfing bad_tracking (24%) and kick_low_height (12%). The observation
-# vector still snapped every kick_*->0/loco_*->live in ONE control tick there, while two siblings
-# (post_flip_termination_grace_steps, post_flip_reward_decay_steps, both above) already smoothed
-# the reward/termination side of the SAME discontinuity. Crossfading the observation too looked
-# like the obvious missing third piece.
-#
-# THE EXPERIMENT. skill011 batch-4 vs batch-3 differ by EXACTLY this one line (verified by
-# diffing the two resolved holosoma_config.yaml files -- a genuine single-variable A/B), same
-# Stage-B start checkpoint (20260823_113321 model_0165000), same everything else:
-#     window      alive_frac  0->50      topple_frac  0->50
-#     165-172k    0.077 -> 0.046         0.120 -> 0.155
-#     172-180k    0.097 -> 0.053         0.079 -> 0.114
-#     180-188k    0.069 -> 0.050         0.100 -> 0.148
-#     188-196k    0.077 -> 0.050         0.140 -> 0.161
-# Survival DOWN and toppling UP in all four windows, both directions consistent -- not a wash,
-# and not the direction predicted. (Consecutive samples are EMA-autocorrelated, so read this as
-# 4-for-4 consistency, not as the literal z-scores.) Corroborated on the other two skills:
-# skill012's alive fell 0.393->0.332 DESPITE its motion_global_feet_lin_vel revert delivering a
-# large tracking win in the same run, and skill013's alive gain is better explained by its own
-# bad_motion_body_pos_threshold 0.35->0.5 raise (its other change).
-#
-# ROOT CAUSE, and the general lesson. The ramp crossfades kick_*/loco_* observations over N
-# steps. That blended vector is one the policy NEVER SAW IN TRAINING -- neither a valid kick obs
-# nor a valid loco obs. Bolting it onto a checkpoint warm-started from Stage B (which trained on
-# the hard switch) introduces a NEW out-of-distribution input in order to fix an old one. This is
-# exactly the failure mode MultiSkillConfig.warm_start_obs_ramp_steps' own docstring describes --
-# a JOINT/conditional distribution shift, not a marginal one. The mechanism can only pay if the
-# run TRAINS WITH IT FROM THE START; it is not a mid-curriculum drop-in. If it is ever revisited,
-# that is the way to test it (enable from Stage A/B onward), not another warm-started resume.
-#
-# The premise was not wrong that post-flip is where the falls are -- the 62% measurement stands.
-# What was wrong is that smoothing the observation there is a free fix for an already-trained
-# policy.
-post_flip_obs_ramp_steps: 0.0
-# ------------------------------------------------------------------------------
-# 2026-08-10: two defensive mechanisms against a live-observed failure mode -- a
-# rare per-env physics-solver numerical explosion (a single env's dof_pos
-# spiking to 2.36e8 for one tick during the swing, SAC critic loss going NaN at
-# the same step, ~1100 steps of corrupted training before self-recovery). Both
-# opt-in, both NOT yet validated by a full training run.
-#
-# ------------------------------------------------------------------------------
-# l2sp_weight: L2-SP ("L2 toward Starting Point") continual-learning anchor for
-# the ACTOR. After every actor optimizer step, each actor parameter is pulled a
-# little way back toward the value it had in the checkpoint THIS RUN RESUMED
-# FROM:   p += actor_learning_rate * l2sp_weight * (anchor - p)
-#
-# What it is for: adding motion skill N+1 on top of a checkpoint that already
-# knows skills 1..N trains ONE shared Actor/Critic (there are no per-skill heads)
-# from a UNIFORMLY sampled shared replay buffer, so every gradient step moves the
-# weights that encode the older skills. Lowering an old skill's
-# motion_training_ratio does NOT protect it -- that knob only sets what fraction
-# of envs (hence of the buffer) the skill occupies, so lowering it means LESS
-# rehearsal and FASTER forgetting. Retention has to come from the parameter side
-# instead, which is what this does.
-#
-# Same decoupled mechanism as AdamW's own weight_decay (0.001), just aimed at
-# theta_anchor instead of at 0 -- which is why weight_decay is the natural
-# reference scale for choosing a value here.
-#
-# VALUES TO TRY:
-#   0.0    OFF (default). The right choice for JOINT training of all skills at
-#          once -- catastrophic forgetting is a problem created by SEQUENTIAL
-#          training, so training every skill together avoids it outright and
-#          none of this machinery is needed.
-#   0.001  == weight_decay. Almost certainly too weak to change anything;
-#          useful only as a sanity/A-B rung.
-#   0.01   10x weight_decay. START HERE if you do need it.
-#   0.1    100x weight_decay; roughly the ratio the L2-SP paper used relative to
-#          its own decay. Treat as the practical upper end -- if this still shows
-#          no retention benefit, anchor strength is not the problem and raising
-#          it further will not help.
-#
-# HOW TO TUNE: watch the per-skill EMAs already logged under Kick_skills_{i}
-# (success / topple). An older skill's EMA is the retention signal; the new
-# skill's learning curve is the plasticity cost. Take the LARGEST value that has
-# not yet visibly slowed the new skill. When enabled the run also logs
-# `l2sp_drift` (||theta - theta_anchor||) -- expect it to plateau once the pull
-# balances the gradients, rather than growing without bound.
-#
-# REQUIRES RESUMING from a checkpoint (that checkpoint IS the anchor). Setting
-# this > 0 on a from-scratch run raises at startup rather than silently
-# regularizing toward a randomly initialized actor. See FastSACConfig.l2sp_weight
-# for the full design. NOT yet validated by a training run -- opt-in A/B.
-# ------------------------------------------------------------------------------
-# l2sp_weight: 0.1
-
-# joint_pos_sanity_check_enabled: a new termination (joint_pos_sanity) that
-# resets any env whose dof_pos goes non-finite (NaN/Inf) or exceeds
-# joint_pos_sanity_threshold in absolute value -- task_mode-agnostic, checks
-# the robot's OWN state against an absolute physical bound, NOT a
-# reference-tracking check like bad_tracking (which can't catch this: a NaN
-# comparison silently evaluates False). See MultiSkillConfig.
-# joint_pos_sanity_check_enabled's own docstring for the full rationale.
-#
-# replay_buffer_sanitize_enabled: torch.nan_to_num applied to observations/
-# rewards/next_observations/critic_observations right at the SAC replay
-# buffer's write boundary. The complementary fix: termination and reward are
-# computed in the SAME tick, BEFORE any reset, so joint_pos_sanity_check_enabled
-# alone cannot stop that one exploded tick's already-corrupted transition from
-# reaching the learner -- this is the guard that actually does. See
-# FastSACConfig.replay_buffer_sanitize_enabled's own docstring.
-# ------------------------------------------------------------------------------
-# joint_pos_sanity_check_enabled: true
-# joint_pos_sanity_threshold: 20.0
-# replay_buffer_sanitize_enabled: true
+post_flip_obs_ramp_steps: 0
 
 # ------------------------------------------------------------------------------
-# RoboNaldo-derived: progressive ee_body_pos termination threshold.
-# S2a = 0.35 (task_params_1.yaml termination_overrides.ee_body_pos.threshold,
-# all 4 tracked bodies uniform). ee_body_pos_warmup_threshold is a SEPARATE
-# field (kick_penalty_ee_body_pos_divergence's own warmup_threshold param) --
-# S2a override = 0.7, per task_params_1.yaml's regularization.
-# ee_body_pos_termination_penalty.params.warmup_threshold.
+# BAD MOTION & BODY POS WARMUP CONFIG
+# An early termination settings to the bad motion
 # ------------------------------------------------------------------------------
-bad_motion_body_pos_threshold: 0.35 # originally 0.35
+bad_motion_body_pos_threshold:  0.35
 ee_body_pos_warmup_threshold: 0.7
 
 # ------------------------------------------------------------------------------
-# Own-design, no RoboNaldo mapping: kick_recovery_posture_reward's own deadzone
-# params (was Python-hardcoded, no yaml override at all until this plumbing).
-# 2026-08-06: progressive widening B->C1->C2, ~x1.4 per step here (x2.0
-# cumulative B->C2), same shape as bad_motion_body_pos_threshold's own
-# RoboNaldo-derived progression above -- reused deliberately rather than
-# inventing a new ratio. Motivation for moving AT C1 specifically, even though
-# randomize_x/y doesn't widen until C2 (0.1->0.1->0.5): goal_weight turns on
-# here, the shooting reward activates, and target-reaching becomes a real
-# objective for the first time -- landing-pose variance grows from that
-# qualitative shift, not just from ball-spawn range. See task_config_stageC2.yaml's
-# own comment for the full per-field table. UNVALIDATED against live telemetry.
+# KICK RECOVERY CONFIG
+# Post kick stabilization recovery
 # ------------------------------------------------------------------------------
 kick_recovery_stand_height_deadzone: 0.02
 kick_recovery_stand_orientation_deadzone: 0.035
 kick_recovery_stand_feet_width_deadzone: 0.04
 kick_recovery_stand_knee_width_deadzone: 0.04
+recovery_duration_s: 1.0
+hold_duration_s: 1.0
+
 
 # ------------------------------------------------------------------------------
-# 2026-08-12, PART 1 of the swing-stability fix: deadzones for
-# kick_penalty_swing_orientation / kick_penalty_swing_torso_orientation (both
-# UNGATED across the whole kick episode, weights set below under
-# kick_safety_reward). Ships at deadzone=0.0 in reward.py by default -- i.e.
-# penalizing tilt from the very first radian, including the clip's OWN
-# authored lean. Measured directly against the reference clip's npz
-# (video_012, body_quat_w -> projected gravity), pelvis/torso tilt from
-# vertical by phase:
-#   pelvis:  approach 7.9 deg mean  | STRIKE 25.6 deg mean, 33.3 deg peak | recovery 10.3 deg mean
-#   torso:   approach 1.6 deg mean  | STRIKE 14.7 deg mean, 19.6 deg peak | recovery  4.3 deg mean
-# At deadzone=0.0 these terms fight the tracking reward on the exact same DOFs
-# at the exact same instant -- the strike phase's own authored lean (leaning
-# is how a biped counterbalances a swinging leg) gets penalized as if it were
-# instability. Values below = sin(peak strike tilt) + a small margin, so the
-# deadzone clears the clip's own worst moment entirely and these terms only
-# fire on lean BEYOND what the kick itself demands:
-#   pelvis: sin(33.3 deg) = 0.549 -> 0.55
-#   torso:  sin(19.6 deg) = 0.335 -> 0.35
-# NOT validated by a training run. Revert to the pre-fix (always-penalize)
-# state by setting both back to 0.0.
+# KICK SWING CONFIG
+# in striking phase deadzone settings
 # ------------------------------------------------------------------------------
-kick_swing_orientation_deadzone: 0.44        # fixes-3
-kick_swing_torso_orientation_deadzone: 0.26  # fixes-3
+kick_swing_orientation_deadzone: 0.44        
+kick_swing_torso_orientation_deadzone: 0.26  
 
-# ------------------------------------------------------------------------------
-# RoboNaldo-derived: ball spawn randomization. Directly portable (a physical
-# distance in meters, no ratio-scale needed). RoboNaldo's own init_pos_range
-# (task_params_1.yaml) = 0.1 in S2a -- SAME as S1, only widens at S2b. 2026-08-05
-# correction: an earlier pass left this at this project's own pre-existing 0.35
-# across all 3 stages -- caught by direct comparison against RoboNaldo's source.
-# ------------------------------------------------------------------------------
-randomize_x: 0.1
-randomize_y: 0.1
 
-# ------------------------------------------------------------------------------
-# Formerly per-skill fields, now shared/global. NOT RoboNaldo-derived -- no
-# equivalent randomized-target-point concept in their source -- left unchanged
-# across all 3 stage files.
-# ------------------------------------------------------------------------------
-# 2026-08-22: randomize_target_x/y REMOVED (azimuth-aim refactor) -- independent target
-# randomization has no replacement; kick_aim_enabled=True (every skill in this project) derives
-# all aim variation from kick_aim_theta instead.
-# 2026-08-24: kick_ball_velocity_v_ref -- SET FOR THE FIRST TIME. This field has never appeared in
-# any task config, so every run to date silently used shooting.py::ball_velocity's own 5.0 default,
-# which puts the Lorentzian s^2/(s^2+v_ref^2) deep in its FLAT TAIL at the speeds these policies
-# actually reach: at the measured ~1.8 m/s it returns 0.115, and rew_kick_ball_velocity realized
-# 0.00005 per episode (skill012/014) -- a rounding error, not a reward. MultiSkillConfig.
-# kick_ball_velocity_v_ref's own docstring already derived the answer from live measurement ("at
-# the measured 1.6 m/s operating point, v_ref=5.0 sits deep in the flat tail (value 0.093, gradient
-# 0.105 per m/s); 2.0 gives 0.390 and 0.297 -- 2.8x steeper exactly where the policy lives"); it
-# was analysed, written down, and then never actually put in a config. This applies it.
+# -----------------------------------------------------------------------------------------------
+# VELOCITY, SUCCESS RADIUS, AND KICK BALL OVER LINE
+# Ball velocity reference during kicking, success radius criteria settings, kick ball over line
+# -----------------------------------------------------------------------------------------------
 kick_ball_velocity_v_ref: 2.0
 success_radius: 0.5
-shooting_reward_scale: 0.5
-# 2026-08-06 correction: was 1.2. Traced the actual runtime path (reward.py:316-329 +
-# shooting.py's term functions, e.g. error_ball_to_target's `... * current_w_g(env) * ...`):
-# shooting_reward_scale is NOT a static config-time bake -- RewardManager applies
-# `weight(yaml) * term_output`, and current_w_g(env) [= this field, live/ramped] is ALSO
-# multiplied INSIDE every shooting term function, on top of that. Every literal weight below
-# already has RoboNaldo's goal_weight=0.8 baked in (see e.g. kick_ball_proximity's own comment:
-# "= 1.0*0.8, x k=2.5"). Setting this field to 1.2 re-applied goal_weight a SECOND time, at the
-# wrong value -- a genuine double-scaling bug, not a real tuning choice. 1.0 is a pure no-op
-# multiplier so the already-verified per-term numbers below pass through as the final RoboNaldo
-# S2a value. The ramp (shooting_reward_scale_ramp_iters=5000, own-design, unchanged) now climbs
-# 0 -> 1.0 instead of 0 -> 1.2.
-# 2026-08-06, user-requested opt-in: gates kick_ball_over_line to has_kicked, closing the same
-# class of accidental-non-kick-foot-nudge exposure already fixed (and live-measured) for
-# kick_predicted_error_ball_to_target -- see ball_over_line's own docstring
-# (managers/reward/terms/shooting.py) for the full mechanism. False (default) = off, matching
-# RoboNaldo's own ungated registration exactly. NOT yet live-measured for this specific term --
-# ships as an opt-in, not landed unconditionally.
 kick_ball_over_line_require_has_kicked: true
+
+# ------------------------------------------------------------------------------
+# REWARD SCALE CONFIG
+# Scale configuration
+# ------------------------------------------------------------------------------
+shooting_reward_scale_ramp_iters: 5000
+shooting_reward_scale_hold_iters: 0
+shooting_reward_scale: 0.5   
 motion_tracking_reward_scale: 2.0
 root_tracking_reward_scale: 1.0
-# 2026-08-06 correction: was 0.2 (this project's own pre-existing, UNVALIDATED value, never
-# backed by a completed training run). Contradicts RoboNaldo's own design principle (Finding 1,
-# early this session): relative-body tracking (all 6 terms) never gets discounted in ANY of
-# their stages -- only the root anchor ever relaxes. Set to 1.0 for consistency with Stage B,
-# where the SAME field at 0.2 combined with kick_alive=0.0 to produce a measured, 13-hour dead
-# plateau (kick_topple_frac ~0.95-0.98, kick_early_term_frac pegged at 1.0, zero improvement
-# after step ~50k) -- fixed there by raising this to 1.0. C1/C2 have kick_alive nonzero already,
-# so the failure mode won't be as total, but the same RoboNaldo-fidelity argument applies
-# identically here, not just as a Stage-B patch. Watch kick_topple_frac/kick_min_base_height/
-# kick_early_term_frac once this stage actually trains to confirm.
 recovery_tracking_scale: 1.0
 kick_recovery_posture_reward_scale: 1.0
 kick_safety_reward_scale: 1.0
 kick_alive_reward_scale: 1.0
-kick_alive_pre_kick_ratio: 0.1
-observation_bias: 0.05
-recovery_duration_s: 1.0
-hold_duration_s: 1.0
+kick_alive_pre_kick_ratio: 0.1  
 
-# ==============================================================================
-# Reward-term weights -- Stage 2a (S2a) values, computed from RoboNaldo's own
-# base RewTerm formulas evaluated at motion_weight=1.0/goal_weight=0.8/
-# reg_weight=0.2, with task_params_1.yaml's reward_overrides applied on top.
-# ==============================================================================
-
+# ------------------------------------------------------------------------------
+# REWARD TERMS CONFIG
+# Reward weight settings
+# ------------------------------------------------------------------------------
 motion_tracking_reward:
-  motion_global_ref_position_error_exp: 1.0    # overridden weight_scale.task=1
-  motion_global_ref_orientation_error_exp: 0.5 # overridden weight_scale.task=0.5
+  motion_global_ref_position_error_exp: 1.0    
+  motion_global_ref_orientation_error_exp: 0.5 
   motion_relative_body_position_error_exp: 1.0
   motion_relative_body_orientation_error_exp: 1.0
   motion_global_body_lin_vel: 1.0
   motion_global_body_ang_vel: 1.0
   motion_global_feet_lin_vel: 1.0
-  # 2026-08-12, PART 2 of the swing-stability fix (ours only, no RoboNaldo mapping -- see
-  # MotionStrikeDofPosErrorExp's own docstring in managers/reward/terms/wbt.py): ships at
-  # weight=0.0 (off) in reward.py by default; this line is the opt-in. Targets a real measured
-  # gap the 6 Cartesian motion-tracking terms above are structurally blind to -- rotation about a
-  # limb's own long axis (shoulder_yaw, wrist_roll, ...) barely moves the tracked link's Cartesian
-  # position, so the policy can drift arbitrarily far on those axes at near-zero tracking cost.
-  # Measured live (ckpt 440k, 20260802_122622): strike-phase arm/waist joint error 16-53 deg,
-  # EXCEEDING the clip's own per-joint range of motion (11-22 deg) on exactly those axes -- the
-  # signature of null-space drift. Motivates this as a stability lever, not just a fidelity one:
-  # during single-support swing the arms are the counterbalance, so if they're 40-53 deg off
-  # reference exactly when the pelvis is leaning hardest (see kick_penalty_swing_orientation's
-  # deadzone comment below -- 33.3 deg peak pelvis tilt during strike), the counterweight that
-  # makes that lean survivable is broken. Legs excluded by the term itself (kick leg already
-  # tracks well; support leg needs freedom for single-support balance). sigma stays at its own
-  # Python-reasoned default (0.5, see the term's registration in reward.py) -- not overridden
-  # here. 1.0 is the term's own documented reasoned-but-UNVALIDATED starting weight. Revert to
-  # the pre-fix (off) state by deleting this line or setting it to 0.0.
   motion_strike_dof_pos_error_exp: 1.0
-  # 2026-08-14: leg counterpart of the line above, same class/formula/sigma, applied to the leg's
-  # OWN low-Cartesian-authority axes (hip_roll, hip_yaw, ankle_roll -- see
-  # motion_strike_leg_null_dof_pos_error_exp's own registration in reward.py for the exact 6-joint
-  # list and full rationale). Added while diagnosing run
-  # 20260813_005001-stageC1-1skill-locoflip-shooting05-new-fixes-3-locomotion: striking-phase leg
-  # motion measurably WORSENED over training (RoboJuDo/MuJoCo replay, ckpt 150k vs 352k -- right
-  # leg peak joint velocity +85%, RMS jerk +238%, worse than the arms the line above already
-  # holds flat) while task outcome (ball velocity/success rate) stayed flat -- i.e. the extra
-  # motion bought nothing. 1.0 matches the upper-body term's own weight (directly comparable --
-  # both use per-joint MEAN, not sum, so joint-count doesn't need rescaling). Reasoned from real
-  # measurement, but training-UNVALIDATED like every other starting weight in this file -- watch
-  # kick_motion/error_joint_pos_swing (should stop the ~8% growth seen over that run) and
-  # kick_ball_velocity/kick_ball_success_rate (must not regress -- this must not fight the actual
-  # kick). Revert by deleting this line or setting it to 0.0.
-  motion_strike_leg_null_dof_pos_error_exp: 1.0 # fixes-4
-
-  # 2026-08-25: OPTION 3 promoted here after it WON the three-arm batch on skill012. Linear,
-  # NON-SATURATING per-joint price on strike-phase error beyond a 0.35 rad (20 deg) deadband,
-  # over all 29 DOF -- see managers/reward/terms/wbt.py:StrikeDofDivergencePenalty.
-  #
-  # WHY THIS SKILL NEEDS IT MOST: measured 2026-08-24 (per-joint strike probe, 512 envs) this run
-  # owns the project's most saturated joint -- left_shoulder_yaw at 54 deg, where the Gaussian's
-  # gradient is 0.21 vs ~1.7 on a typical 20 deg joint -- and 16 of its 29 joints sit past the
-  # deadband (vs 10 on skill012, 3 on skill013). Its error_joint_pos_strike has also been rising
-  # monotonically across every run measured (1.72 -> 2.92, then 1.81 -> 2.78).
-  #
-  # EVIDENCE FROM skill012's ARM (matched window, this term the only change there):
-  #     error_joint_pos_strike  2.322 -> 1.910   -18%
-  #     error_body_rot_strike   0.565 -> 0.493   -13%
-  #     kick_alive_frac         0.399 -> 0.494   +24%
-  #     kick_topple_frac        0.075 -> 0.063   -16%
-  #     cost: hit -4%, success -6%, ball_velocity -5%
-  # Divergence DOWN and survival UP together, which those two metrics rarely do here.
-  #
-  # -3.0 is skill012's validated value, reused rather than re-derived. NOTE this skill has 16
-  # joints past the deadband vs skill012's 10, so the raw term will be LARGER here (~0.091 vs
-  # ~0.089 measured pre-run, and it grows as divergence grows) -- if the realized
-  # rew_kick_penalty_strike_dof_divergence lands materially below -0.005 or the kick metrics fall
-  # by much more than skill012's -4/-6/-5%, retune to -1.5 rather than assuming -3.0 transfers.
-  # TO CHECK: error_joint_pos_strike must FALL (it has risen in every prior run). If it keeps
-  # rising, this term does not transfer to this skill and the divergence here has another cause.
-  kick_penalty_strike_dof_divergence: -3.0
+  motion_strike_leg_null_dof_pos_error_exp: 1.0 
 
 shooting_reward:
-  kick_ball_proximity: 2.0                  # robot_feet_ball_distance = 1.0*0.8, x k=2.5
-  kick_contact_orientation: 4.0             # ball_contact_orientation = 2.0*0.8, x k=2.5
-  kick_foot_strike_pitch: 1.0               # 2026-08-07, ours only -- ships as a verified no-op, not yet enabled
-  # 2026-08-24: 1.0 -> 10.0. Sized together with the new kick_ball_velocity_v_ref: 2.0 above --
-  # the two multiply, so neither alone tells you the resulting magnitude. Measured motivation:
-  # across skill012/013/014 the realized rew_kick_ball_velocity was 0.00005 / 0.01545 / 0.00004,
-  # while shot power tracked rew_motion_global_feet_lin_vel (0.161 / 0.291 / 0.086 -> ball speed
-  # 1.76 / 1.90 / 1.27 m/s) almost monotonically -- i.e. the clip, not this term, was doing all the
-  # work. 10.0 is deliberately between the old 1.0 (which realized nothing) and skill013's 40.0
-  # (which crowded the shooting budget: its contact/velocity terms realized 18x the sibling runs'
-  # while producing LOWER ball speed than skill012 at weight 1.0). NOT yet validated by a run.
+  kick_ball_proximity: 2.0                
+  kick_contact_orientation: 4.0          
+  kick_foot_strike_pitch: 0.0             
   kick_ball_velocity: 10.0
-  kick_error_ball_to_target: 20.0           # error_ball_to_target = 10.0*0.8, x k=2.5
-  # 2026-08-23: 0.0 -> 5.0, turned ON. This is the DENSE directional signal (its own docstring
-  # calls it "the credit-assignment workhorse"): every step the ball is moving it extends the
-  # ball's current velocity ray forward and rewards the predicted closest approach to the target,
-  # so the policy gets feedback on where the shot is HEADING from the instant of contact instead
-  # of waiting for the ball to finish rolling. With it at 0.0, the ONLY aiming signal was
-  # kick_error_ball_to_target -- a LATCHED, end-of-trajectory quantity -- and that one was itself
-  # nearly flat at the old sigma=4.2 (see the _sigma block below), so BOTH directional learning
-  # channels were effectively disabled at once. 5.0 is deliberately a quarter of
-  # kick_error_ball_to_target's 20.0: a real gradient without displacing the outcome term as the
-  # primary objective. Its own sigma stays at the function's 1.0 default (NOT raised to 2.0 like
-  # the outcome term): it measures a velocity-ray projection rather than a settled position, and
-  # a sharper kernel there pairs with the outcome term's broader basin -- broad basin to get the
-  # shot roughly right, sharp dense term to refine it. NOT yet validated by a completed run.
+  kick_error_ball_to_target: 20.0           
   kick_predicted_error_ball_to_target: 5.0
-  kick_goal_success_burst: 0.0              # goal_reward_burst = 0.0 in S2a too (Stage-3-only)
-  kick_ball_contact_hit: 2.0                # ours only (own design, current value kept -- no RoboNaldo number to port)
-  kick_ball_approach_stance: 2.0            # ours only, current value kept
-  kick_ball_over_line: 1.0                  # ball_over_line = 0.5*0.8, x k=2.5
-  kick_robot_com_ball_distance: 2.0         # robot_com_ball_distance = 1.0*0.8, x k=2.5
-  kick_robot_torso_ball_distance: 2.0       # robot_head_torso_ball_distance = 1.0*0.8, x k=2.5
-  kick_penalize_weak_foot_contact: -1.0     # penalize_weak_foot_contact = -0.5*0.8, x k=2.5
-  kick_penalize_self_contact_feet: -0.4     # penalize_self_contact_feet = -0.2*0.8, x k=2.5
+  kick_goal_success_burst: 0.0             
+  kick_ball_contact_hit: 0.0              
+  kick_ball_approach_stance: 0.0           
+  kick_ball_over_line: 1.0                  
+  kick_robot_com_ball_distance: 2.0       
+  kick_robot_torso_ball_distance: 2.0       
+  kick_penalize_weak_foot_contact: -1.0 
+  kick_penalize_self_contact_feet: -0.4    
   _sigma:
-    # ============================ OPTION 2 of the 2026-08-24 strike-divergence batch ===========
-    # skill011 carries OPTION 2 (this sigma). skill012 carries OPTION 3 (the new non-saturating
-    # kick_penalty_strike_dof_divergence); skill013 carries OPTION 1 (weight). One variable each
-    # so the three remain separable -- do not add a second one to this file.
-    #
-    # 0.5 -> 1.0 on motion_strike_dof_pos_error_exp ONLY (its leg-null sibling is untouched).
-    # NOT a general "tolerate more deviation" move -- it is a deliberate REALLOCATION of this
-    # term's gradient from well-tracked joints onto the diverged ones, which is this per-joint
-    # term's entire purpose.
-    #
-    # WHY HERE. Measured 2026-08-24 (per-joint strike probe, ckpt 262k, 512 envs): this skill owns
-    # the single most saturated joint in the project -- left_shoulder_yaw at 54 deg, where the
-    # Gaussian's gradient (2e/s^2)exp(-e^2/s^2) is 0.21 versus ~1.7 on a typical 20 deg joint. A
-    # kernel cannot correct what it has already given up on. Sweeping sigma over this skill's OWN
-    # measured per-joint error distribution:
-    #     sigma   grad on 3 WORST   grad on typical   worst/typical   sum grad
-    #      0.5           0.76             1.68             0.45         23.8
-    #      0.7           0.97             1.18             0.82         17.7
-    #      1.0           0.82             0.69             1.19         11.0
-    #      1.4           0.55             0.38             1.45          6.4
-    # At 1.0 the ratio finally INVERTS: the flailing joints get more pull than the well-tracked
-    # ones. Total gradient falls 23.8 -> 11.0, so this is a genuine trade, not a free win.
-    #
-    # READ THIS BEFORE TRUSTING IT. A sigma WIDENING has already measured harmful once in this
-    # project (swing_tracking_sigma_multiplier 1.5 on skill012, reverted 2026-08-24 -- see that
-    # file). That case widened ALL SEVEN general tracking terms including well-tracked ones, at an
-    # operating error 5x below the crossover; this widens only the per-joint outlier-catcher whose
-    # job is precisely the tail. Related but not the same move -- and the prior is bad enough that
-    # this must be judged on the run, not on the reasoning.
-    # NOT VALIDATED BY A TRAINING RUN.
-    # TO CHECK: error_joint_pos_strike should fall and the worst individual joints should converge
-    # (rerun probe_strike_perjoint). If error_joint_pos_strike RISES, the widening is behaving like
-    # its harmful predecessor -- revert to 0.5 rather than trying 1.4.
-    # 2026-08-24 -> 2026-08-25 RESULT: TRIED AT 1.0, FALSIFIED BY THE RUN, REVERTED TO 0.5.
-    # This was OPTION 2 of the three-arm strike-divergence batch. Matched-window A/B against the
-    # previous run (same StageB start, this sigma the ONLY difference), steps 204200-216200:
-    #     error_joint_pos_strike   2.598 -> 2.732   +5%   <-- WRONG DIRECTION, this was the target
-    #     error_body_rot_strike    0.708 -> 0.803  +13%
-    #     kick_topple_frac         0.152 -> 0.185  +22%
-    #     kick_ball_success_rate   0.059 -> 0.046  -22%
-    #     Train/mean_reward         22.3 -> -12.6 -156%   (bad iterations 28% -> 34%, worst -1128)
-    # Within-run it climbed steeply too (1.81 -> 2.78 over 50k steps). This file's own pre-
-    # registered abort said exactly this: "If error_joint_pos_strike RISES, the widening is
-    # behaving like its harmful predecessor -- revert to 0.5 rather than trying 1.4." It rose.
-    #
-    # THE GENERAL RESULT, worth more than this one value: a WIDENED tracking sigma has now
-    # measured HARMFUL three independent times in this project --
-    #   1. bad_tracking_swing_threshold_multiplier=2.0 (2026-07-30, fall hazard 0.058 -> 0.240)
-    #   2. swing_tracking_sigma_multiplier=1.5 on skill012 (reverted 2026-08-24)
-    #   3. this (2026-08-25)
-    # Treat it as settled: do NOT try an intermediate value (0.7) here expecting a different sign.
-    # The reasoning behind it was not obviously wrong -- the sigma sweep really does invert the
-    # worst/typical gradient ratio at 1.0 (0.45 -> 1.19) -- but buying outlier pull by weakening
-    # every well-tracked joint loses more than it gains, every time it has been measured.
-    #
-    # WHAT ACTUALLY WORKED for the same problem: kick_penalty_strike_dof_divergence (OPTION 3,
-    # added to this file below), which gets constant gradient on the outliers WITHOUT touching the
-    # Gaussian's well-calibrated near-zero regime. On skill012 it cut error_joint_pos_strike 18%
-    # and raised alive_frac 24% in the same batch.
     motion_strike_dof_pos_error_exp: 0.5
-    # 2026-08-23: 4.2 -> 2.0. This sigma is an ANGULAR tolerance, not a distance one: for a
-    # kick_aim_enabled skill the target sits at a FIXED D=kick_aim_nominal_distance_m (5.0) along
-    # the commanded ray, so a shot that is `a` degrees off misses by 2*D*sin(a/2) and this term
-    # pays exp(-miss^2/sigma^2). MEASURED at the old 4.2, over the +/-15 deg range the policy is
-    # actually commanded to steer within, the reward was nearly FLAT -- 20 deg off still paid
-    # 0.843, 30 deg off paid 0.684 -- i.e. almost no gradient telling the policy to aim. Three
-    # Stage C runs (skill012/013/014, 2026-08-23, ~130k steps each) confirmed the consequence:
-    # sim2sim ball-CONTACT rate climbed to 0.95 while kick_direction_success_rate plateaued at
-    # 0.35-0.38 (skill013: 0.05). 4.2 was a correct fix for its own era ("gradient-dead-kernel":
-    # when the policy missed by ~5 m, exp(-25/1) was 0 and gave nothing to learn from) but it has
-    # outlived that regime -- contact is now solved, aiming is not. At 2.0: 20 deg off pays 0.471
-    # and 45 deg off still pays 0.026, so there is a real gradient across the commanded range
-    # without going dead on a genuinely wild shot. NOT yet validated by a completed run.
-    # 2026-08-24: 2.0 -> 3.0. The 4.2 -> 2.0 cut made the day before was WRONG and this reverses
-    # it with a rule instead of a guess. That cut was chosen by looking only at how sharply the
-    # kernel discriminates across the +/-15 deg commanded range, without checking how far the
-    # policy was ACTUALLY missing. Measured from the batch-one/batch-two realized-reward ratio
-    # (same skill, same steps, only sigma changed): the real miss is ~3.0 m for skill012/013 and
-    # ~4.6 m for skill014. At those distances sigma=2.0 put the operating point in the DEAD TAIL --
-    # realized rew_kick_error_ball_to_target fell 0.17x / 0.27x / 0.01x, i.e. skill014 lost 99% of
-    # its aiming signal -- and sim2sim direction success fell with it (-0.22 / -0.20 at matched
-    # steps). That is the same gradient-dead-kernel failure the original 4.2 existed to fix,
-    # recreated from the other side.
-    #
-    # THE RULE (use this, don't guess again): the learning signal is the GRADIENT,
-    #   |d/dd exp(-d^2/sigma^2)| = (2d/sigma^2) exp(-d^2/sigma^2),
-    # which for a given miss distance d is MAXIMISED at sigma = d. So sigma should track the
-    # policy's current typical miss, and be revisited as that shrinks -- 4.2 was near-optimal when
-    # misses were ~5 m and simply went stale. Recompute from the survival scan's own
-    # direction/miss telemetry rather than re-deriving by eye.
     kick_error_ball_to_target: 3.0
 
 kick_recovery_posture_reward:
@@ -625,77 +178,23 @@ kick_safety_reward:
   kick_penalty_excess_contact_force: -1.0
   kick_penalty_hard_landing: -1.0
   kick_penalty_excess_base_lin_vel: -1.0
-
-  kick_penalty_swing_orientation: -0.04        # locomotion_phase_orientation_l2 = -0.2*0.2 -- deadzone set above (kick_swing_orientation_deadzone)
-  kick_penalty_swing_torso_orientation: -0.04  # locomotion_phase_torso_orientation_l2 = -0.2*0.2 -- deadzone set above (kick_swing_torso_orientation_deadzone)
-  kick_feet_slip: -0.02                        # OVERRIDE weight_scale=-0.1 -> -0.1*0.2
-  action_rate_l2: -0.04                        # no override in S2a -> base -0.2*0.2
-  kick_arm_default_pose: -0.04                 # OVERRIDE weight_scale=0.2 -> 0.2*0.2, sign-flipped
+  kick_penalty_swing_orientation: -0.04       
+  kick_penalty_swing_torso_orientation: -0.04 
+  kick_feet_slip: -0.02                        
+  action_rate_l2: -0.04                       
+  kick_arm_default_pose: -0.04                
   kick_feet_air_time: 50.0
   kick_swing_feet_clearance: -20.0
-  kick_no_fly: -0.1                           # OVERRIDE weight_scale=-0.1 -> base -0.1*0.2            # fixes-3
-  kick_penalty_unstable: -0.5                # OVERRIDE weight_scale=-0.5 -> base -0.2*0.2 (NOT -0.05) # fixes-3
+  kick_no_fly: -0.1                          
+  kick_penalty_unstable: -0.5             
   kick_feet_contact_time: -0.5
-  kick_penalty_lin_vel_z: -0.1                 # locomotion_phase_lin_vel_z_l2 = -0.5*0.2
-  # 2026-08-14 BUG FIX + recalibration: penalty_kick_dof_vel's formula changed from a SIGNED
-  # power sum to a squared one (see that function's own docstring in
-  # managers/reward/terms/locomotion.py for the full bug -- the old signed formula, under this
-  # negative weight, REWARDED net-negative-power ticks i.e. braking/absorbing, which measurably
-  # grew over training on run 20260813_005001-...: weighted contribution went +0.000011 ->
-  # +0.0000397, the opposite of a penalty). Old -3e-5 was calibrated to the OLD (linear, ~20-70
-  # magnitude) formula; the new squared formula has a much larger raw magnitude. LIVE-VERIFIED
-  # (2026-08-14, real IsaacSim GPU2, ckpt 352000 of that same run, 64 envs x 6s post-trigger_kick):
-  # whole-kick-episode mean=26380, strike-phase-only mean=32931/median=16816/p90=78718/
-  # max=1051958 -- roughly matches the initial RoboJuDo/MuJoCo qvel*qfrc_actuator PROXY estimate
-  # this was originally sized from (strike-window mean ~23000 @ ckpt 352k), so -5e-8 is kept as-is
-  # post-verification: mean weighted ~-0.0013 (whole episode) / ~-0.0016 (strike-only) -- a small
-  # "guardrail, not primary lever" magnitude, reasoned from real measurement but still
-  # training-unvalidated (a real training run's effect on kick_ball_velocity/success_rate is the
-  # actual test).
-  kick_penalty_dof_vel: -5e-8  # fixes-4
+  kick_penalty_lin_vel_z: -0.1                
+  kick_penalty_dof_vel: -5e-8  
   kick_penalty_torque: -2e-7
-  # 2026-08-14: strike-phase joint-acceleration smoothness penalty -- see
-  # penalty_kick_strike_dof_acc's own docstring (managers/reward/terms/locomotion.py) for the
-  # full rationale (same diagnostic run as the two entries above: measured RMS jerk up 81-238%
-  # across the legs over training while ball velocity/success rate stayed flat) AND for a real
-  # bug this weight's history reflects: an EARLIER version of the function read
-  # env.simulator.dof_acc directly, which crashed immediately in live IsaacSim verification --
-  # that attribute only exists when a hardware-deployment "bridge" feature is enabled, never
-  # during normal training. Fixed to finite-difference dof_vel via the joint_control action
-  # term's own existing prev_dof_vel cache instead (substep dt, not full-tick dt).
-  #
-  # Weight LIVE-VERIFIED post-fix (2026-08-14, real IsaacSim GPU2, ckpt 352000, 64 envs x 6s):
-  # strike-phase raw sum(dof_acc^2) mean=318474, median=80880, p90=366363, max=36941492 -- ~2-25x
-  # LARGER than the original RoboJuDo/MuJoCo proxy estimate this was first sized from (~12300 @
-  # ckpt150k, ~135100 @ ckpt352k) because that proxy used a full-tick (1/50s) finite difference
-  # while the live formula uses the physics SUBSTEP dt (1/200s, decimation=4) -- a real backend
-  # difference, not a measurement error. Original -1e-7 would have landed ~-0.032 mean / ~-3.69
-  # max-tick weighted -- too large relative to the ~0.6 total kick reward budget and to
-  # kick_action_smoothness's own ~0.086. Reduced to -5e-8: mean weighted ~-0.016, median-tick
-  # ~-0.004, max-tick outlier ~-1.85 (some outlier sensitivity is inherent to a quadratic penalty
-  # on a heavy-tailed physical quantity -- likely real, brief ball-contact-impact spikes, not
-  # necessarily "bad" -- watched via raw_rew_kick_penalty_strike_dof_acc, not pre-clipped here).
-  # Watch kick_action_smoothness/raw jerk telemetry for over-suppression (a too-large weight here
-  # could fight the kick leg's legitimate strike power, not just its oscillation) -- if
-  # kick_ball_velocity regresses after this is live, reduce this first before touching
-  # motion_strike_leg_null_dof_pos_error_exp above.
-  kick_penalty_strike_dof_acc: -5e-8 # fixes-4
+  kick_penalty_strike_dof_acc: -5e-8 
   kick_undesired_contacts: -0.1
-  kick_penalty_ee_body_pos_divergence: -100.0  # threshold synced to bad_motion_body_pos_threshold=0.35; warmup_threshold=0.7 (OVERRIDE, was 0.25 base)
-  kick_action_smoothness: -0.1                 # OVERRIDE weight_scale=-0.5 -> -0.5*0.2
+  kick_penalty_ee_body_pos_divergence: -100.0  
+  kick_action_smoothness: -0.1   
 
 kick_alive_reward:
-  # 2026-08-06 correction: now literally matches RoboNaldo (was 10.0, this project's own
-  # pre-existing magnitude -- see git history for that reasoning if reverting).
-  #
-  # RoboNaldo robot_alive weight = 0.5*goal_weight = 0.5*0.8 = 0.4 (OVERRIDE weight_scale=1.0 ->
-  # 1.0*0.8=0.8 -- same result either way here since the override is 1.0). Their robot_alive()
-  # function returns a raw 1.0 pre-kick / 10.0 post-kick, so effective reward = 0.4 pre / 4.0
-  # post. This project's kick_alive_scaled() is structured the OTHER way round: _alive(env) is
-  # flat 1.0 always, and kick_alive_pre_kick_ratio (0.1, unchanged) discounts the PRE-kick side
-  # only -- so the yaml weight below passes straight through UNDISCOUNTED on the post-kick side
-  # (ratio doesn't apply there). To land on RoboNaldo's real 0.4/4.0 split, this field must be set
-  # to their POST-kick number (4.0), NOT their raw weight (0.4) -- 0.4 here would give 0.4 post /
-  # 0.04 pre, 10x too small on both ends. 4.0 * kick_alive_pre_kick_ratio(0.1) = 0.4 pre, exact
-  # match.
   kick_alive: 4.0

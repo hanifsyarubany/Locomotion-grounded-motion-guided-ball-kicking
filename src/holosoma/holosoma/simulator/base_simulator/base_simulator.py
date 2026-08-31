@@ -349,6 +349,37 @@ class BaseSimulator:
         """
         raise NotImplementedError("The 'apply_torques_at_dof' method must be implemented in subclasses.")
 
+    def set_external_body_forces(self, forces_w) -> None:
+        """Set persistent world-frame external forces on every rigid body of the robot.
+
+        Added 2026-08-27 for body-targeted collision-style disturbance randomization
+        (``BodyPushRandomizerState``). Distinct from ``apply_torques_at_dof``, which drives the
+        JOINTS: this applies a Cartesian force to a BODY, which is what an external contact -- a
+        shin against a table leg, a shoulder against a doorframe -- actually is. No pre-existing
+        entry point covered that: the only external-force path in this codebase was
+        ``VirtualGantry``'s per-backend private helpers, which are single-environment and
+        single-body by construction.
+
+        Args:
+            forces_w (tensor): ``[num_envs, num_bodies, 3]`` world-frame forces in Newtons,
+                indexed by HOLOSOMA body order (i.e. ``robot_config.body_names`` order, the same
+                convention as ``_rigid_body_pos`` and ``find_rigid_body_indice``'s return value) --
+                NOT the backend's own model order. Each backend translates to its native indexing.
+                Values PERSIST until the next call; pass zeros to clear.
+
+        Raises:
+            RandomizerNotSupportedError: on backends with no external-force path. Deliberately an
+                error rather than a silent no-op -- a disturbance randomizer that quietly does
+                nothing would show up as an unexplained robustness result much later. Callers that
+                want optional behavior must check support explicitly.
+        """
+        from holosoma.managers.randomization.exceptions import RandomizerNotSupportedError
+
+        raise RandomizerNotSupportedError(
+            f"{type(self).__name__} does not implement set_external_body_forces; body-targeted "
+            "push randomization is unavailable on this backend."
+        )
+
     def simulate_at_each_physics_step(self):
         """
         Advances the simulation by a single physics step.

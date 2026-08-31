@@ -117,6 +117,177 @@ HOLOSOMA_DISTILL_LOGSTD_LOSS_WEIGHT adds an auxiliary MSE on raw log_std to brea
 now DEFAULTS TO 0.001 whenever match_deployed_action is on (see its own comment for how that value
 was scaled from the measurement); set it to 0.0 to restore the old, known-degenerate behavior.
 
+OPTIONAL CRITIC DISTILLATION (2026-08-28)
+-------------------------------------------------------------------------------------------------
+Off by default (HOLOSOMA_DISTILL_CRITIC_LOSS_WEIGHT=0.0, exact no-op -- no extra teacher forward
+passes, no q_optimizer built, byte-identical to every distillation run before this existed).
+
+Why this exists. This script only ever optimized the actor -- `optimizer = Adam(student_actor.
+parameters())`. The student's qnet/qnet_target are whatever `setup()` randomly initialized and are
+NEVER touched here, so a distilled checkpoint's critic is pure noise (verified: qnet and
+qnet_target are byte-identical, only possible pre-training). Resuming real RL training straight
+from that checkpoint reproduces the stale-critic failure `critic_warmup_iters` exists for, except
+worse: a frozen actor during warmup only ever visits its OWN narrow rollout, so the critic becomes
+accurate in a tube around the distilled policy and unconstrained everywhere else -- the instant the
+actor unfreezes it is rewarded for finding exactly the states where that critic is wrong. Measured
+on a real run seeded from a SINGLE teacher's critic instead (`scripts/seed_critic_from_teacher.py`):
+the disturbance shrank enormously (peak topple 0.40 vs. 1.0 with a random critic) and, unlike the
+random-critic run, genuinely recovered -- action_std/entropy converged back to the teacher's own
+healthy band within ~6-7k steps. But the seeded critic only ever saw ONE teacher's skill during
+ITS OWN training: per-skill telemetry on that run showed the seed skill outperforming the other
+three by 5-9x on topple_frac. This section is the fix that removes that asymmetry -- a critic that
+has genuine signal from ALL N teachers, not one.
+
+WHY CROSS-ENTROPY AGAINST THE TEACHER'S SOFTMAX, NOT MSE ON A COLLAPSED SCALAR. This project's
+critic is a C51-style DISTRIBUTIONAL critic (`Critic`/`DistributionalQNetwork` in fast_sac.py,
+`num_atoms=101`): `forward()` returns raw logits per q-network, and the REAL training loss
+(`_update_main`) is `-sum(target_distribution * log_softmax(q_outputs))` -- cross-entropy against a
+projected 101-atom target distribution, never MSE on `E[Q]`. Distilling only the collapsed scalar
+value would throw away exactly the information (variance/skew across atoms) the real critic update
+is built around, and would be a second train/deploy-shaped mismatch of the same kind
+`match_deployed_action` already had to fix twice on the actor side. So the target here is the
+teacher's own softmax output, matched via cross-entropy -- the identical loss FORM the critic is
+normally trained with, just against a frozen teacher instead of a projected TD target.
+
+TWIN CRITICS PAIR INDEPENDENTLY (qnets[0]<->qnets[0], qnets[1]<->qnets[1]), NOT toward a shared
+min. `Critic.forward` stacks both q-networks' outputs along dim 0 in declared order, for both
+teacher and student (same class, same construction), so pairing is correct by construction with no
+extra bookkeeping. Regressing both student heads toward `min(teacher_Q1, teacher_Q2)` would
+collapse the two student heads toward an identical function, defeating the reason SAC keeps two
+(the min-over-both in the real TD target is exactly what controls overestimation -- it needs two
+genuinely different estimators, not one duplicated).
+
+WHAT (obs, action) PAIR IS THE Q EVALUATED AT: the state the student actually visited, and actions
+that TEACHER's own policy would take there -- never the student's own predicted action. A teacher's
+Q is only calibrated where its own policy goes; asking it to value the student's (possibly quite
+different, especially early) action would query it off-distribution and teach the student a
+fiction. This mirrors how the actor loss is framed: regress toward what the teacher would do here.
+
+ACTION COVERAGE -- why ONE action per state is not enough (2026-08-28, measured defect + fix).
+The first version of this regressed Q at exactly one action per state (`target_action`, the
+teacher's recommended action). That is sufficient to make the student's Q *values* match, and
+completely insufficient for what the critic is actually FOR. SAC's actor update is `-Q(s, pi(s))`:
+it consumes **dQ/da**, the way Q varies with the action. Constraining Q at a single point per state
+leaves that gradient entirely unconstrained -- free to be arbitrary. A real TD-trained critic never
+has this problem because SAC feeds it many *sampled* actions per state from the replay buffer.
+
+Measured consequence, comparing two RL resumes that differ in the critic they warm-started from:
+  * critic SEEDED from one real teacher critic (scripts/seed_critic_from_teacher.py, run
+    20260828_003018): action_std peaked at 1.4x its start, entropy drifted +0.19, recovered.
+  * critic DISTILLED with single-action coverage (run 20260828_085838): action_std peaked at 4.7x,
+    entropy drifted +16.34 (-23.71 -> -7.37, i.e. AWAY from target), topple peaked 0.982.
+The actor walked wherever the unconstrained dQ/da pointed, which included inflating sigma.
+(Caveat, stated honestly: those two runs also differ in skill set (4 vs 3) and warmup length, so
+this is a strong mechanistic hypothesis plus two data points, not a controlled experiment.)
+
+ATTEMPTED FIX THAT DID NOT WORK -- `HOLOSOMA_DISTILL_CRITIC_ACTION_SAMPLES`, default 0 (OFF).
+The obvious repair is to regress Q at extra actions per state (drawn from the teacher's own
+stochastic policy, where its Q is genuinely calibrated) so the student sees Q's action-dependence.
+It is implemented and available, but **measured not to help**, so it ships off.
+
+Direct measurement (student critic fit against a teacher critic, dQ/da cosine similarity at the
+reference action, 800 Adam steps, 256 states):
+
+    n_extra_samples   perturbation_scale   dQ/da cosine
+          0                  --                0.328     <- BEST
+          1                 0.03               0.281
+          1                 0.10               0.284
+          1                 0.30               0.298
+          2                 0.30               0.269
+          4                 0.30               0.252
+          8                 0.50               0.264
+
+More coverage is slightly WORSE, monotonically-ish, at every scale tried. The reason is a general
+property, not a tuning failure: **matching a function's VALUES at sampled points does not constrain
+its GRADIENT.** Pinning Q at k points per state leaves dQ/da free between them, and in a 29-dim
+action space no feasible k gives dense coverage. Spending the same optimizer budget across more
+points also fits each one less well, which is the small degradation visible above.
+
+The principled fix is Sobolev/gradient matching -- add an explicit loss on
+||dQ_student/da - dQ_teacher/da||^2, which constrains the derivative directly instead of hoping it
+falls out of value matching. That needs a backward through the teacher for the target gradient and
+a double-backward through the student, and is NOT implemented here.
+
+PRACTICAL CONSEQUENCE, stated plainly: critic DISTILLATION as implemented in this module gives the
+student a Q whose values match the teachers' but whose action-gradient does not, and the actor
+update consumes precisely that gradient. Single-teacher critic SEEDING
+(`scripts/seed_critic_from_teacher.py`) copies a real TD-trained critic wholesale and so preserves
+a meaningful action-gradient by construction -- it is the empirically better option today (run
+20260828_003018, sigma peak 1.4x, recovered) and should be preferred until gradient matching
+exists.
+
+CRITIC_OBS IS THREADED THROUGH THE LOOP IN PARALLEL WITH obs, sourced from `env.reset_with_critic_
+obs()` (initial) and `infos["observations"]["critic"]` (every step after) -- this script never
+needed critic_obs before since the actor-only loss doesn't touch it. Zero cost when
+critic_loss_weight is 0.0 beyond one extra tensor carried around; the extra teacher/student
+qnet forward passes only run when the feature is actually on.
+
+QNET_TARGET IS DELIBERATELY LEFT ALONE HERE, NOT POLYAK-AVERAGED DURING DISTILLATION. `setup()`
+hard-copies `qnet_target = qnet` at init (fast_sac_agent.py), so without this note qnet would move
+toward the teachers' signal while qnet_target stayed at that stale random-init copy -- silently
+recreating close to the ORIGINAL problem this section exists to fix. The chosen fix is NOT to
+half-reimplement Polyak averaging inside what is fundamentally a supervised-regression loop:
+`save_params` hard-copies the freshly-distilled `qnet_state_dict` into `qnet_target_state_dict` too
+at save time (both start in sync, byte-identical, analogous to `setup()`'s own initial hard-copy --
+just now copying a TRAINED qnet instead of a random one). A short REAL `critic_warmup_iters` after
+resuming (the existing mechanism, likely shorter than needed for a random-init critic since this
+starting point is already close) is what should build the genuine Polyak divergence between them,
+through actual TD learning -- not this script.
+
+Per-skill diagnostic breakdown (`distill_q_loss_skill{N}`, logging only) mirrors the existing
+per-skill actor-MSE split below, same rationale: a persistently high q-loss on one skill after
+distillation says that skill's critic signal needs more steps or a higher HOLOSOMA_DISTILL_
+CRITIC_LOSS_WEIGHT, not a capacity problem in the actor.
+
+    export HOLOSOMA_DISTILL_CRITIC_LOSS_WEIGHT=0.01   # 0.0 (default) = off, exact no-op
+    export HOLOSOMA_DISTILL_Q_LR=3e-4                 # matches FastSACConfig.critic_learning_rate's own default
+    export HOLOSOMA_DISTILL_CRITIC_ACTION_SAMPLES=0   # default 0 -- measured NOT to help, see ACTION COVERAGE
+
+CRITIC-ONLY MODE: HOLOSOMA_DISTILL_FREEZE_ACTOR (2026-08-28)
+-------------------------------------------------------------------------------------------------
+Freezes the actor entirely -- no actor loss computed, no `optimizer.step()`, actor weights come out
+of the run BYTE-IDENTICAL to what went in -- while the critic distills normally. Off by default.
+
+WHY THIS EXISTS, measured. Turning critic distillation on for a +20k continuation run
+(200k -> 220k) left the actor materially WORSE under real RL rollout: resumed training showed
+kick_topple_frac 0.67-0.74 *while the actor was still frozen by critic_warmup_iters*, versus
+0.07-0.16 for the same lineage's 200k actor. Critic distillation itself was NOT the cause and
+provably cannot be -- `optimizer` holds only `student_actor.parameters()`, `q_optimizer` only
+`student_qnet.parameters()`, `target_action`/`critic_targets` are both detached (computed under
+`torch.no_grad()`), the two `.backward()`/`.step()` pairs are fully separate, AND the DAgger
+rollout action is actor-only (`predict_action`), so the critic has no path -- direct or indirect,
+gradient or state-distribution -- to influence the actor's trajectory. Running with
+CRITIC_LOSS_WEIGHT=0.0 would have produced the same actor.
+
+The real cause was simply that the actor kept training for 20k more DAgger steps. Measured actor
+RMS drift vs the 200k checkpoint: 0.0039 (201k) -> 0.0073 (205k) -> 0.0098 (210k) -> 0.0119 (215k)
+-> 0.0140 (220k), steady and monotonic, against a mean parameter magnitude of ~0.115 -- i.e. a
+~12% relative weight change, not incidental noise. Whether continued DAgger training degrades real-
+sample behavior generally (prime suspect: the sigma-inflation pathology documented in the
+2026-08-18 section above, whose `logstd_loss_weight=0.001` counter may be too weak over a 200k+
+horizon) is UNRESOLVED -- this flag sidesteps the question rather than answering it.
+
+WHEN TO USE IT: you already have an actor you have VALIDATED under real rollout (see
+`scripts/validate_checkpoint_real_rollout.py`) and want only to upgrade its critic -- e.g. going
+from a single-teacher `scripts/seed_critic_from_teacher.py` splice to a genuine multi-teacher
+distilled critic. Freezing removes the actor as a variable entirely: the output checkpoint's actor
+is bit-identical to the input's, so any behavior change on a later RL resume is attributable to the
+critic alone.
+
+WHAT STILL RUNS while frozen: the DAgger rollout itself (the student's own action still drives
+`env.step()`, so the critic is still trained on the state distribution the student actually
+visits -- this is NOT the same as offline regression on a fixed dataset), the teachers' target
+computation, all per-skill/per-phase diagnostics, checkpointing, ONNX export, and the MuJoCo
+rollout bundle. Only the actor's loss and optimizer step are skipped. `distill_mse` is still
+LOGGED (it remains a meaningful read on how far the frozen actor sits from the teachers) but no
+longer has any gradient effect.
+
+REQUIRES critic distillation to be on. Freezing the actor with CRITIC_LOSS_WEIGHT=0.0 would train
+nothing at all -- an expensive no-op that would silently burn a GPU for hours and emit checkpoints
+identical to its input, so it is rejected at startup rather than allowed to run.
+
+    export HOLOSOMA_DISTILL_FREEZE_ACTOR=1            # 0/unset (default) = actor trains normally
+
 DIAGNOSTIC BREAKDOWN (logging only, no gradient effect)
 --------------------------------------------------------
 Alongside ``Loss/distill_mse`` the loop logs ``distill_mse_skill{N}`` per skill and
@@ -189,6 +360,27 @@ _LOGSTD_LOSS_WEIGHT_ENV_VAR = "HOLOSOMA_DISTILL_LOGSTD_LOSS_WEIGHT"
 # resizes teacher_agent's config and load_state_dict raises a size-mismatch on the teacher
 # checkpoint. This var is the ONLY supported way to give the student a different width.
 _STUDENT_ACTOR_HIDDEN_DIM_ENV_VAR = "HOLOSOMA_DISTILL_STUDENT_ACTOR_HIDDEN_DIM"
+# 2026-08-28, optional critic distillation. See the module docstring's own section. 0.0 (default)
+# = off: no q_optimizer built, no extra teacher/student qnet forward passes, byte-identical to
+# every distillation run before this existed.
+_CRITIC_LOSS_WEIGHT_ENV_VAR = "HOLOSOMA_DISTILL_CRITIC_LOSS_WEIGHT"
+_Q_LR_ENV_VAR = "HOLOSOMA_DISTILL_Q_LR"
+# 2026-08-28: freeze the actor, train ONLY the critic. See the module docstring's
+# "CRITIC-ONLY MODE" section for the measurement that motivated this.
+_FREEZE_ACTOR_ENV_VAR = "HOLOSOMA_DISTILL_FREEZE_ACTOR"
+# 2026-08-28: how many EXTRA sampled actions per state the critic loss covers, beyond the
+# teacher's own recommended action. DEFAULT 0 (off) -- this was implemented as a fix for the
+# unconstrained-dQ/da defect and then MEASURED NOT TO HELP (it is slightly worse at every
+# scale/count tried). Kept available for further investigation only. See the module
+# docstring's ACTION COVERAGE section for the measurement table and why value-matching
+# fundamentally cannot constrain a gradient.
+_CRITIC_ACTION_SAMPLES_ENV_VAR = "HOLOSOMA_DISTILL_CRITIC_ACTION_SAMPLES"
+_DEFAULT_CRITIC_ACTION_SAMPLES = 0
+# Noise scales for critic action coverage, cycled across the requested sample slots. Spans
+# near-optimal (0.03, the teachers' own policy sigma) to near-saturating (1.0) so the student
+# critic learns the full Q-vs-action falloff -- see Teacher.perturbed_action's docstring for the
+# measurement showing narrow-only sampling is ~flat and therefore useless here.
+_CRITIC_ACTION_SIGMAS = (0.3, 1.0, 0.03)
 
 _DEFAULT_STEPS = 200_000
 _DEFAULT_LR = 3e-4
@@ -310,6 +502,17 @@ def parse_teacher_ckpts_from_skills_yaml(skills_yaml_path: str) -> dict[int, str
     return ckpts
 
 
+def _sync_qnet_target(student_agent) -> None:
+    """Hard-copy qnet_target <- qnet, called just before saving whenever critic distillation ran
+    this step. See module docstring's own section for why: qnet_target starts as setup()'s
+    hard-copy of a RANDOM qnet and is never Polyak-updated here (no TD learning happens in this
+    script), so without this it would silently stay stale while qnet moved toward the teachers'
+    signal. Mirrors setup()'s own initial hard-copy, just copying a trained qnet instead of a
+    random one -- deliberately not a partial/EMA blend, since after this only a real
+    critic_warmup_iters phase on resume is meant to build genuine Polyak divergence."""
+    student_agent.qnet_target.load_state_dict(student_agent.qnet.state_dict())
+
+
 def _log_env_int(var: str, default: int) -> int:
     raw = os.environ.get(var)
     if raw is None:
@@ -360,9 +563,20 @@ def distill(tyro_config) -> None:
                     p.requires_grad_(False)
                 self.obs_normalizer = agent.obs_normalizer
                 self.obs_normalizer.eval()
+                # Critic side (2026-08-28, only meaningfully used when critic_loss_weight > 0.0,
+                # but constructing the references is free -- agent.setup()/.load() already build
+                # these as part of the normal teacher agent). Frozen for the identical reason the
+                # actor is: this teacher's qnet is a fixed regression TARGET, never trained here.
+                self.qnet = agent.qnet
+                self.qnet.eval()
+                for p in self.qnet.parameters():
+                    p.requires_grad_(False)
+                self.critic_obs_normalizer = agent.critic_obs_normalizer
+                self.critic_obs_normalizer.eval()
                 # Keep the agent referenced only so its actor/normalizer stay alive with correct
-                # device placement -- never call .learn()/.env.step() on it; only .actor/.obs_normalizer
-                # are used, both accessed exclusively through the wrapper methods below.
+                # device placement -- never call .learn()/.env.step() on it; only .actor/.obs_normalizer/
+                # .qnet/.critic_obs_normalizer are used, all accessed exclusively through the
+                # wrapper methods below.
                 self._agent = agent
 
             def act(self, raw_obs: torch.Tensor) -> torch.Tensor:
@@ -375,6 +589,54 @@ def distill(tyro_config) -> None:
                 # explore() is already @torch.no_grad()-decorated internally (fast_sac.py) -- no
                 # need to wrap here, and teachers are frozen (requires_grad_(False)) regardless.
                 return self.actor.explore(normed, deterministic=True)
+
+            def perturbed_action(self, raw_obs: torch.Tensor, sigma: float) -> torch.Tensor:
+                """tanh(mu + sigma*Z) at an EXPLICIT noise scale -- NOT the teacher's own policy
+                sigma. Used by critic distillation's action-coverage term.
+
+                CORRECTED 2026-08-28. The first version sampled from the teacher's own policy
+                (`explore(deterministic=False)`, sigma ~0.03) on the reasoning that a teacher's Q
+                is only calibrated where its own policy goes. That reasoning was wrong in a way
+                that mattered: the point of action coverage is to teach the student that WIDE
+                (bad) actions have LOW Q, and actions within 0.03 of the mean are all
+                near-optimal, so they convey none of that. Measured on the real skill012 teacher,
+                distilling a fresh critic and then reading dE[Q] as sigma goes 0.01 -> 1.0:
+
+                    teacher (reference)              -0.8168   <- strong restoring force
+                    student, narrow actions (0.03)   -0.0050   <- essentially flat
+                    student, wide actions (.03/.3/1) -0.0538   <- 10x better, still 15x short
+
+                And the teacher IS calibrated at wide actions -- TD bootstrapping through the
+                target network covers the whole action space, which is exactly why its own Q
+                falls off so cleanly with sigma. The extrapolation worry was unfounded.
+
+                WHY THIS MATTERS: SAC's actor loss is `alpha*log_probs - Q`. The entropy term
+                always pushes sigma UP; Q pushing it DOWN is what balances it (equilibrium
+                sigma ~0.033). A critic that is flat in sigma supplies no downward force, so
+                sigma inflates unopposed to the ceiling -- the measured failure on run
+                20260828_115812 (action_std 0.0335 -> 0.1305 in one logging interval, immediately
+                at actor unfreeze, WITH the alpha windup already fixed and alpha at just 0.001).
+                """
+                normed = self.obs_normalizer(raw_obs, update=False)
+                with torch.no_grad():
+                    _, mean, _log_std = self.actor(normed)
+                    noisy = mean + sigma * torch.randn_like(mean)
+                    if self.actor.use_tanh:
+                        return torch.tanh(noisy) * self.actor.action_scale + self.actor.action_bias
+                    return noisy
+
+            def q_distribution(self, raw_critic_obs: torch.Tensor, action: torch.Tensor) -> torch.Tensor:
+                """This teacher's Q-value distribution at (state, ACTION) -- the regression
+                TARGET for critic distillation, see module docstring's own section for why the
+                action must be this teacher's own recommended action, not the student's.
+
+                Returns softmax probabilities, shape [num_q_networks, batch, num_atoms] -- same
+                stacking order `Critic.forward` always produces, so pairing against the student's
+                own qnets[i] needs no extra bookkeeping (see module docstring: twin critics pair
+                independently, index i <-> index i).
+                """
+                normed = self.critic_obs_normalizer(raw_critic_obs, update=False)
+                return F.softmax(self.qnet(normed, action), dim=-1)
 
             def raw_dist(self, raw_obs: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
                 """(mean, log_std) BEFORE any squashing -- only used by the optional auxiliary
@@ -571,6 +833,52 @@ def distill(tyro_config) -> None:
             f" | logstd_loss_weight={logstd_loss_weight}"
         )
 
+        # 2026-08-28, optional critic distillation -- see module docstring's own section. 0.0
+        # (default) = off, exact no-op: no q_optimizer built below, no extra teacher/student qnet
+        # forward passes in the loop.
+        critic_loss_weight = _log_env_float(_CRITIC_LOSS_WEIGHT_ENV_VAR, 0.0)
+        if critic_loss_weight < 0.0:
+            raise ValueError(f"{_CRITIC_LOSS_WEIGHT_ENV_VAR} must be >= 0.0, got {critic_loss_weight}")
+        q_lr = _log_env_float(_Q_LR_ENV_VAR, _DEFAULT_LR)
+        # See the module docstring's "ACTION COVERAGE" section for why the default is 1, not 0.
+        critic_action_samples = _log_env_int(_CRITIC_ACTION_SAMPLES_ENV_VAR, _DEFAULT_CRITIC_ACTION_SAMPLES)
+        if critic_action_samples < 0:
+            raise ValueError(f"{_CRITIC_ACTION_SAMPLES_ENV_VAR} must be >= 0, got {critic_action_samples}")
+        logger.info(
+            f"[distill] critic distillation {'ENABLED' if critic_loss_weight > 0.0 else 'off'} "
+            f"| critic_loss_weight={critic_loss_weight}"
+            + (f" q_lr={q_lr} action_samples={critic_action_samples}" if critic_loss_weight > 0.0 else "")
+        )
+        if critic_loss_weight > 0.0:
+            logger.warning(
+                "[distill] NOTE: critic distillation constrains Q's VALUES but not its "
+                "action-gradient dQ/da -- which is exactly what SAC's actor update consumes. "
+                f"({_CRITIC_ACTION_SAMPLES_ENV_VAR}={critic_action_samples}; extra action coverage "
+                "was measured NOT to fix this -- see the module docstring's ACTION COVERAGE "
+                "section.) Single-teacher critic SEEDING "
+                "(scripts/seed_critic_from_teacher.py) preserves a real action-gradient by "
+                "construction and is the empirically better option today."
+            )
+
+        # 2026-08-28, critic-only mode -- see module docstring's "CRITIC-ONLY MODE" section for the
+        # measured actor drift (0.0140 RMS over a 20k continuation, ~12% relative) that motivated it.
+        freeze_actor = os.environ.get(_FREEZE_ACTOR_ENV_VAR, "").strip().lower() in _TRUTHY
+        if freeze_actor and critic_loss_weight <= 0.0:
+            raise ValueError(
+                f"{_FREEZE_ACTOR_ENV_VAR} is set but {_CRITIC_LOSS_WEIGHT_ENV_VAR} is "
+                f"{critic_loss_weight} -- with the actor frozen AND no critic loss, this run would "
+                "train nothing at all: it would step the env for the full step budget and emit "
+                "checkpoints byte-identical to its input. Set a non-zero critic loss weight, or "
+                "unset the freeze flag."
+            )
+        if freeze_actor:
+            logger.info(
+                "[distill] ACTOR FROZEN -- critic-only mode. No actor loss, no actor optimizer "
+                "step; the output checkpoint's actor will be byte-identical to the input's. "
+                "distill_mse is still logged (a valid read on frozen-actor-vs-teacher agreement) "
+                "but has no gradient effect."
+            )
+
         env_target = tyro_config.env_class
         tyro_env_config = get_tyro_env_config(tyro_config)
         env = get_class(env_target)(tyro_env_config, device=device)
@@ -692,14 +1000,26 @@ def distill(tyro_config) -> None:
         student_agent.logging_helper.num_steps_per_env = log_interval
         student_actor = student_agent.actor
         student_norm = student_agent.obs_normalizer
+        student_qnet = student_agent.qnet
+        student_critic_norm = student_agent.critic_obs_normalizer
 
-        optimizer = torch.optim.Adam(student_actor.parameters(), lr=lr)
+        # None in critic-only mode -- kept as a sentinel rather than an unused-but-built optimizer,
+        # so "the actor is frozen" is true of the optimizer state too, not just the skipped step.
+        optimizer = None if freeze_actor else torch.optim.Adam(student_actor.parameters(), lr=lr)
+        # None when critic distillation is off (default) -- kept as a sentinel rather than an
+        # unused-but-built optimizer, so "critic_loss_weight=0.0 is an exact no-op" is true of the
+        # optimizer state too, not just the loss value.
+        q_optimizer = torch.optim.Adam(student_qnet.parameters(), lr=q_lr) if critic_loss_weight > 0.0 else None
 
         num_skills = len(teachers)
         # skill_id -> teacher index into a stacked action tensor, built once, indexed every step.
         teacher_actors_ordered = [teachers[i] for i in range(num_skills)]
 
-        obs = student_agent.env.reset()
+        # reset_with_critic_obs (not plain reset()) only because critic distillation needs
+        # critic_obs threaded alongside obs -- see module docstring. critic_obs is unused
+        # (carried for nothing) when critic_loss_weight is 0.0, which costs one extra tensor, not
+        # any extra computation.
+        obs, critic_obs = student_agent.env.reset_with_critic_obs()
 
         while student_agent.global_step < num_steps:
             # The rollout action MUST be the SAME quantity the loss regresses (predict_action) --
@@ -743,7 +1063,33 @@ def distill(tyro_config) -> None:
                 # letting uninitialized memory silently pollute a batch-averaged MSE.
                 target_action = torch.zeros_like(rollout_action)
                 any_matched = torch.zeros(obs.shape[0], dtype=torch.bool, device=device)
-                target_log_std = torch.zeros_like(rollout_action) if logstd_loss_weight > 0.0 else None
+                # `and not freeze_actor`: this target feeds ONLY the actor's auxiliary log_std loss,
+                # so computing it in critic-only mode would be pure waste (an extra teacher forward
+                # pass per teacher per step, for a gradient that is never taken).
+                target_log_std = (
+                    torch.zeros_like(rollout_action) if (logstd_loss_weight > 0.0 and not freeze_actor) else None
+                )
+                # Critic-distillation targets, as a list of (action, target_dist) PAIRS -- one for
+                # the teacher's recommended action plus `critic_action_samples` extra actions
+                # sampled from each teacher's own policy. Multiple points per state are what give
+                # the student critic a real dQ/da; see the module docstring's ACTION COVERAGE
+                # section for the measured defect that single-point coverage caused. None (not
+                # merely empty) when critic distillation is off, so the loss block gates on
+                # identity rather than a second boolean.
+                critic_targets = None
+                if critic_loss_weight > 0.0:
+                    probe_dist = teacher_actors_ordered[0].q_distribution(critic_obs[:1], target_action[:1])
+                    n_q, n_atoms = probe_dist.shape[0], probe_dist.shape[2]
+                    # Slot 0 is always target_action itself (shared with the actor loss, not
+                    # recomputed); slots 1..N are per-state stochastic samples, filled per-teacher.
+                    critic_actions = [target_action] + [
+                        torch.zeros_like(rollout_action) for _ in range(critic_action_samples)
+                    ]
+                    critic_dists = [
+                        torch.zeros(n_q, obs.shape[0], n_atoms, device=device)
+                        for _ in range(critic_action_samples + 1)
+                    ]
+                    critic_targets = (critic_actions, critic_dists)
                 skill_masks: list[tuple[int, torch.Tensor]] = []
                 for teacher in teacher_actors_ordered:
                     mask = effective_skill_id == teacher.skill_id
@@ -751,6 +1097,30 @@ def distill(tyro_config) -> None:
                         target_action[mask] = teacher.act(obs[mask])
                         if target_log_std is not None:
                             target_log_std[mask] = teacher.raw_dist(obs[mask])[1]
+                        if critic_targets is not None:
+                            critic_actions, critic_dists = critic_targets
+                            # Slot 0: the teacher's recommended action (already computed above).
+                            critic_dists[0][:, mask, :] = teacher.q_distribution(
+                                critic_obs[mask], target_action[mask]
+                            )
+                            # Slots 1..N: extra actions from THIS teacher's own stochastic policy,
+                            # giving the student critic multiple points per state to fit dQ/da
+                            # against -- see module docstring's ACTION COVERAGE section. Each
+                            # sample is an independent draw, so N>1 spans the policy's spread
+                            # rather than repeating one perturbation.
+                            for slot in range(1, critic_action_samples + 1):
+                                # WIDE noise scales, not the teacher's own ~0.03 policy sigma --
+                                # see perturbed_action's docstring for the measurement showing
+                                # narrow sampling conveys nothing about bad actions. The ladder
+                                # spans near-optimal to near-saturating so the student learns the
+                                # whole Q-vs-action falloff, which is the restoring force that
+                                # keeps sigma from inflating.
+                                sigma = _CRITIC_ACTION_SIGMAS[(slot - 1) % len(_CRITIC_ACTION_SIGMAS)]
+                                sampled = teacher.perturbed_action(obs[mask], sigma)
+                                critic_actions[slot][mask] = sampled
+                                critic_dists[slot][:, mask, :] = teacher.q_distribution(
+                                    critic_obs[mask], sampled
+                                )
                         any_matched |= mask
                         skill_masks.append((teacher.skill_id, mask))
                 if not bool(any_matched.all()):
@@ -763,19 +1133,58 @@ def distill(tyro_config) -> None:
                     )
 
             with student_agent.logging_helper.record_learn_time():
-                normed_obs_grad = student_norm(obs, update=False)
-                student_pred = predict_action(student_actor, normed_obs_grad)
-                loss = F.mse_loss(student_pred[any_matched], target_action[any_matched])
-                total_loss = loss
-                if target_log_std is not None:
-                    _, _student_mean, student_log_std = student_actor(normed_obs_grad)
-                    logstd_loss = F.mse_loss(student_log_std[any_matched], target_log_std[any_matched])
-                    total_loss = loss + logstd_loss_weight * logstd_loss
-                    student_agent.training_metrics.add({"distill_logstd_mse": logstd_loss.detach()})
+                # In critic-only mode the actor's MSE is still COMPUTED (under no_grad -- it stays
+                # a meaningful diagnostic of how far the frozen actor sits from the teachers, and
+                # is still logged below) but carries no gradient and drives no optimizer step.
+                if freeze_actor:
+                    with torch.no_grad():
+                        normed_obs_grad = student_norm(obs, update=False)
+                        student_pred = predict_action(student_actor, normed_obs_grad)
+                        loss = F.mse_loss(student_pred[any_matched], target_action[any_matched])
+                else:
+                    normed_obs_grad = student_norm(obs, update=False)
+                    student_pred = predict_action(student_actor, normed_obs_grad)
+                    loss = F.mse_loss(student_pred[any_matched], target_action[any_matched])
+                    total_loss = loss
+                    if target_log_std is not None:
+                        _, _student_mean, student_log_std = student_actor(normed_obs_grad)
+                        logstd_loss = F.mse_loss(student_log_std[any_matched], target_log_std[any_matched])
+                        total_loss = loss + logstd_loss_weight * logstd_loss
+                        student_agent.training_metrics.add({"distill_logstd_mse": logstd_loss.detach()})
 
-                optimizer.zero_grad(set_to_none=True)
-                total_loss.backward()
-                optimizer.step()
+                    optimizer.zero_grad(set_to_none=True)
+                    total_loss.backward()
+                    optimizer.step()
+
+                # Critic distillation -- a SEPARATE backward/step from the actor's above, on
+                # purpose: different parameter set (student_qnet, not student_actor), and nothing
+                # is gained by fusing them into one graph (target_action/critic_targets are both
+                # already detached, computed under the no_grad block above, so there is no shared
+                # computation to preserve by keeping them in the same .backward() call).
+                if critic_targets is not None:
+                    critic_actions, critic_dists = critic_targets
+                    normed_critic_obs_grad = student_critic_norm(critic_obs, update=False)
+                    # One cross-entropy term per (action, target_dist) pair -- the student's Q is
+                    # evaluated at exactly the same actions the teacher's was, so each pair is a
+                    # like-for-like comparison. Averaging ACROSS pairs (rather than summing) keeps
+                    # the loss magnitude, and hence the effective learning rate, independent of
+                    # critic_action_samples -- so changing coverage does not silently also change
+                    # how hard the critic is being pushed.
+                    per_env_ce_terms = []
+                    for action_i, target_dist_i in zip(critic_actions, critic_dists):
+                        student_q_logits = student_qnet(normed_critic_obs_grad, action_i)
+                        student_q_log_probs = F.log_softmax(student_q_logits, dim=-1)
+                        # Cross-entropy per q-network (dim 0), per env; twin critics pair
+                        # independently (index i <-> index i) by construction -- see docstring.
+                        per_qnet_ce = -(target_dist_i * student_q_log_probs).sum(dim=-1)  # [n_q, batch]
+                        per_env_ce_terms.append(per_qnet_ce.mean(dim=0))  # [batch]
+                    per_env_q_ce_all = torch.stack(per_env_ce_terms).mean(dim=0)  # [batch]
+                    q_loss = per_env_q_ce_all[any_matched].mean()
+
+                    q_optimizer.zero_grad(set_to_none=True)
+                    (critic_loss_weight * q_loss).backward()
+                    q_optimizer.step()
+                    student_agent.training_metrics.add({"distill_q_loss": q_loss.detach()})
             # detach before handing to training_metrics: TensorAverageMeter (average_meters.py)
             # just appends whatever tensor it's given to a plain list -- a grad-tracked tensor
             # there would keep this WHOLE step's autograd graph alive until the next log_interval
@@ -824,6 +1233,19 @@ def distill(tyro_config) -> None:
 
                 for skill_id, mask in skill_masks:
                     _add_split(f"skill{skill_id}", mask)
+
+                # Per-skill critic-distillation loss, same rationale as the actor split above: a
+                # persistently high q-loss on one skill says that skill needs more steps or a
+                # higher HOLOSOMA_DISTILL_CRITIC_LOSS_WEIGHT, not a capacity problem in the actor.
+                # per_env_q_ce_all is still in scope from the learn-time block above (a `with`
+                # block is not a new Python scope). Already averaged over BOTH q-networks and all
+                # action-coverage samples, so this matches the pooled distill_q_loss exactly --
+                # just split per skill.
+                if critic_targets is not None:
+                    per_env_q_ce = per_env_q_ce_all.detach()  # [batch]
+                    for skill_id, mask in skill_masks:
+                        diag[f"distill_q_loss_skill{skill_id}"] = per_env_q_ce[mask].mean()
+
                 # Strike-phase split, kick-mode envs only. in_strike_phase is the SAME accessor the
                 # 6 shooting reward terms gate on (managers/command/terms/wbt.py), so "strike" here
                 # means exactly what it means everywhere else in this project rather than a new
@@ -850,6 +1272,11 @@ def distill(tyro_config) -> None:
                 # bookkeeping needs it.
                 next_obs, rewards, dones, infos = student_agent.env.step(rollout_action.float())
                 obs = next_obs
+                # Carried in parallel with obs (2026-08-28) -- see module docstring's critic
+                # distillation section. Unused, but harmlessly still fetched, when
+                # critic_loss_weight is 0.0; this dict entry is always present regardless
+                # (FastSACEnv.step always computes it, see fast_sac_agent.py:EnvWrapper.step).
+                critic_obs = infos["observations"]["critic"]
                 # Free diagnostic signal: the student's OWN action just drove this real env step,
                 # so infos["to_log"]/["episode"] already contain the same per-skill kick_topple_frac
                 # /kick_episode_length/etc. every RL run in this project logs -- feeding them here
@@ -870,6 +1297,8 @@ def distill(tyro_config) -> None:
                 save_path = str(experiment_dir / f"model_{student_agent.global_step:07d}.pt")
                 onnx_path = str(experiment_dir / f"model_{student_agent.global_step:07d}.onnx")
                 logger.info(f"[distill] saving {save_path}")
+                if critic_loss_weight > 0.0:
+                    _sync_qnet_target(student_agent)
                 student_agent.save(save_path)
                 # export() only reads env/actor state (dummy zero input for ONNX tracing, plus
                 # metadata pulled from command_manager/robot_config) -- verified it never calls
@@ -897,6 +1326,8 @@ def distill(tyro_config) -> None:
         final_path = str(experiment_dir / f"model_{student_agent.global_step:07d}.pt")
         final_onnx_path = str(experiment_dir / f"model_{student_agent.global_step:07d}.onnx")
         logger.info(f"[distill] done -- saving final checkpoint {final_path}")
+        if critic_loss_weight > 0.0:
+            _sync_qnet_target(student_agent)
         student_agent.save(final_path)
         student_agent.export(onnx_file_path=final_onnx_path)
         # No mujoco rollout re-trigger here, matching FastSACAgent.learn()'s own final-save block

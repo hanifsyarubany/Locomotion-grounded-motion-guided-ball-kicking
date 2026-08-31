@@ -1,0 +1,243 @@
+# ------------------------------------------------------------------------------
+# BALL MAIN SETTINGS
+# Radius, mass, and position randomization
+# ------------------------------------------------------------------------------
+ball:
+  radius: 0.11
+  mass: 0.43
+randomize_x: 0.1
+randomize_y: 0.1
+
+# ------------------------------------------------------------------------------
+# LOCOMOTION-TO-KICKING HANDOFF CONFIGS
+# mid-episode kick entry, termination, etc. 
+# ------------------------------------------------------------------------------
+mid_episode_kick_entry_prob: 0.3
+mid_episode_kick_entry_min_steps: 100
+mid_episode_kick_entry_max_residual: 2.0
+pre_kick_decel_steps: 0.0
+pre_kick_decel_target: 0.1
+pre_kick_fallback_timeout_steps: 0.0
+pre_kick_reward_ramp_steps: 50.0
+pre_kick_termination_grace_steps: 50.0
+pre_kick_reference_blend_steps: 50.0
+mid_episode_kick_entry_ball_fixed: false
+
+# ------------------------------------------------------------------------------
+# BALL OBSERVATION SETTINGS
+# Sensor Noise configuration and OOD Settings
+# ------------------------------------------------------------------------------
+ball_obs_noise: 0.05
+ball_obs_noise_range_coefficient: 0.03
+ball_obs_delay_steps_min: 0
+ball_obs_delay_steps_max: 6
+ball_obs_hold_steps_min: 1
+ball_obs_hold_steps_max: 4
+ood_spawn_probability: 0.05
+ood_region_multiplier: 3.0
+ball_static_obs_probability: 0.05
+ball_obs_stale_probability: 0.01 
+observation_bias: 0.05
+
+# ------------------------------------------------------------------------------
+# BAD TRACKING CONFIG & HANDOFF
+# Bad Tracking, Kick Recovery, and Swing Tracking
+# ------------------------------------------------------------------------------
+bad_tracking_swing_only: false
+kick_recovery_termination_handoff: true
+kick_recovery_drift_deadzone: 0.4
+bad_tracking_swing_threshold_multiplier: 1.0
+swing_tracking_sigma_multiplier: 1.0
+
+# ------------------------------------------------------------------------------
+# CONTACT, FRAME, AND BALANCING CONFIG
+# Balance potential, frame randomization/sampling, Kick Contact
+# ------------------------------------------------------------------------------
+balance_potential_weight: 1.0
+use_foot_strike_pitch_reference_relative: true
+kick_contact_force_penalty_floor: 3.0
+kick_contact_force_penalty_k: 4.0
+kick_contact_force_threshold_bodyweight_multiplier: 3.0
+start_at_timestep_zero_prob: 0.5   
+rsi_scope_to_authored_clip: true
+critical_frame_oversampling_prob: 0.0
+critical_frame_sampling_window: 10
+kick_target_entropy_ratio: 0.8
+kick_gamma: 0.99  
+
+# ------------------------------------------------------------------------------
+# TERRAIN CONFIG
+# Kicking terrain rough settings
+# ------------------------------------------------------------------------------
+kick_terrain_light_rough_proportion: 0.0    
+kick_terrain_light_rough_max_height: 0.008  
+kick_eligible_terrain_types: ["flat"]       
+
+# ------------------------------------------------------------------------------
+# PUSH RANDOMIZATION CONFIG
+# Body push pertubation collision
+# ------------------------------------------------------------------------------
+body_push_enabled: true
+body_push_interval_min_s: 4.0   
+body_push_interval_max_s: 8.0
+body_push_force_min: 20.0      
+body_push_force_max: 80.0       
+body_push_duration_min_s: 0.05 
+body_push_duration_max_s: 0.20 
+body_push_vertical_fraction: 0.2  
+
+# ------------------------------------------------------------------------------
+# HANDOFF/PENALTY/POST-FLIP CONFIG
+# Kick recovery, motion-vel smoothing, penalty, post-flip settings
+# ------------------------------------------------------------------------------
+kick_recovery_locomotion_flip_enabled: true
+
+# ------------------------------------------------------------------------------
+# KICK ABORT (2026-08-28) -- mid-clip kick->locomotion flip at a randomized tick.
+#
+# WHY. kick_recovery_locomotion_flip_enabled already flips every kick env to locomotion, but only
+# ever at ONE point (pre_recovery_motion_end_idx, the clip end), so the policy practises exactly
+# one arrival pose. A 512-env phase-resolved probe found 76% of teacher-1's falls and 83% of the
+# distilled student's skill-1 falls in that post-stand phase -- while a locomotion control arm
+# under identical terrain/push/DR toppled 0/1847. Locomotion is not fragile; ARRIVING in it
+# discontinuously from an off-balance state is. This turns that single arrival into a distribution
+# over the whole clip.
+#
+# BOTH ARRIVAL FLAVOURS COME FREE from the existing RSI draw (start_at_timestep_zero_prob, 0.5):
+# frame-0 envs give policy-produced (realistic) pre-flip states; RSI-started envs reach poses the
+# policy might never roll into unaided (better coverage). No second switch needed.
+#
+# THE DELAY WINDOW SELECTS THE PHASE, and that is the consequential choice. skill012 (T=250) has
+# its strike at frames 120-154; with a frame-0 start the [10,60] default lands in the APPROACH,
+# the safest phase. Widen toward 200+ to reach follow-through. The strike window is by far the
+# hardest (this project's own analysis puts 62-85% of kick falls there) -- reach it deliberately,
+# not by accident.
+#
+# Ships DISABLED (0.0 = exact no-op). When enabling start at 0.05-0.10, NOT 0.01: the mirror
+# mid_episode_kick_entry_prob runs at 0.3 and still only reaches ~1.7-2% of all envs, a share the
+# Stage-D analysis found too small to move aggregate metrics. Watch kick_abort_pending_frac /
+# kick_abort_post_flip_frac, not pooled kick_topple_frac. NOT VALIDATED BY A TRAINING RUN.
+kick_abort_prob: 0.0
+kick_abort_delay_min_steps: 10
+kick_abort_delay_max_steps: 60
+motion_head_velocity_smoothing_frames: 3
+penalty_curriculum_enabled: false
+post_flip_termination_grace_steps: 50.0
+post_flip_reward_decay_steps: 50.0
+post_flip_obs_ramp_steps: 0
+
+# ------------------------------------------------------------------------------
+# BAD MOTION & BODY POS WARMUP CONFIG
+# An early termination settings to the bad motion
+# ------------------------------------------------------------------------------
+bad_motion_body_pos_threshold:  0.35
+ee_body_pos_warmup_threshold: 0.7
+
+# ------------------------------------------------------------------------------
+# KICK RECOVERY CONFIG
+# Post kick stabilization recovery
+# ------------------------------------------------------------------------------
+kick_recovery_stand_height_deadzone: 0.02
+kick_recovery_stand_orientation_deadzone: 0.035
+kick_recovery_stand_feet_width_deadzone: 0.04
+kick_recovery_stand_knee_width_deadzone: 0.04
+recovery_duration_s: 1.0
+hold_duration_s: 1.0
+
+
+# ------------------------------------------------------------------------------
+# KICK SWING CONFIG
+# in striking phase deadzone settings
+# ------------------------------------------------------------------------------
+kick_swing_orientation_deadzone: 0.44        
+kick_swing_torso_orientation_deadzone: 0.26  
+
+
+# -----------------------------------------------------------------------------------------------
+# VELOCITY, SUCCESS RADIUS, AND KICK BALL OVER LINE
+# Ball velocity reference during kicking, success radius criteria settings, kick ball over line
+# -----------------------------------------------------------------------------------------------
+kick_ball_velocity_v_ref: 2.0
+success_radius: 0.5
+kick_ball_over_line_require_has_kicked: true
+
+# ------------------------------------------------------------------------------
+# REWARD SCALE CONFIG
+# Scale configuration
+# ------------------------------------------------------------------------------
+shooting_reward_scale_ramp_iters: 5000
+shooting_reward_scale_hold_iters: 0
+shooting_reward_scale: 0.5   
+motion_tracking_reward_scale: 2.0
+root_tracking_reward_scale: 1.0
+recovery_tracking_scale: 1.0
+kick_recovery_posture_reward_scale: 1.0
+kick_safety_reward_scale: 1.0
+kick_alive_reward_scale: 1.0
+kick_alive_pre_kick_ratio: 0.1  
+
+# ------------------------------------------------------------------------------
+# REWARD TERMS CONFIG
+# Reward weight settings
+# ------------------------------------------------------------------------------
+motion_tracking_reward:
+  motion_global_ref_position_error_exp: 1.0    
+  motion_global_ref_orientation_error_exp: 0.5 
+  motion_relative_body_position_error_exp: 1.0
+  motion_relative_body_orientation_error_exp: 1.0
+  motion_global_body_lin_vel: 1.0
+  motion_global_body_ang_vel: 1.0
+  motion_global_feet_lin_vel: 1.0
+  motion_strike_dof_pos_error_exp: 1.0
+  motion_strike_leg_null_dof_pos_error_exp: 1.0 
+
+shooting_reward:
+  kick_ball_proximity: 2.0                
+  kick_contact_orientation: 4.0          
+  kick_foot_strike_pitch: 1.0             
+  kick_ball_velocity: 10.0
+  kick_error_ball_to_target: 20.0           
+  kick_predicted_error_ball_to_target: 5.0
+  kick_goal_success_burst: 0.0             
+  kick_ball_contact_hit: 0.0              
+  kick_ball_approach_stance: 0.0           
+  kick_ball_over_line: 1.0                  
+  kick_robot_com_ball_distance: 2.0       
+  kick_robot_torso_ball_distance: 2.0       
+  kick_penalize_weak_foot_contact: -1.0 
+  kick_penalize_self_contact_feet: -0.4    
+  _sigma:
+    kick_error_ball_to_target: 3.0
+
+kick_recovery_posture_reward:
+  penalty_kick_recovery_stance_asymmetry: -20.0
+  penalty_kick_recovery_yaw_drift: -2.0
+  penalty_kick_recovery_stand_height: -40.0
+  penalty_kick_recovery_stand_orientation: -20.0
+  penalty_kick_recovery_stand_feet_width: -20.0
+  penalty_kick_recovery_stand_knee_width: -20.0
+
+kick_safety_reward:
+  kick_penalty_excess_contact_force: -1.0
+  kick_penalty_hard_landing: -1.0
+  kick_penalty_excess_base_lin_vel: -1.0
+  kick_penalty_swing_orientation: -0.04       
+  kick_penalty_swing_torso_orientation: -0.04 
+  kick_feet_slip: -0.02                        
+  action_rate_l2: -0.04                       
+  kick_arm_default_pose: -0.04                
+  kick_feet_air_time: 50.0
+  kick_swing_feet_clearance: -20.0
+  kick_no_fly: -0.1                          
+  kick_penalty_unstable: -0.5             
+  kick_feet_contact_time: -0.5
+  kick_penalty_lin_vel_z: -0.1                
+  kick_penalty_dof_vel: -5e-8  
+  kick_penalty_torque: -2e-7
+  kick_penalty_strike_dof_acc: -5e-8 
+  kick_undesired_contacts: -0.1
+  kick_penalty_ee_body_pos_divergence: -100.0  
+  kick_action_smoothness: -0.1   
+
+kick_alive_reward:
+  kick_alive: 4.0

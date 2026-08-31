@@ -51,8 +51,43 @@ with the changes below on top.
 
 from dataclasses import replace
 
+from holosoma.config_types.multi_skill import load_multi_skill_config, multi_skill_mode_enabled
 from holosoma.config_types.randomization import RandomizationManagerCfg, RandomizationTermCfg
+from holosoma.config_types.simulator import load_ball_config
 from holosoma.config_values.wbt.g1.randomization import g1_29dof_wbt_randomization
+
+# Body-targeted collision-style push (2026-08-27) -- see BodyPushRandomizerState's own docstring
+# (managers/randomization/terms/locomotion.py) for why this is a separate mechanism from
+# push_randomizer_state above, not a parameter change to it. Read the SAME way every other
+# task-config-driven field in this preset family is read (command.py's identical pattern): task
+# config wins when HOLOSOMA_TASK_CONFIG/N-skill mode is active, legacy BallConfig otherwise. Module-
+# level, same as command.py/reward.py -- resolved once at import time, not per-env.
+_multi_skill_cfg = load_multi_skill_config() if multi_skill_mode_enabled() else None
+if _multi_skill_cfg is not None:
+    _body_push_enabled = _multi_skill_cfg.body_push_enabled
+    _body_push_interval_s = [_multi_skill_cfg.body_push_interval_min_s, _multi_skill_cfg.body_push_interval_max_s]
+    _body_push_force_range = [_multi_skill_cfg.body_push_force_min, _multi_skill_cfg.body_push_force_max]
+    _body_push_duration_s = [_multi_skill_cfg.body_push_duration_min_s, _multi_skill_cfg.body_push_duration_max_s]
+    _body_push_vertical_fraction = _multi_skill_cfg.body_push_vertical_fraction
+    _body_push_body_names = _multi_skill_cfg.body_push_body_names
+else:
+    _legacy_ball_cfg = load_ball_config()
+    _body_push_enabled = _legacy_ball_cfg.body_push_enabled
+    _body_push_interval_s = [_legacy_ball_cfg.body_push_interval_min_s, _legacy_ball_cfg.body_push_interval_max_s]
+    _body_push_force_range = [_legacy_ball_cfg.body_push_force_min, _legacy_ball_cfg.body_push_force_max]
+    _body_push_duration_s = [_legacy_ball_cfg.body_push_duration_min_s, _legacy_ball_cfg.body_push_duration_max_s]
+    _body_push_vertical_fraction = _legacy_ball_cfg.body_push_vertical_fraction
+    _body_push_body_names = _legacy_ball_cfg.body_push_body_names
+
+_body_push_params = {
+    "enabled": _body_push_enabled,
+    "interval_s": _body_push_interval_s,
+    "force_range": _body_push_force_range,
+    "duration_s": _body_push_duration_s,
+    "vertical_fraction": _body_push_vertical_fraction,
+}
+if _body_push_body_names is not None:
+    _body_push_params["body_names"] = list(_body_push_body_names)
 
 g1_29dof_unified_randomization = RandomizationManagerCfg(
     setup_terms={
@@ -149,12 +184,30 @@ g1_29dof_unified_randomization = RandomizationManagerCfg(
                 "enabled": True,
             },
         ),
+        # (6) BODY-TARGETED COLLISION PUSH (added 2026-08-27). See BodyPushRandomizerState's
+        # docstring for the full rationale -- addresses two of the three ways an unmodelled real
+        # collision differs from the existing root-velocity push_randomizer_state above (location,
+        # duration; NOT the third, physical blocking of the recovery motion, which is out of
+        # scope). Params sourced from configs/task/task_config_stageB.yaml's body_push_* fields
+        # (or the legacy BallConfig counterparts) -- see this module's own top-of-file resolution
+        # block. Ships with enabled=False unless that yaml sets body_push_enabled: true, a
+        # verified no-op at every other default (bit-identical to before this term existed).
+        "body_push_randomizer_state": RandomizationTermCfg(
+            func="holosoma.managers.randomization.terms.locomotion:BodyPushRandomizerState",
+            params=_body_push_params,
+        ),
     },
     reset_terms={
         **g1_29dof_wbt_randomization.reset_terms,
         # Re-assert the RFI injection flag on reset (mirrors stock loco's reset_terms).
         "configure_torque_rfi": RandomizationTermCfg(
             func="holosoma.managers.randomization.terms.locomotion:configure_torque_rfi",
+        ),
+        # Same class instance as the setup_terms registration above -- this just tags it into the
+        # "reset" lifecycle stage too (RandomizationManager dedupes by name, see
+        # _register_class_term); params are read once, at the setup_terms registration.
+        "body_push_randomizer_state": RandomizationTermCfg(
+            func="holosoma.managers.randomization.terms.locomotion:BodyPushRandomizerState",
         ),
         # Per-episode constant bias on kick_ball_pos_b (heading frame). No-op unless
         # BallConfig.observation_bias > 0 (configs/ball*.yaml); see that field's docstring and
@@ -172,7 +225,22 @@ g1_29dof_unified_randomization = RandomizationManagerCfg(
             func="holosoma.managers.randomization.terms.locomotion:randomize_ball_obs_freeze",
         ),
     },
-    step_terms=g1_29dof_wbt_randomization.step_terms,
+    step_terms={
+        **g1_29dof_wbt_randomization.step_terms,
+        # Same instance as the setup_terms registration -- tags the "step" lifecycle stage
+        # (increments the schedule counter; see BodyPushRandomizerState.step).
+        "body_push_randomizer_state": RandomizationTermCfg(
+            func="holosoma.managers.randomization.terms.locomotion:BodyPushRandomizerState",
+        ),
+        # The actual force application: checks the schedule, samples/ticks/clears disturbances,
+        # and writes to the simulator. Registration ORDER matters here, same as
+        # push_randomizer_state/apply_pushes above -- dict insertion order is iteration order, and
+        # this must run AFTER the state's own step() so the just-incremented counter is what
+        # apply_body_pushes compares against the resampled interval.
+        "apply_body_pushes": RandomizationTermCfg(
+            func="holosoma.managers.randomization.terms.locomotion:apply_body_pushes",
+        ),
+    },
 )
 
 __all__ = ["g1_29dof_unified_randomization"]

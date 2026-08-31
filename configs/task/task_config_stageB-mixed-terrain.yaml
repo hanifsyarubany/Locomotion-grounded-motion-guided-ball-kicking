@@ -1,0 +1,175 @@
+# ------------------------------------------------------------------------------
+# BALL MAIN SETTINGS
+# Radius, mass, and position randomization
+# ------------------------------------------------------------------------------
+ball:
+  radius: 0.11
+  mass: 0.43
+randomize_x: 0.1
+randomize_y: 0.1
+
+# ------------------------------------------------------------------------------
+# BALL OBSERVATION SETTINGS
+# Sensor Noise configuration and OOD Settings
+# ------------------------------------------------------------------------------
+ball_obs_noise: 0.05
+ball_obs_noise_range_coefficient: 0.03
+ball_obs_delay_steps_min: 0
+ball_obs_delay_steps_max: 6
+ball_obs_hold_steps_min: 1
+ball_obs_hold_steps_max: 4
+ood_spawn_probability: 0.4
+ood_region_multiplier: 100.0
+ball_static_obs_probability: 0.4
+ball_obs_stale_probability: 0.01 
+observation_bias: 0.05
+
+# ------------------------------------------------------------------------------
+# BAD TRACKING CONFIG & HANDOFF
+# Bad Tracking, Kick Recovery, and Swing Tracking
+# ------------------------------------------------------------------------------
+bad_tracking_swing_only: false
+kick_recovery_termination_handoff: false
+kick_recovery_drift_deadzone: 0.15
+bad_tracking_swing_threshold_multiplier: 1.0
+swing_tracking_sigma_multiplier: 1.0
+
+# ------------------------------------------------------------------------------
+# CONTACT, FRAME, AND BALANCING CONFIG
+# Balance potential, frame randomization/sampling, Kick Contact
+# ------------------------------------------------------------------------------
+balance_potential_weight: 1.0
+kick_contact_force_penalty_floor: 3.0
+kick_contact_force_penalty_k: 4.0
+kick_contact_force_threshold_bodyweight_multiplier: 3.0
+start_at_timestep_zero_prob: 0.5   
+rsi_scope_to_authored_clip: false
+critical_frame_oversampling_prob: 0.0
+critical_frame_sampling_window: 10
+kick_target_entropy_ratio: 0.8
+kick_gamma: 0.99  
+
+# ------------------------------------------------------------------------------
+# TERRAIN CONFIG
+# Kicking terrain rough settings
+# ------------------------------------------------------------------------------
+kick_terrain_light_rough_proportion: 0.15 
+kick_terrain_light_rough_max_height: 0.008  
+kick_eligible_terrain_types: ["flat","light_rough"]      
+
+# ------------------------------------------------------------------------------
+# PUSH RANDOMIZATION CONFIG
+# Body push pertubation collision
+# ------------------------------------------------------------------------------
+body_push_enabled: true
+body_push_interval_min_s: 4.0   
+body_push_interval_max_s: 8.0
+body_push_force_min: 20.0      
+body_push_force_max: 80.0       
+body_push_duration_min_s: 0.05 
+body_push_duration_max_s: 0.20 
+body_push_vertical_fraction: 0.2 
+
+# ------------------------------------------------------------------------------
+# BAD MOTION & BODY POS WARMUP CONFIG
+# An early termination settings to the bad motion
+# ------------------------------------------------------------------------------
+bad_motion_body_pos_threshold: 0.25
+ee_body_pos_warmup_threshold: 0.25
+
+# ------------------------------------------------------------------------------
+# KICK RECOVERY CONFIG
+# Post kick stabilization recovery
+# ------------------------------------------------------------------------------
+kick_recovery_stand_height_deadzone: 0.015
+kick_recovery_stand_orientation_deadzone: 0.025
+kick_recovery_stand_feet_width_deadzone: 0.03
+kick_recovery_stand_knee_width_deadzone: 0.03
+recovery_duration_s: 1.0
+hold_duration_s: 1.0
+
+# -----------------------------------------------------------------------------------------------
+# VELOCITY, SUCCESS RADIUS, AND KICK BALL OVER LINE
+# Ball velocity reference during kicking, success radius criteria settings, kick ball over line
+# -----------------------------------------------------------------------------------------------
+kick_ball_velocity_v_ref: 2.0
+success_radius: 0.5
+kick_ball_over_line_require_has_kicked: false
+
+# ------------------------------------------------------------------------------
+# REWARD SCALE CONFIG
+# Scale configuration
+# ------------------------------------------------------------------------------
+shooting_reward_scale_ramp_iters: 5000
+shooting_reward_scale_hold_iters: 0
+shooting_reward_scale: 0.0   
+motion_tracking_reward_scale: 2.0
+root_tracking_reward_scale: 1.0
+recovery_tracking_scale: 1.0
+kick_recovery_posture_reward_scale: 1.0
+kick_safety_reward_scale: 1.0
+kick_alive_reward_scale: 1.0
+kick_alive_pre_kick_ratio: 0.1   
+
+# ------------------------------------------------------------------------------
+# REWARD TERMS CONFIG
+# Reward weight settings
+# ------------------------------------------------------------------------------
+motion_tracking_reward:
+  motion_global_ref_position_error_exp: 0.5   
+  motion_global_ref_orientation_error_exp: 0.5 
+  motion_relative_body_position_error_exp: 1.0 
+  motion_relative_body_orientation_error_exp: 1.0
+  motion_global_body_lin_vel: 1.0
+  motion_global_body_ang_vel: 1.0
+  motion_global_feet_lin_vel: 1.0
+
+shooting_reward:
+  kick_ball_proximity: 0.0                 
+  kick_contact_orientation: 0.0             
+  kick_foot_strike_pitch: 0.0              
+  kick_ball_velocity: 0.0                  
+  kick_error_ball_to_target: 0.0            
+  kick_predicted_error_ball_to_target: 0.0  
+  kick_goal_success_burst: 0.0              
+  kick_ball_contact_hit: 0.0               
+  kick_ball_approach_stance: 0.0           
+  kick_ball_over_line: 0.0                  
+  kick_robot_com_ball_distance: 0.0       
+  kick_robot_torso_ball_distance: 0.0      
+  kick_penalize_weak_foot_contact: 0.0      
+  kick_penalize_self_contact_feet: 0.0     
+  _sigma:
+    kick_error_ball_to_target: 3.0
+
+kick_recovery_posture_reward:
+  penalty_kick_recovery_stance_asymmetry: -20.0
+  penalty_kick_recovery_yaw_drift: -2.0
+  penalty_kick_recovery_stand_height: -40.0
+  penalty_kick_recovery_stand_orientation: -20.0
+  penalty_kick_recovery_stand_feet_width: -20.0
+  penalty_kick_recovery_stand_knee_width: -20.0
+
+kick_safety_reward:
+  kick_penalty_excess_contact_force: -1.0
+  kick_penalty_hard_landing: -1.0
+  kick_penalty_excess_base_lin_vel: -1.0
+  kick_penalty_swing_orientation: -0.01        
+  kick_penalty_swing_torso_orientation: -0.01 
+  kick_feet_slip: -0.025                       
+  action_rate_l2: -0.1                       
+  kick_arm_default_pose: -0.025               
+  kick_feet_air_time: 50.0                     
+  kick_swing_feet_clearance: -20.0           
+  kick_no_fly: -0.05                          
+  kick_penalty_unstable: -0.01                
+  kick_feet_contact_time: -0.5                
+  kick_penalty_lin_vel_z: -0.025              
+  kick_penalty_dof_vel: -3e-5                 
+  kick_penalty_torque: -2e-7                 
+  kick_undesired_contacts: -0.1              
+  kick_penalty_ee_body_pos_divergence: -100.0
+  kick_action_smoothness: -0.0015             
+
+kick_alive_reward:
+  kick_alive: 0.0

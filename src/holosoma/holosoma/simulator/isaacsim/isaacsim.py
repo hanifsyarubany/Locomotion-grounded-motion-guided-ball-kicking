@@ -934,6 +934,52 @@ class IsaacSim(BaseSimulator):
     def apply_torques_at_dof(self, torques):
         self._robot.set_joint_effort_target(torques, joint_ids=self.dof_ids)
 
+    def set_external_body_forces(self, forces_w) -> None:
+        """See BaseSimulator.set_external_body_forces. `forces_w` is [num_envs, num_bodies, 3],
+        WORLD frame, HOLOSOMA body order.
+
+        Two conversions happen here, both load-bearing:
+
+        1. **Body order.** `self.body_ids[h]` is the Isaac body index of holosoma body `h`, so the
+           same list serves as both the gather index for `body_quat_w` AND the `body_ids` argument
+           below -- column `j` of the force tensor lines up with `body_ids[j]` by construction.
+           Getting this wrong is the exact failure this codebase has already hit twice (see
+           `_holosoma_body_to_mujoco_id`'s comment in the MuJoCo backend for the sibling bug).
+
+        2. **Frame.** IsaacLab 2.1 hardcodes `is_global=False` in `set_external_force_and_torque`,
+           i.e. it interprets forces in each body's LOCAL frame. A collision force is naturally
+           world-frame, so it is rotated by the inverse body quaternion here -- the same correction
+           `VirtualGantry._apply_force_isaacsim` applies. Without it, a fixed world-frame push would
+           swing around with the body's orientation, which is silently wrong rather than obviously
+           wrong.
+
+        Forces persist in IsaacLab's buffer until overwritten and are pushed to PhysX by
+        `scene.write_data_to_sim()` inside `simulate_at_each_physics_step` -- so one call per
+        control step correctly sustains the force across that step's physics substeps.
+        """
+        from isaaclab.utils.math import quat_apply_inverse
+
+        expected = (self.num_envs, self.num_bodies, 3)
+        if tuple(forces_w.shape) != expected:
+            raise ValueError(
+                f"set_external_body_forces expects forces_w of shape {expected} "
+                f"(holosoma body order), got {tuple(forces_w.shape)}"
+            )
+
+        if getattr(self, "_external_force_body_ids", None) is None:
+            self._external_force_body_ids = list(self.body_ids)
+
+        body_ids = self._external_force_body_ids
+        quat_w = self._robot.data.body_quat_w[:, body_ids, :]  # (num_envs, num_bodies, 4) wxyz
+        forces_w = forces_w.to(device=quat_w.device, dtype=quat_w.dtype)
+        forces_b = quat_apply_inverse(quat_w.reshape(-1, 4), forces_w.reshape(-1, 3)).reshape(expected)
+
+        self._robot.set_external_force_and_torque(
+            forces=forces_b,
+            torques=torch.zeros_like(forces_b),
+            body_ids=body_ids,
+        )
+
     def draw_debug_viz(self):
         if self.virtual_gantry:
             self.virtual_gantry.draw_debug()

@@ -1,0 +1,61 @@
+task_config: task_config_stageB-mixed-terrain
+
+base_robot:
+  target_height: 0.74
+  deadzone: 0.015
+
+motion_skill_1:
+  motion_npz: ../../locomotion_and_motion_tracking/video2robot/data/video_011/npz_holosoma/robot_motion_track_1.npz
+  x: 1.276
+  y: 0.072
+  target_x: 6.122
+  target_y: 1.287
+  strike_start_frame: 170   
+  stand_start_frame: 215    
+  motion_training_ratio: 0.23
+  kick_foot: right
+  kick_ankle_pitch_correction_enabled: true
+  kick_aim_enabled: true
+  task_config: task_config_stageB-mixed-terrain
+
+motion_skill_2:
+  motion_npz: ../../locomotion_and_motion_tracking/video2robot/data/video_012/npz_holosoma/robot_motion_track_1.npz
+  x: 1.39
+  y: 0.02
+  target_x: 6.554
+  target_y: -0.099
+  strike_start_frame: 120   
+  stand_start_frame: 154    
+  motion_training_ratio: 0.23
+  kick_foot: right
+  kick_ankle_pitch_correction_enabled: true 
+  kick_aim_enabled: true 
+  task_config: task_config_stageB-mixed-terrain
+
+motion_skill_3:
+  motion_npz: ../../locomotion_and_motion_tracking/video2robot/data/video_013/npz_holosoma/robot_motion_track_1.npz
+  x: 1.99
+  y: -0.14
+  target_x: 6.579
+  target_y: -2.782
+  strike_start_frame: 153   
+  stand_start_frame:  220   
+  motion_training_ratio: 0.23
+  kick_foot: right
+  kick_ankle_pitch_correction_enabled: true 
+  kick_aim_enabled: true
+  task_config: task_config_stageB-mixed-terrain
+
+motion_skill_4:
+  motion_npz: ../../locomotion_and_motion_tracking/video2robot/data/video_014/npz_holosoma/robot_motion_track_1.npz
+  x: 0.6
+  y: 0.21
+  target_x: 1.861
+  target_y: 5.048
+  strike_start_frame: 63  
+  stand_start_frame:  120  
+  motion_training_ratio: 0.23
+  kick_foot: right
+  kick_ankle_pitch_correction_enabled: true  
+  kick_aim_enabled: true
+  task_config: task_config_stageB-mixed-terrain

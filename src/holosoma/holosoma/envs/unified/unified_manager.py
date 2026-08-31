@@ -99,6 +99,10 @@ class UnifiedManager(BaseTask):
         # its own comment in _init_buffers), so it's cleared separately here.
         self._clear_kick_pending(env_ids)
         self._pre_kick_step[env_ids] = -1
+        # Kick-abort target tick: cleared unconditionally on every genuine reset, exactly like
+        # _post_flip_step above and for the same reason (a stale target from a PRIOR episode must
+        # never fire in a fresh one). Re-drawn below for the envs that win the probability.
+        self._kick_abort_flip_tick[env_ids] = -1
 
         forced = self._forced_task_mode[env_ids]
         has_forced = forced >= 0
@@ -118,6 +122,30 @@ class UnifiedManager(BaseTask):
         # (same pattern task_mode itself uses). Meaningless for envs where task_mode ends up
         # LOCOMOTION; harmless to copy unconditionally.
         self.skill_id[env_ids] = self._skill_id_partition[env_ids]
+
+        # Kick ABORT draw (2026-08-28) -- see MultiSkillConfig.kick_abort_prob's own docstring for
+        # the full rationale (76-83% of falls are post-flip, yet the policy only ever practises ONE
+        # arrival pose). Kick-partitioned envs that are actually STAYING in kick mode this episode:
+        # explicitly excludes envs diverted to LOCOMOTION by the mid_episode_kick_entry draw below,
+        # since those have no kick phase to abort out of. Placed BEFORE that draw so `task_mode`
+        # here is still the raw partition value; the entry draw's own override is applied after and
+        # would otherwise mask which envs were kick-partitioned at all.
+        if self._kick_abort_prob > 0.0:
+            abort_eligible = (self.task_mode[env_ids] == TaskMode.KICK) & (~has_forced)
+            if abort_eligible.any():
+                draw = torch.rand(env_ids.shape[0], device=self.device) < self._kick_abort_prob
+                selected = abort_eligible & draw
+                if selected.any():
+                    # +1 on the high end: randint's upper bound is exclusive, and the config field
+                    # documents max_steps as INCLUSIVE.
+                    ticks = torch.randint(
+                        self._kick_abort_delay_min_steps,
+                        self._kick_abort_delay_max_steps + 1,
+                        (env_ids.shape[0],),
+                        device=self.device,
+                        dtype=torch.long,
+                    )
+                    self._kick_abort_flip_tick[env_ids[selected]] = ticks[selected]
 
         # Locomotion -> kick direction (2026-08-13): kick-partitioned envs, NOT explicitly forced
         # (trigger_kick() always means "enter now" -- interactive/deploy tooling expects immediate
@@ -434,6 +462,14 @@ class UnifiedManager(BaseTask):
         # FIX 5 -- the kick->locomotion (flip) direction of the same observation discontinuity.
         # Read here rather than in reward.py/termination.py because, like its pre_kick sibling, it
         # is consumed per-tick by this class's own task_mode_mask_soft.
+        # Kick abort (2026-08-28) -- see MultiSkillConfig.kick_abort_prob's own docstring.
+        self._kick_abort_prob = float(getattr(self.command_manager.command_cfg, "kick_abort_prob", 0.0))
+        self._kick_abort_delay_min_steps = int(
+            getattr(self.command_manager.command_cfg, "kick_abort_delay_min_steps", 10)
+        )
+        self._kick_abort_delay_max_steps = int(
+            getattr(self.command_manager.command_cfg, "kick_abort_delay_max_steps", 60)
+        )
         self._post_flip_obs_ramp_steps = float(
             getattr(self.command_manager.command_cfg, "post_flip_obs_ramp_steps", 0.0)
         )
@@ -510,6 +546,15 @@ class UnifiedManager(BaseTask):
         # partitioned env's sentinel is never touched by the flip path and a kick env's sentinel
         # never leaks across episodes).
         self._post_flip_step = torch.full((self.num_envs,), -1, dtype=torch.long, device=self.device)
+        # Kick ABORT (2026-08-28), see MultiSkillConfig.kick_abort_prob. Per-env episode tick at
+        # which this env should flip KICK->LOCOMOTION mid-clip; sentinel -1 = "not an abort episode"
+        # (the overwhelmingly common case, and the only case when kick_abort_prob is 0.0). Drawn in
+        # _resample_task_mode, consumed in _maybe_flip_kick_recovery_to_locomotion, cleared back to
+        # -1 on every genuine reset by that same draw so it can never leak across episodes.
+        # Deliberately stores the ABSOLUTE target tick rather than a countdown: episode_length_buf
+        # is already the tick counter every other handoff mechanism keys off, so a direct equality
+        # test needs no separate decrement bookkeeping that could drift.
+        self._kick_abort_flip_tick = torch.full((self.num_envs,), -1, dtype=torch.long, device=self.device)
         # Locomotion -> kick direction's own per-env state, mirroring _post_flip_step's shape
         # exactly (mirror mechanism, mirror bookkeeping). _kick_pending: this env reset into
         # LOCOMOTION carrying a pending kick-entry rather than teleporting immediately (see
@@ -785,7 +830,10 @@ class UnifiedManager(BaseTask):
         if getattr(self, "_task_mode_partition", None) is not None:
             return
 
-        kick_eligible = self.terrain_manager.get_state("locomotion_terrain").env_terrain_is_flat
+        # env_terrain_kick_eligible, NOT env_terrain_is_flat (2026-08-27): eligibility is now
+        # configurable via TerrainTermCfg.kick_eligible_terrain_types, defaulting to ("flat",) so
+        # this is unchanged unless a task config widens it (e.g. to include "light_rough").
+        kick_eligible = self.terrain_manager.get_state("locomotion_terrain").env_terrain_kick_eligible
         kick_mode_t = torch.full((self.num_envs,), int(TaskMode.KICK), dtype=torch.long, device=self.device)
         loco_mode_t = torch.full((self.num_envs,), int(TaskMode.LOCOMOTION), dtype=torch.long, device=self.device)
 
@@ -1003,6 +1051,25 @@ class UnifiedManager(BaseTask):
             & (self.episode_length_buf > 1)
             & enabled_mask
         )
+        # Kick ABORT (2026-08-28): the SECOND trigger for this same flip, firing mid-clip at a
+        # per-env randomized tick instead of at the clip-end boundary. Deliberately OR-ed into
+        # `crossed` rather than given its own flip path, so both triggers share one set of
+        # side-effects (task_mode switch, pin_zero, _post_flip_step stamping) and therefore
+        # automatically inherit every post_flip_* smoothing mechanism keyed off that stamp --
+        # they cannot drift apart. `_kick_abort_flip_tick` is -1 for every non-abort env, and
+        # episode_length_buf is never negative, so this contributes nothing when the feature is
+        # off. See MultiSkillConfig.kick_abort_prob for the full rationale.
+        #
+        # An env whose drawn tick lands PAST pre_recovery_motion_end_idx never matches here (the
+        # boundary `crossed` term fires first and flips it, after which task_mode != KICK gates
+        # this off) -- the documented safe fallback, not a special case needing its own code.
+        aborted = (
+            (self.task_mode == TaskMode.KICK)
+            & (self._kick_abort_flip_tick >= 0)
+            & (self.episode_length_buf >= self._kick_abort_flip_tick)
+            & enabled_mask
+        )
+        crossed = crossed | aborted
         env_ids = crossed.nonzero(as_tuple=False).flatten()
         if env_ids.numel() > 0:
             self.task_mode[env_ids] = TaskMode.LOCOMOTION
@@ -1548,13 +1615,34 @@ class UnifiedManager(BaseTask):
                             continue
                         self.log_dict[f"kick_{key}_handoff"] = val[handoff_active_mask].mean().detach().cpu()
 
-        kick_eligible = self.terrain_manager.get_state("locomotion_terrain").env_terrain_is_flat
+        # Tracks the SAME predicate _build_task_mode_partition gates on (2026-08-27) -- otherwise
+        # this metric would keep reporting the flat-only fraction while the partition actually used
+        # a widened kick_eligible_terrain_types, silently disagreeing with reality.
+        kick_eligible = self.terrain_manager.get_state("locomotion_terrain").env_terrain_kick_eligible
         self.log_dict["kick_eligible_frac"] = kick_eligible.float().mean().detach().cpu()
         self.log_dict["kick_active_frac"] = kick_mask.float().mean().detach().cpu()
         # Share of ALL envs currently mid a handoff-triggered kick -- the "how much is this
         # mechanism actually firing" sanity check (mid_episode_kick_entry_prob's realized rate),
         # same denominator convention as kick_active_frac above.
         self.log_dict["kick_handoff_active_frac"] = (kick_mask & self._kick_ep_is_handoff).float().mean().detach().cpu()
+        # Kick ABORT (2026-08-28), two metrics because they answer different questions and the
+        # pooled kick_* stats can answer neither -- at the recommended 0.05-0.10 draw rate these
+        # envs are a small minority, exactly the regime the Stage-D analysis found "cannot move
+        # aggregate metrics".
+        #   _pending: drawn this episode but NOT yet flipped -- i.e. still kicking, awaiting its
+        #             tick. Confirms the DRAW is firing at the configured rate.
+        #   _post   : already flipped and now surviving (or not) in locomotion mode. This is the
+        #             population whose topple rate actually tests the mechanism; a value pinned
+        #             near 1.0 that never improves is the "unrecoverable pose" signal called out
+        #             in kick_abort_prob's own docstring.
+        if self._kick_abort_prob > 0.0:
+            abort_drawn = self._kick_abort_flip_tick >= 0
+            self.log_dict["kick_abort_pending_frac"] = (
+                (abort_drawn & kick_mask).float().mean().detach().cpu()
+            )
+            self.log_dict["kick_abort_post_flip_frac"] = (
+                (abort_drawn & (~kick_mask) & (self._post_flip_step >= 0)).float().mean().detach().cpu()
+            )
 
         # Kick stability, the signal that was previously missing entirely.
         # kick/episode_length     — mean length of ended KICK episodes (vs the locomotion-only

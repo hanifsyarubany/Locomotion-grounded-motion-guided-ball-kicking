@@ -53,6 +53,12 @@ def _make_manager(
     )
     m._prev_in_raw_clip_phase = torch.ones(num_envs, dtype=torch.bool)  # "was in raw clip" last tick
     m._post_flip_step = torch.full((num_envs,), -1, dtype=torch.long)  # sentinel: not post-flip
+    # Kick ABORT (2026-08-28): sentinel -1 = "no abort drawn", i.e. feature off -- which is what
+    # every config this file targets has. _maybe_flip_kick_recovery_to_locomotion reads this
+    # unconditionally (the abort trigger is OR-ed into the boundary one), so it must exist even
+    # though these tests exercise only the boundary path. See test_kick_abort_flip.py.
+    m._kick_abort_flip_tick = torch.full((num_envs,), -1, dtype=torch.long)
+    m._kick_abort_prob = 0.0  # feature off -- _resample_task_mode's draw block short-circuits
     # Locomotion -> kick direction's own state (2026-08-13): off by default here (0.0), matching
     # every config this test's own module docstring targets (Stage A/B/C1/C2 never set it) --
     # _resample_task_mode touches these buffers unconditionally (_clear_kick_pending), so they

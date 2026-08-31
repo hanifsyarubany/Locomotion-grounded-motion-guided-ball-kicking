@@ -999,6 +999,102 @@ class MultiSkillConfig:
     the measured reward magnitudes, NOT yet validated by a training run. Ships at 0.0 per this
     project's convention of landing new mechanisms as a verified no-op."""
 
+    kick_terrain_light_rough_proportion: float = 0.0
+    """Shared (not per-skill) proportion of the terrain bank generated as the ``light_rough`` tier
+    (``TerrainBase._light_rough_terrain_func``). 0.0 (default) = the tier is not generated at all,
+    a byte-identical no-op: ``Terrain._initialize_terrain_config`` filters zero-proportion types
+    out before generation, so the terrain bank, its normalization, and every env's tile assignment
+    are unchanged from before this field existed.
+
+    Motivation (2026-08-27): kick-mode envs are gated to flat terrain because a freely-simulated
+    ball needs a defined rest position. RoboNaldo hits the same wall -- their ball is spawned
+    unconditionally in every stage, and every stage from 2a onward (i.e. the moment shooting
+    reward turns on) sets ``use_rough_terrain: false``. Their ONE exception is an optional
+    "Stage 1b" tracking-robustness fine-tune on very light terrain (8mm noise, 0.5% slopes) while
+    ``goal_weight`` is still 0. This tier is the port of that idea: terrain gentle enough not to
+    disturb the ball, aimed at hardening the single-support strike window (where 62-85% of this
+    project's measured falls originate) against footing variation.
+
+    **Side effect to weigh before setting this non-zero**: terrain proportions are NORMALIZED
+    (``proportions / sum(proportions)``), so adding this tier dilutes every existing type's share
+    -- it changes what LOCOMOTION-mode envs train on too, not just kick envs. Prefer taking the
+    proportion explicitly out of ``flat``'s share rather than appending it, so locomotion's
+    rough/obstacle exposure stays fixed. NOT VALIDATED BY A TRAINING RUN."""
+
+    kick_terrain_light_rough_max_height: float = 0.008
+    """Shared (not per-skill) peak height deviation (meters) of the ``light_rough`` tier -- see
+    TerrainTermCfg.light_rough_max_height. Default 0.008 is RoboNaldo's own value. Inert unless
+    kick_terrain_light_rough_proportion > 0."""
+
+    kick_eligible_terrain_types: tuple[str, ...] = ("flat",)
+    """Shared (not per-skill) list of terrain-type names a kick-mode env may be assigned to -- see
+    TerrainTermCfg.kick_eligible_terrain_types and TerrainLocomotion.env_terrain_kick_eligible.
+    Default ``("flat",)`` reproduces the previous hardcoded flat-only gate exactly.
+
+    Deliberately a SEPARATE switch from kick_terrain_light_rough_proportion above: generating the
+    tier and letting kick envs stand on it are independent, so an A/B can generate the tier in
+    BOTH arms and vary only this -- keeping terrain-bank layout (hence locomotion's own training
+    distribution) identical across arms, so any measured difference is attributable to kick
+    eligibility alone rather than to a reshuffled terrain bank."""
+
+    body_push_enabled: bool = False
+    """Shared (not per-skill) switch for BodyPushRandomizerState -- sustained, body-targeted
+    external-force disturbances (``managers/randomization/terms/locomotion.py``). False (default)
+    = term absent, exactly as before this field existed; the existing root-velocity push
+    (``push_randomizer_state`` / ``PushRandomizerState``) is untouched and keeps running regardless
+    of this flag -- this is an ADDITIONAL disturbance channel, not a replacement.
+
+    Motivation (2026-08-27): the existing push is a one-tick additive velocity impulse on the
+    robot's ROOT (``robot_root_states[:, 7:13]``). A real collision -- a shin against a table leg,
+    a shoulder against a doorframe -- differs in three ways: (1) it lands on a LIMB, inducing
+    joint torques a root impulse never produces, (2) it is SUSTAINED (tens to hundreds of ms), not
+    instantaneous, and (3) the obstacle stays there and blocks the recovery motion. This field
+    addresses (1) and (2) only. It does NOT address (3) -- a force is not a collision constraint,
+    and nothing here stops the robot moving through the notional obstacle; that would need
+    collision geometry in the scene, a larger change left explicitly out of scope here.
+
+    Not yet validated by a training run. Ships False per this project's convention of landing new
+    mechanisms as a verified no-op."""
+
+    body_push_interval_min_s: float = 4.0
+    """Minimum seconds between body-push events per env, uniformly resampled per event (matches
+    the unified root push's own loosened [4.0, 8.0]s interval -- see g1_29dof_unified_randomization
+    for why that was widened from WBT's [1.0, 3.0]s). Only meaningful when body_push_enabled."""
+
+    body_push_interval_max_s: float = 8.0
+    """Maximum seconds between body-push events -- see body_push_interval_min_s."""
+
+    body_push_force_min: float = 20.0
+    """Minimum force magnitude (Newtons) applied at the chosen body for the push's duration.
+    20-80N was chosen as plausible for a shin/elbow bump against furniture or a doorframe --
+    roughly 3-13% of the robot's own body weight (~30kg x 9.81 ~= 294N) applied to a single limb,
+    not the whole-body reaction a push of that fraction against the ROOT would represent. Not yet
+    validated by a training run; the range is reasoned, not measured against real impact data."""
+
+    body_push_force_max: float = 80.0
+    """Maximum force magnitude (Newtons) -- see body_push_force_min."""
+
+    body_push_duration_min_s: float = 0.05
+    """Minimum duration (seconds) a body-push force is sustained once it fires -- see
+    BodyPushRandomizerState's docstring for why a sustained force, not an instantaneous impulse
+    like the existing root push, is the point of this mechanism. 50-200ms brackets a plausible
+    real contact duration (a brief bump to a lingering shoulder-check)."""
+
+    body_push_duration_max_s: float = 0.20
+    """Maximum duration (seconds) a body-push force is sustained -- see body_push_duration_min_s."""
+
+    body_push_vertical_fraction: float = 0.2
+    """Fraction of the push direction's unit vector allowed on the vertical (z) axis, in [0, 1];
+    the remainder is uniform in azimuth. Low by default (0.2) because an unmodelled-scenery
+    collision is overwhelmingly horizontal -- a vertical component near 1.0 would mostly model
+    being dropped on or lifted from below, not bumping into something while walking."""
+
+    body_push_body_names: tuple[str, ...] | None = None
+    """Which robot bodies are eligible push targets, one chosen at random per event. None
+    (default) uses DEFAULT_BODY_PUSH_BODIES (knees, elbows, torso, pelvis -- see that constant's
+    own comment for why feet are excluded). Names are validated against the robot's actual URDF
+    link names at env setup; an unknown name raises rather than silently shrinking the target set."""
+
     use_foot_strike_pitch_reference_relative: bool = False
     """Shared (not per-skill) switch for ``shooting.py::foot_strike_pitch``'s ``reference_relative``
     param -- see that function's own docstring for the full reward-formula rationale. False
@@ -1054,6 +1150,76 @@ class MultiSkillConfig:
     locomotion->kick direction either; that needs a commandable skill-selector observation (an
     obs-width change breaking every existing checkpoint's warm-start) and is intentionally a
     separate, later increment. NOT yet validated by a training run."""
+
+    kick_abort_prob: float = 0.0
+    """Shared (not per-skill) per-reset probability that a kick-partitioned env becomes a KICK
+    ABORT episode: it starts in kick mode as normal, tracks the clip for a randomized number of
+    ticks (kick_abort_delay_min/max_steps), then flips KICK->LOCOMOTION mid-clip and must survive
+    on locomotion rewards alone for the rest of the episode. 0.0 (default) = OFF, exact no-op.
+
+    WHY (2026-08-28). ``kick_recovery_locomotion_flip_enabled`` already flips every kick env to
+    locomotion, but only ever at ONE point: ``pre_recovery_motion_end_idx``, the end of the
+    authored clip. So the policy learns "recover to locomotion from a single, always-identical
+    pose". Measured consequence (512-env phase-resolved probe, see
+    ``UnifiedManager.post_flip_obs_ramp_alpha``'s docstring): **76% of teacher-1's falls and 83%
+    of the distilled student's skill-1 falls land in the post-stand phase** -- i.e. AFTER that
+    flip, not during the kick -- while a locomotion control arm under identical terrain/push/DR
+    toppled 0/1847. Locomotion itself is not fragile; ARRIVING in locomotion mode from an
+    off-balance state is, and today the policy only ever practises one such arrival.
+
+    This mechanism generalises that single arrival into a distribution over the whole clip.
+
+    TWO ARRIVAL FLAVOURS, BOTH COVERED BY THIS ONE SWITCH -- because the existing RSI machinery
+    (``start_at_timestep_zero_prob``, 0.5 today) already randomises where a kick episode STARTS:
+      * env starts at frame 0 -> flips after N ticks: the pre-flip state was produced by the
+        policy's own rollout, so contacts/momentum are physically self-consistent. Most REALISTIC,
+        but only covers frames the policy actually survives to.
+      * env starts at an RSI-sampled random frame -> flips after N ticks: reaches poses the policy
+        might never roll into unaided (deep in the strike, say). Best COVERAGE.
+    Nothing extra is needed to get both; the RSI draw supplies the mix. Lower
+    ``start_at_timestep_zero_prob`` for more coverage, raise it for more realism.
+
+    ON "these envs shouldn't train the kick policy": they DO contribute ordinary kick gradient
+    during the pre-flip window, and that is correct, not a leak. FastSAC writes every env's
+    transitions to the shared replay buffer unconditionally (``rb.extend(transition)``) with no
+    per-env gradient gating, so excluding them would need new machinery -- and there is nothing to
+    exclude: an abort env's pre-flip ticks are indistinguishable from any other RSI kick env's,
+    tracking the same clip under the same rewards. Only the POST-flip ticks are the new thing, and
+    those are locomotion-mode by construction (``task_mode_mask`` zeroes every kick term).
+
+    SIZING. Start at 0.05-0.10, not 0.01. For calibration, the mirror-direction
+    ``mid_episode_kick_entry_prob`` runs at 0.3 and still yields only ~1.7-2% of ALL envs in
+    handoff state -- a share the Stage-D analysis found too small to move aggregate metrics. At
+    0.01 the mechanism risks being both too sparse to learn from and invisible in telemetry. Watch
+    the dedicated ``kick_abort_*`` metrics rather than pooled ``kick_topple_frac``.
+
+    RISK TO WATCH: some poses (mid-strike, single support, kicking leg at peak angular velocity)
+    may be genuinely unrecoverable, in which case those envs contribute gradient toward an
+    impossible task. ``kick_abort_topple_frac`` sitting near 1.0 and never improving is the signal;
+    the response is to restrict the delay range so flips land in the approach/follow-through rather
+    than the strike window. NOT VALIDATED BY A TRAINING RUN."""
+
+    kick_abort_delay_min_steps: int = 10
+    """Lower bound (inclusive) of the uniformly-sampled tick offset from EPISODE START at which a
+    kick-abort env flips to locomotion. Only read when kick_abort_prob > 0.0.
+
+    Why a delay at all rather than flipping at reset: reset TELEPORTS the robot onto the clip pose,
+    which sets joint positions/velocities but leaves contact forces to be resolved by physics over
+    the next tick or two. Flipping instantly would train recovery from states with transient,
+    physically-inconsistent contact configurations. A short tracking window lets the dynamics
+    settle so the flip state is one the policy could actually be in."""
+
+    kick_abort_delay_max_steps: int = 60
+    """Upper bound (inclusive) of the kick-abort flip tick. Only read when kick_abort_prob > 0.0.
+
+    The [min, max] window, combined with the RSI start frame, is what selects WHICH clip phase the
+    flip lands in -- the single most consequential choice here. For a 250-frame clip with
+    strike at 120-154 (skill012): a frame-0 env with this default [10, 60] window flips during the
+    APPROACH, the safest phase. Widen toward 200+ to reach follow-through, and expect the strike
+    window to be the hardest by far (this project's own swing-phase analysis puts 62-85% of kick
+    falls there). If the flip tick would land past ``pre_recovery_motion_end_idx``, the ordinary
+    boundary flip simply fires first and this episode is a normal one -- a safe, silent fallback,
+    not an error."""
 
     mid_episode_kick_entry_prob: float = 0.0
     """Shared (not per-skill) switch for the LOCOMOTION->KICK direction of the handoff (the
@@ -2009,12 +2175,111 @@ def _parse_multi_skill_global_fields(raw: dict, source_path: Path) -> dict:
             f"{source_path}: balance_potential_weight must be >= 0.0 (it is a magnitude; the shaping "
             f"itself is signed), got {balance_potential_weight}"
         )
+    kick_terrain_light_rough_proportion = float(raw.get("kick_terrain_light_rough_proportion", 0.0))
+    if not 0.0 <= kick_terrain_light_rough_proportion <= 1.0:
+        raise ValueError(
+            f"{source_path}: kick_terrain_light_rough_proportion must be in [0.0, 1.0], got "
+            f"{kick_terrain_light_rough_proportion}"
+        )
+    kick_terrain_light_rough_max_height = float(raw.get("kick_terrain_light_rough_max_height", 0.008))
+    if kick_terrain_light_rough_max_height <= 0.0:
+        raise ValueError(
+            f"{source_path}: kick_terrain_light_rough_max_height must be > 0.0, got "
+            f"{kick_terrain_light_rough_max_height}"
+        )
+    _kick_eligible_raw = raw.get("kick_eligible_terrain_types")
+    if _kick_eligible_raw is not None and not (isinstance(_kick_eligible_raw, list) and _kick_eligible_raw):
+        raise ValueError(
+            f"{source_path}: kick_eligible_terrain_types must be a non-empty list of terrain-type "
+            f"names if set, got {_kick_eligible_raw!r}"
+        )
+    kick_eligible_terrain_types = (
+        tuple(str(n) for n in _kick_eligible_raw) if _kick_eligible_raw is not None else ("flat",)
+    )
+    # A kick-eligible type that is never generated would silently yield ZERO kick envs -- the
+    # partition would put every env in locomotion mode and the run would look like a locomotion-only
+    # job for no stated reason. Catch the specific, likely version of that mistake here: opting kick
+    # onto light_rough without also generating any light_rough tiles.
+    if "light_rough" in kick_eligible_terrain_types and kick_terrain_light_rough_proportion <= 0.0:
+        raise ValueError(
+            f"{source_path}: kick_eligible_terrain_types includes 'light_rough' but "
+            f"kick_terrain_light_rough_proportion is {kick_terrain_light_rough_proportion} -- that "
+            "tier would never be generated, so those envs would not exist. Set a non-zero "
+            "proportion (and see its docstring: take it out of 'flat''s share, since proportions "
+            "are normalized and would otherwise dilute locomotion's terrain mix too)."
+        )
+    body_push_enabled = bool(raw.get("body_push_enabled", False))
+    body_push_interval_min_s = float(raw.get("body_push_interval_min_s", 4.0))
+    body_push_interval_max_s = float(raw.get("body_push_interval_max_s", 8.0))
+    if body_push_interval_min_s <= 0.0 or body_push_interval_max_s < body_push_interval_min_s:
+        raise ValueError(
+            f"{source_path}: body_push_interval_min_s/max_s must satisfy 0 < min <= max, got "
+            f"({body_push_interval_min_s}, {body_push_interval_max_s})"
+        )
+    body_push_force_min = float(raw.get("body_push_force_min", 20.0))
+    body_push_force_max = float(raw.get("body_push_force_max", 80.0))
+    if body_push_force_min < 0.0 or body_push_force_max < body_push_force_min:
+        raise ValueError(
+            f"{source_path}: body_push_force_min/max must satisfy 0 <= min <= max, got "
+            f"({body_push_force_min}, {body_push_force_max})"
+        )
+    body_push_duration_min_s = float(raw.get("body_push_duration_min_s", 0.05))
+    body_push_duration_max_s = float(raw.get("body_push_duration_max_s", 0.20))
+    if body_push_duration_min_s <= 0.0 or body_push_duration_max_s < body_push_duration_min_s:
+        raise ValueError(
+            f"{source_path}: body_push_duration_min_s/max_s must satisfy 0 < min <= max, got "
+            f"({body_push_duration_min_s}, {body_push_duration_max_s})"
+        )
+    body_push_vertical_fraction = float(raw.get("body_push_vertical_fraction", 0.2))
+    if not 0.0 <= body_push_vertical_fraction <= 1.0:
+        raise ValueError(
+            f"{source_path}: body_push_vertical_fraction must be in [0.0, 1.0], got "
+            f"{body_push_vertical_fraction}"
+        )
+    _body_push_body_names_raw = raw.get("body_push_body_names")
+    if _body_push_body_names_raw is not None and not (
+        isinstance(_body_push_body_names_raw, list) and _body_push_body_names_raw
+    ):
+        raise ValueError(
+            f"{source_path}: body_push_body_names must be a non-empty list of link names if set, "
+            f"got {_body_push_body_names_raw!r}"
+        )
+    body_push_body_names = (
+        tuple(str(n) for n in _body_push_body_names_raw) if _body_push_body_names_raw is not None else None
+    )
     use_foot_strike_pitch_reference_relative = bool(
         raw.get("use_foot_strike_pitch_reference_relative", False)
     )
     kick_recovery_locomotion_flip_enabled = bool(
         raw.get("kick_recovery_locomotion_flip_enabled", False)
     )
+    kick_abort_prob = float(raw.get("kick_abort_prob", 0.0))
+    if not (0.0 <= kick_abort_prob <= 1.0):
+        raise ValueError(f"{source_path}: kick_abort_prob must be in [0.0, 1.0], got {kick_abort_prob}")
+    kick_abort_delay_min_steps = int(raw.get("kick_abort_delay_min_steps", 10))
+    kick_abort_delay_max_steps = int(raw.get("kick_abort_delay_max_steps", 60))
+    if kick_abort_delay_min_steps < 1:
+        raise ValueError(
+            f"{source_path}: kick_abort_delay_min_steps must be >= 1 (flipping at tick 0 would "
+            f"train recovery from an unsettled post-teleport contact state -- see that field's own "
+            f"docstring), got {kick_abort_delay_min_steps}"
+        )
+    if kick_abort_delay_max_steps < kick_abort_delay_min_steps:
+        raise ValueError(
+            f"{source_path}: kick_abort_delay_max_steps ({kick_abort_delay_max_steps}) must be >= "
+            f"kick_abort_delay_min_steps ({kick_abort_delay_min_steps})"
+        )
+    # An abort flip is a KICK->LOCOMOTION transition, so it can only happen where that transition
+    # exists at all. Catching it here turns a silently-inert config into a startup error.
+    if kick_abort_prob > 0.0 and not kick_recovery_locomotion_flip_enabled:
+        raise ValueError(
+            f"{source_path}: kick_abort_prob is {kick_abort_prob} but "
+            "kick_recovery_locomotion_flip_enabled is False -- the abort mechanism reuses that "
+            "flip's own path (task_mode switch, pin_zero, _post_flip_step stamping, and the "
+            "post_flip_* smoothing keyed off it), so with the flip disabled it would silently do "
+            "nothing at all. Enable the flip, or set kick_abort_prob to 0.0."
+        )
+
     mid_episode_kick_entry_prob = float(raw.get("mid_episode_kick_entry_prob", 0.0))
     if not (0.0 <= mid_episode_kick_entry_prob <= 1.0):
         raise ValueError(
@@ -2212,6 +2477,18 @@ def _parse_multi_skill_global_fields(raw: dict, source_path: Path) -> dict:
         kick_contact_force_penalty_floor=kick_contact_force_penalty_floor,
         kick_contact_force_penalty_k=kick_contact_force_penalty_k,
         kick_contact_force_threshold_bodyweight_multiplier=kick_contact_force_threshold_bodyweight_multiplier,
+        kick_terrain_light_rough_proportion=kick_terrain_light_rough_proportion,
+        kick_terrain_light_rough_max_height=kick_terrain_light_rough_max_height,
+        kick_eligible_terrain_types=kick_eligible_terrain_types,
+        body_push_enabled=body_push_enabled,
+        body_push_interval_min_s=body_push_interval_min_s,
+        body_push_interval_max_s=body_push_interval_max_s,
+        body_push_force_min=body_push_force_min,
+        body_push_force_max=body_push_force_max,
+        body_push_duration_min_s=body_push_duration_min_s,
+        body_push_duration_max_s=body_push_duration_max_s,
+        body_push_vertical_fraction=body_push_vertical_fraction,
+        body_push_body_names=body_push_body_names,
         start_at_timestep_zero_prob=start_at_timestep_zero_prob,
         rsi_scope_to_authored_clip=rsi_scope_to_authored_clip,
         critical_frame_oversampling_prob=critical_frame_oversampling_prob,
@@ -2235,6 +2512,9 @@ def _parse_multi_skill_global_fields(raw: dict, source_path: Path) -> dict:
         balance_potential_weight=balance_potential_weight,
         use_foot_strike_pitch_reference_relative=use_foot_strike_pitch_reference_relative,
         kick_recovery_locomotion_flip_enabled=kick_recovery_locomotion_flip_enabled,
+        kick_abort_prob=kick_abort_prob,
+        kick_abort_delay_min_steps=kick_abort_delay_min_steps,
+        kick_abort_delay_max_steps=kick_abort_delay_max_steps,
         mid_episode_kick_entry_prob=mid_episode_kick_entry_prob,
         mid_episode_kick_entry_min_steps=mid_episode_kick_entry_min_steps,
         mid_episode_kick_entry_max_residual=mid_episode_kick_entry_max_residual,

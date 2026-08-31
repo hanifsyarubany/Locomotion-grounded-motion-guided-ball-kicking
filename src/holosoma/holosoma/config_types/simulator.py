@@ -744,6 +744,49 @@ class BallConfig:
     -- see that field's docstring for the full rationale. False (default) = current absolute-target
     behavior, exact no-op."""
 
+    kick_terrain_light_rough_proportion: float = 0.0
+    """Legacy single-skill counterpart of MultiSkillConfig.kick_terrain_light_rough_proportion --
+    see that field's docstring for the full rationale (including the terrain-proportion
+    normalization side effect). 0.0 (default) = tier not generated, bit-identical to before this
+    field existed."""
+
+    kick_terrain_light_rough_max_height: float = 0.008
+    """Legacy single-skill counterpart of MultiSkillConfig.kick_terrain_light_rough_max_height."""
+
+    kick_eligible_terrain_types: tuple[str, ...] = ("flat",)
+    """Legacy single-skill counterpart of MultiSkillConfig.kick_eligible_terrain_types. Default
+    ("flat",) reproduces the previous hardcoded flat-only kick gate exactly."""
+
+    body_push_enabled: bool = False
+    """Legacy single-skill counterpart of MultiSkillConfig.body_push_enabled -- see that field's
+    docstring for the full rationale. False (default) = term absent, bit-identical to before this
+    field existed."""
+
+    body_push_interval_min_s: float = 4.0
+    """Legacy single-skill counterpart of MultiSkillConfig.body_push_interval_min_s."""
+
+    body_push_interval_max_s: float = 8.0
+    """Legacy single-skill counterpart of MultiSkillConfig.body_push_interval_max_s."""
+
+    body_push_force_min: float = 20.0
+    """Legacy single-skill counterpart of MultiSkillConfig.body_push_force_min."""
+
+    body_push_force_max: float = 80.0
+    """Legacy single-skill counterpart of MultiSkillConfig.body_push_force_max."""
+
+    body_push_duration_min_s: float = 0.05
+    """Legacy single-skill counterpart of MultiSkillConfig.body_push_duration_min_s."""
+
+    body_push_duration_max_s: float = 0.20
+    """Legacy single-skill counterpart of MultiSkillConfig.body_push_duration_max_s."""
+
+    body_push_vertical_fraction: float = 0.2
+    """Legacy single-skill counterpart of MultiSkillConfig.body_push_vertical_fraction."""
+
+    body_push_body_names: tuple[str, ...] | None = None
+    """Legacy single-skill counterpart of MultiSkillConfig.body_push_body_names. None (default)
+    uses DEFAULT_BODY_PUSH_BODIES."""
+
     kick_recovery_locomotion_flip_enabled: bool = False
     """Legacy single-skill counterpart of MultiSkillConfig.kick_recovery_locomotion_flip_enabled --
     see that field's docstring for the full rationale (Stage D's post-swing -> locomotion handoff).
@@ -993,6 +1036,16 @@ def load_ball_config(yaml_path: str | Path = DEFAULT_BALL_CONFIG_YAML) -> BallCo
         "kick_aim_theta_max_deg",
         "kick_aim_theta_ref_deg",
         "kick_aim_nominal_distance_m",
+        "body_push_enabled",
+        "body_push_interval_min_s",
+        "body_push_interval_max_s",
+        "body_push_force_min",
+        "body_push_force_max",
+        "body_push_duration_min_s",
+        "body_push_duration_max_s",
+        "body_push_vertical_fraction",
+        "kick_terrain_light_rough_proportion",
+        "kick_terrain_light_rough_max_height",
     ):
         if optional_key in raw:
             if optional_key in (
@@ -1008,6 +1061,7 @@ def load_ball_config(yaml_path: str | Path = DEFAULT_BALL_CONFIG_YAML) -> BallCo
                 "joint_pos_sanity_check_enabled",
                 "penalty_curriculum_enabled",
                 "kick_aim_enabled",
+                "body_push_enabled",
             ):
                 kwargs[optional_key] = bool(raw[optional_key])
                 continue
@@ -1082,6 +1136,70 @@ def load_ball_config(yaml_path: str | Path = DEFAULT_BALL_CONFIG_YAML) -> BallCo
                 "kick_swing_torso_orientation_deadzone",
             ) and kwargs[optional_key] < 0.0:
                 raise ValueError(f"{yaml_path}: {optional_key} must be >= 0.0, got {kwargs[optional_key]}")
+            if optional_key == "body_push_vertical_fraction" and not 0.0 <= kwargs[optional_key] <= 1.0:
+                raise ValueError(
+                    f"{yaml_path}: body_push_vertical_fraction must be in [0.0, 1.0], got "
+                    f"{kwargs[optional_key]}"
+                )
+
+    _body_push_interval = (
+        kwargs.get("body_push_interval_min_s", 4.0),
+        kwargs.get("body_push_interval_max_s", 8.0),
+    )
+    if _body_push_interval[0] <= 0.0 or _body_push_interval[1] < _body_push_interval[0]:
+        raise ValueError(
+            f"{yaml_path}: body_push_interval_min_s/max_s must satisfy 0 < min <= max, got "
+            f"{_body_push_interval}"
+        )
+    _body_push_force = (kwargs.get("body_push_force_min", 20.0), kwargs.get("body_push_force_max", 80.0))
+    if _body_push_force[0] < 0.0 or _body_push_force[1] < _body_push_force[0]:
+        raise ValueError(
+            f"{yaml_path}: body_push_force_min/max must satisfy 0 <= min <= max, got {_body_push_force}"
+        )
+    _body_push_duration = (
+        kwargs.get("body_push_duration_min_s", 0.05),
+        kwargs.get("body_push_duration_max_s", 0.20),
+    )
+    if _body_push_duration[0] <= 0.0 or _body_push_duration[1] < _body_push_duration[0]:
+        raise ValueError(
+            f"{yaml_path}: body_push_duration_min_s/max_s must satisfy 0 < min <= max, got "
+            f"{_body_push_duration}"
+        )
+    _light_rough_prop = kwargs.get("kick_terrain_light_rough_proportion", 0.0)
+    if not 0.0 <= _light_rough_prop <= 1.0:
+        raise ValueError(
+            f"{yaml_path}: kick_terrain_light_rough_proportion must be in [0.0, 1.0], got "
+            f"{_light_rough_prop}"
+        )
+    if kwargs.get("kick_terrain_light_rough_max_height", 0.008) <= 0.0:
+        raise ValueError(
+            f"{yaml_path}: kick_terrain_light_rough_max_height must be > 0.0, got "
+            f"{kwargs['kick_terrain_light_rough_max_height']}"
+        )
+    if "kick_eligible_terrain_types" in raw:
+        _types_raw = raw["kick_eligible_terrain_types"]
+        if not (isinstance(_types_raw, list) and _types_raw):
+            raise ValueError(
+                f"{yaml_path}: kick_eligible_terrain_types must be a non-empty list of "
+                f"terrain-type names if set, got {_types_raw!r}"
+            )
+        kwargs["kick_eligible_terrain_types"] = tuple(str(n) for n in _types_raw)
+    # Same "eligible but never generated => zero kick envs" guard as the MultiSkillConfig loader.
+    if "light_rough" in kwargs.get("kick_eligible_terrain_types", ("flat",)) and _light_rough_prop <= 0.0:
+        raise ValueError(
+            f"{yaml_path}: kick_eligible_terrain_types includes 'light_rough' but "
+            f"kick_terrain_light_rough_proportion is {_light_rough_prop} -- that tier would never "
+            "be generated, so no kick envs would exist."
+        )
+
+    if "body_push_body_names" in raw:
+        _names_raw = raw["body_push_body_names"]
+        if not (isinstance(_names_raw, list) and _names_raw):
+            raise ValueError(
+                f"{yaml_path}: body_push_body_names must be a non-empty list of link names if "
+                f"set, got {_names_raw!r}"
+            )
+        kwargs["body_push_body_names"] = tuple(str(n) for n in _names_raw)
 
     # Shooting-task keys — all optional, defaults preserve pre-shooting-reward behavior
     # (no randomization; right foot; target 5m downrange of nominal spawn).

@@ -1,0 +1,243 @@
+# ===============================================================================================
+# STAGE B2 DIAGNOSTIC -- FLIP-OFF arm.  Generated 2026-08-31.
+#
+# QUESTION: does the kick->locomotion flip, BY ITSELF, degrade the strike?
+#
+# RUN BOTH ARMS FROM THE SAME CHECKPOINT and compare `Env/kick_motion/error_joint_pos_strike`.
+# The two task configs differ by EXACTLY ONE LINE (kick_recovery_locomotion_flip_enabled).
+#
+# WHY THIS EXISTS -- the runs already on disk cannot answer it:
+#   20260828_125823 (parent B, flip OFF) -> error_joint_pos_strike ~1.88-2.13, already RISING
+#   20260830_045756 (B2, flip ON)        -> ~2.37-2.50
+#   20260828_145506 (stage C, flip OFF)  -> ~1.31-1.47
+# The parent-vs-B2 pair looks like a flip test but is not: they also differ in
+# rsi_scope_to_authored_clip, motion_head_velocity_smoothing_frames, penalty_curriculum_enabled
+# and ball_obs_delay_steps_min. And Stage C differs by the strike rewards AND shooting. So the
+# dominant term in that ~1.4 -> ~2.4 spread is the missing strike rewards, not necessarily the
+# flip -- this pair separates them.
+#
+# WHAT IS DELIBERATELY DIFFERENT FROM PLAIN STAGE B:
+#   - motion_strike_dof_pos_error_exp / _leg_null_ restored to 1.0 (see the reward block below).
+#     Without them the strike is unprotected in BOTH arms and the measurement is dominated by
+#     reward-free drift rather than by the flip.
+#   - every confound above pinned explicitly, identical in both arms.
+#
+# WHAT IS DELIBERATELY *NOT* CHANGED:
+#   - shooting_reward_scale stays 0.0. Turning it on would make this Stage C, which is where the
+#     mechanism actually ships -- this run exists to attribute a cause, not to train a deliverable.
+#   - kick_abort_prob stays 0.0 in both arms (second mechanism -- see the handoff block).
+#
+# READING THE RESULT: if the flip-ON arm's error_joint_pos_strike tracks the flip-OFF arm, the
+# flip is exonerated and the B2 regression was the missing strike rewards. If it separates, the
+# flip has a real cost and post_flip_obs_ramp_steps becomes the first thing to try.
+# NOTE: `Env/kick_ball_velocity` and the other ball metrics read exactly 0.0 in BOTH arms --
+# _shot_tracker is created lazily inside the shooting reward terms, which are unregistered at
+# shooting_reward_scale 0.0. That is a dead instrument here, not a measurement. Use
+# error_joint_pos_strike.
+# ===============================================================================================
+
+# ------------------------------------------------------------------------------
+# BALL MAIN SETTINGS
+# Radius, mass, and position randomization
+# ------------------------------------------------------------------------------
+ball:
+  radius: 0.11
+  mass: 0.43
+randomize_x: 0.1
+randomize_y: 0.1
+
+# ------------------------------------------------------------------------------
+# BALL OBSERVATION SETTINGS
+# Sensor Noise configuration and OOD Settings
+# ------------------------------------------------------------------------------
+ball_obs_noise: 0.05
+ball_obs_noise_range_coefficient: 0.03
+ball_obs_delay_steps_min: 0
+ball_obs_delay_steps_max: 6
+ball_obs_hold_steps_min: 1
+ball_obs_hold_steps_max: 4
+ood_spawn_probability: 0.4
+ood_region_multiplier: 100.0
+ball_static_obs_probability: 0.4
+ball_obs_stale_probability: 0.01 
+observation_bias: 0.05
+
+# ------------------------------------------------------------------------------
+# BAD TRACKING CONFIG & HANDOFF
+# Bad Tracking, Kick Recovery, and Swing Tracking
+# ------------------------------------------------------------------------------
+bad_tracking_swing_only: false
+kick_recovery_termination_handoff: true
+kick_recovery_drift_deadzone: 0.15
+bad_tracking_swing_threshold_multiplier: 1.0
+swing_tracking_sigma_multiplier: 1.0
+
+# ------------------------------------------------------------------------------
+# CONTACT, FRAME, AND BALANCING CONFIG
+# Balance potential, frame randomization/sampling, Kick Contact
+# ------------------------------------------------------------------------------
+balance_potential_weight: 1.0
+kick_contact_force_penalty_floor: 3.0
+kick_contact_force_penalty_k: 4.0
+kick_contact_force_threshold_bodyweight_multiplier: 3.0
+start_at_timestep_zero_prob: 0.5   
+rsi_scope_to_authored_clip: true
+critical_frame_oversampling_prob: 0.0
+critical_frame_sampling_window: 10
+kick_target_entropy_ratio: 0.8
+kick_gamma: 0.99  
+
+# ------------------------------------------------------------------------------
+# TERRAIN CONFIG
+# Kicking terrain rough settings
+# ------------------------------------------------------------------------------
+kick_terrain_light_rough_proportion: 0.15 
+kick_terrain_light_rough_max_height: 0.008  
+kick_eligible_terrain_types: ["flat","light_rough"]      
+    
+# ------------------------------------------------------------------------------
+# PUSH RANDOMIZATION CONFIG
+# Body push pertubation collision
+# ------------------------------------------------------------------------------
+body_push_enabled: true
+body_push_interval_min_s: 4.0   
+body_push_interval_max_s: 8.0
+body_push_force_min: 20.0      
+body_push_force_max: 80.0       
+body_push_duration_min_s: 0.05 
+body_push_duration_max_s: 0.20 
+body_push_vertical_fraction: 0.2 
+
+# ------------------------------------------------------------------------------
+# KICK -> LOCOMOTION HANDOFF  (the ONE variable under test -- see header)
+# ------------------------------------------------------------------------------
+kick_recovery_locomotion_flip_enabled: false
+post_flip_termination_grace_steps: 50.0
+post_flip_reward_decay_steps: 50.0
+post_flip_obs_ramp_steps: 0.0
+
+# Kick ABORT deliberately OFF in BOTH arms. It is a SECOND trigger for the same flip; leaving it
+# on would mean the two arms differ by two mechanisms, not one. Re-test it separately once the
+# flip's own effect is known.
+kick_abort_prob: 0.0
+kick_abort_delay_min_steps: 10
+kick_abort_delay_max_steps: 60
+
+# ------------------------------------------------------------------------------
+# CONFOUNDS HELD CONSTANT (explicitly set in BOTH arms, not left to defaults)
+# These four drifted between the 20260828_125823 parent run and the 20260830_045756 B2 run, which
+# is exactly why that pair could NOT isolate the flip. Pinned here to the B2-run lineage values.
+# ------------------------------------------------------------------------------
+penalty_curriculum_enabled: false
+motion_head_velocity_smoothing_frames: 3
+
+# ------------------------------------------------------------------------------
+# BAD MOTION & BODY POS WARMUP CONFIG
+# An early termination settings to the bad motion
+# ------------------------------------------------------------------------------
+bad_motion_body_pos_threshold: 0.35
+ee_body_pos_warmup_threshold: 0.7
+
+# ------------------------------------------------------------------------------
+# KICK RECOVERY CONFIG
+# Post kick stabilization recovery
+# ------------------------------------------------------------------------------
+kick_recovery_stand_height_deadzone: 0.015
+kick_recovery_stand_orientation_deadzone: 0.025
+kick_recovery_stand_feet_width_deadzone: 0.03
+kick_recovery_stand_knee_width_deadzone: 0.03
+recovery_duration_s: 1.0
+hold_duration_s: 1.0
+
+# -----------------------------------------------------------------------------------------------
+# VELOCITY, SUCCESS RADIUS, AND KICK BALL OVER LINE
+# Ball velocity reference during kicking, success radius criteria settings, kick ball over line
+# -----------------------------------------------------------------------------------------------
+kick_ball_velocity_v_ref: 2.0
+success_radius: 0.5
+kick_ball_over_line_require_has_kicked: false
+
+# ------------------------------------------------------------------------------
+# REWARD SCALE CONFIG
+# Scale configuration
+# ------------------------------------------------------------------------------
+shooting_reward_scale_ramp_iters: 5000
+shooting_reward_scale_hold_iters: 0
+shooting_reward_scale: 0.0   
+motion_tracking_reward_scale: 2.0
+root_tracking_reward_scale: 1.0
+recovery_tracking_scale: 1.0
+kick_recovery_posture_reward_scale: 1.0
+kick_safety_reward_scale: 1.0
+kick_alive_reward_scale: 1.0
+kick_alive_pre_kick_ratio: 0.1   
+
+# ------------------------------------------------------------------------------
+# REWARD TERMS CONFIG
+# Reward weight settings
+# ------------------------------------------------------------------------------
+motion_tracking_reward:
+  motion_global_ref_position_error_exp: 0.5   
+  motion_global_ref_orientation_error_exp: 0.5 
+  motion_relative_body_position_error_exp: 1.0 
+  motion_relative_body_orientation_error_exp: 1.0
+  motion_global_body_lin_vel: 1.0
+  motion_global_body_ang_vel: 1.0
+  motion_global_feet_lin_vel: 1.0
+  # RESTORED for this diagnostic (Stage C carries these at 1.0; plain Stage B zeroes them, and a
+  # zero-weight term is not merely scaled down -- it is never registered at all, so strike joint
+  # tracking had NO gradient pressure in the B2 run). Uniform 1.0 rather than Stage C's per-skill
+  # [1.0, 2.0, ...]: this roster shares ONE task config across all three skills.
+  motion_strike_dof_pos_error_exp: 1.0
+  motion_strike_leg_null_dof_pos_error_exp: 1.0
+
+shooting_reward:
+  kick_ball_proximity: 0.0                 
+  kick_contact_orientation: 0.0             
+  kick_foot_strike_pitch: 0.0              
+  kick_ball_velocity: 0.0                  
+  kick_error_ball_to_target: 0.0            
+  kick_predicted_error_ball_to_target: 0.0  
+  kick_goal_success_burst: 0.0              
+  kick_ball_contact_hit: 0.0               
+  kick_ball_approach_stance: 0.0           
+  kick_ball_over_line: 0.0                  
+  kick_robot_com_ball_distance: 0.0       
+  kick_robot_torso_ball_distance: 0.0      
+  kick_penalize_weak_foot_contact: 0.0      
+  kick_penalize_self_contact_feet: 0.0     
+  _sigma:
+    kick_error_ball_to_target: 3.0
+
+kick_recovery_posture_reward:
+  penalty_kick_recovery_stance_asymmetry: -20.0
+  penalty_kick_recovery_yaw_drift: -2.0
+  penalty_kick_recovery_stand_height: -40.0
+  penalty_kick_recovery_stand_orientation: -20.0
+  penalty_kick_recovery_stand_feet_width: -20.0
+  penalty_kick_recovery_stand_knee_width: -20.0
+
+kick_safety_reward:
+  kick_penalty_excess_contact_force: -1.0
+  kick_penalty_hard_landing: -1.0
+  kick_penalty_excess_base_lin_vel: -1.0
+  kick_penalty_swing_orientation: -0.01        
+  kick_penalty_swing_torso_orientation: -0.01 
+  kick_feet_slip: -0.025                       
+  action_rate_l2: -0.1                       
+  kick_arm_default_pose: -0.025               
+  kick_feet_air_time: 50.0                     
+  kick_swing_feet_clearance: -20.0           
+  kick_no_fly: -0.05                          
+  kick_penalty_unstable: -0.01                
+  kick_feet_contact_time: -0.5                
+  kick_penalty_lin_vel_z: -0.025              
+  kick_penalty_dof_vel: -3e-5                 
+  kick_penalty_torque: -2e-7   
+  kick_penalty_strike_dof_acc: -5e-8               
+  kick_undesired_contacts: -0.1              
+  kick_penalty_ee_body_pos_divergence: -100.0
+  kick_action_smoothness: -0.0015             
+
+kick_alive_reward:
+  kick_alive: 0.0

@@ -1,0 +1,367 @@
+# ==============================================================================
+# DRAFT / FOR DISCUSSION -- not yet consumed by any code path.
+#
+# Stage B = RoboNaldo's Stage 1 (tracking_params.yaml): motion_weight=1.0,
+# goal_weight=0.0, reg_weight=0.05. Pure motion imitation -- goal_weight=0.0
+# means every term whose RoboNaldo weight formula includes "*goal_weight" is
+# EXACTLY ZERO in this stage, not just small. That includes every shooting/goal
+# term AND robot_alive itself (weight=0.5*goal_weight) -- RoboNaldo pays NO
+# survival reward at all during Stage 1, relying on motion-tracking alone.
+#
+# >>> kick_alive: 0.0 below is the most consequential single value in this file.
+# >>> Flagged, not buried -- see the kick_alive_reward section's own comment.
+#
+# All values cross-checked directly against the cloned RoboNaldo source
+# (tracking_env_cfg.py's base RewTerm formulas + tracking_params.yaml's
+# reward_overrides), not just ROBONALDO_PORT_SCOPE.md's tables -- one small
+# discrepancy was found and corrected here vs. the currently-staged generic
+# value: unstable_penalty's S2a/S2b value is -0.04 (RoboNaldo-verified), not the
+# -0.05 currently staged in kicking_motion_reward_tuning.yaml.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Ball physics -- not RoboNaldo-scaled, physical constant
+# ------------------------------------------------------------------------------
+ball:
+  radius: 0.11
+  mass: 0.43
+
+# ------------------------------------------------------------------------------
+# Own-design knobs with no RoboNaldo counterpart -- left UNCHANGED across all 3
+# stage files (not stage-varied, since there's nothing in RoboNaldo to port a
+# per-stage value FROM). Values match today's live config.
+# ------------------------------------------------------------------------------
+shooting_reward_scale_ramp_iters: 5000
+shooting_reward_scale_hold_iters: 0
+ball_obs_noise: 0.05
+ball_obs_noise_range_coefficient: 0.03
+ball_obs_delay_steps_min: 2
+ball_obs_delay_steps_max: 6
+ball_obs_hold_steps_min: 1
+ball_obs_hold_steps_max: 4
+ood_spawn_probability: 0.4
+ood_region_multiplier: 100.0
+ball_static_obs_probability: 0.4
+ball_obs_stale_probability: 0.01  # per-CONTROL-TICK chance of reusing the previous frame (dropped-packet model); RoboNaldo's own value once staged in (their Stage 3); enabled uniformly here rather than staged, 2026-08-23 user decision -- see ObsTermCfg.stale_probability for the mechanism
+bad_tracking_swing_only: false
+kick_recovery_termination_handoff: false
+# 2026-08-06, drift sibling to kick_recovery_termination_handoff above -- only takes effect when
+# that flag is True (both install together). Euclidean XY radius (meters) the robot may drift from
+# its own base position at the instant it enters recovery/hold before terminating. 0.15 is the
+# user-specified starting point, cross-checked against ~4-6cm typical drift for envs that survived
+# cleanly in a live diagnostic -- see kick_recovery_drift_sustained's own docstring
+# (managers/termination/terms/wbt.py). Currently inert (handoff itself is off above).
+kick_recovery_drift_deadzone: 0.15
+bad_tracking_swing_threshold_multiplier: 1.0
+swing_tracking_sigma_multiplier: 1.0
+balance_potential_weight: 1.0
+kick_contact_force_penalty_floor: 3.0
+kick_contact_force_penalty_k: 4.0
+kick_contact_force_threshold_bodyweight_multiplier: 3.0
+start_at_timestep_zero_prob: 0.5   # NOT a literal port of RoboNaldo's start_time_sampling_fraction -- see note below
+rsi_scope_to_authored_clip: false
+critical_frame_oversampling_prob: 0.0
+critical_frame_sampling_window: 10
+kick_target_entropy_ratio: 0.8
+kick_gamma: 0.99   # was a no-op at 0.97 (== FastSACConfig's own default); see prior discussion
+
+# ------------------------------------------------------------------------------
+# KICK-MODE TERRAIN TIER (2026-08-27). Ported from RoboNaldo's optional "Stage 1b".
+#
+# Kick-mode envs are gated to FLAT terrain because a freely-simulated ball needs a defined rest
+# position. RoboNaldo hits the identical wall -- their ball (`soccer`) is spawned unconditionally
+# in EVERY stage, and every stage from 2a onward (the moment shooting reward turns on) sets
+# `use_rough_terrain: false`. Their one exception is `right_kick/tracking_mixed_params.yaml`, an
+# optional tracking-robustness fine-tune on very light terrain (8mm noise, 0.5% slopes) run while
+# goal_weight is still 0.0 -- gentle enough that the ball doesn't roll anywhere.
+#
+# This is the port of that idea, aimed at the single-support strike window (where 62-85% of this
+# project's own measured falls originate) which the unified policy's locomotion-mode rough-terrain
+# training does NOT harden -- that hardens the walking gait, not the swing.
+#
+# TWO INDEPENDENT SWITCHES, on purpose:
+#   kick_terrain_light_rough_proportion  -> GENERATES the tier (terrain-bank layout)
+#   kick_eligible_terrain_types          -> lets kick envs STAND on it (partition gate)
+# Keeping them separate means an A/B can generate the tier in both arms and vary only eligibility,
+# so the terrain bank (hence locomotion's own training distribution) is identical across arms and
+# any measured difference is attributable to kick eligibility alone.
+#
+# NOTE the proportion is carved OUT OF `flat`'s 0.4 share in terrain_unified_mix, not appended --
+# proportions are normalized, so appending would silently dilute rough/low_obstacles and change
+# what LOCOMOTION envs train on too. Carving from flat only converts already-flat tiles.
+#
+# Ships DISABLED (proportion 0.0 => tier not generated at all, a byte-identical no-op: zero-
+# proportion types are filtered out before terrain generation). NOT VALIDATED BY A TRAINING RUN.
+kick_terrain_light_rough_proportion: 0.0     # try 0.15 (taken from flat's 0.4) to enable
+kick_terrain_light_rough_max_height: 0.008   # RoboNaldo's own noise_range upper bound (8mm)
+kick_eligible_terrain_types: ["flat"]        # add "light_rough" to opt kick envs onto the tier
+
+# ------------------------------------------------------------------------------
+# BODY-TARGETED COLLISION PUSH (2026-08-27). Own-design knob, no RoboNaldo counterpart.
+#
+# The ONLY disturbance this project has ever trained against is push_randomizer_state (config_
+# values/unified/g1/randomization.py) -- a one-tick additive velocity impulse on the robot's ROOT.
+# A real collision (a shin against a table leg, a shoulder against a doorframe) differs from that
+# in three ways: (1) it lands on a LIMB, inducing joint torques a root impulse never produces,
+# (2) it is SUSTAINED over tens-to-hundreds of ms rather than instantaneous, and (3) the obstacle
+# stays there and blocks the recovery motion. This mechanism (BodyPushRandomizerState, same file)
+# addresses (1) and (2) only -- it applies a persistent world-frame force at a randomly chosen
+# limb/torso body for a randomized duration. It does NOT address (3): a force is not a collision
+# constraint, and nothing here stops the robot moving straight through the notional obstacle: that
+# would need actual collision geometry in the scene, a larger change left out of scope here.
+#
+# Additive, not a replacement: push_randomizer_state keeps running unchanged regardless of this
+# block, so disabling it does not remove the disturbance coverage every prior run trained under.
+#
+# Ships DISABLED. Every value below is a reasoned starting point, NOT validated by a training run.
+body_push_enabled: true
+body_push_interval_min_s: 4.0   # matches the root push's own loosened interval (see randomization.py)
+body_push_interval_max_s: 8.0
+body_push_force_min: 20.0       # ~3% of robot bodyweight (~294N) applied to a single limb
+body_push_force_max: 80.0       # ~13% of robot bodyweight applied to a single limb
+body_push_duration_min_s: 0.05  # brief bump
+body_push_duration_max_s: 0.20  # lingering shoulder-check
+body_push_vertical_fraction: 0.2   # mostly horizontal -- unmodelled-scenery contact, not being dropped on
+# body_push_body_names:   # optional; omit to use the default (knees, elbows, torso, pelvis -- see
+#   - left_knee_link      # DEFAULT_BODY_PUSH_BODIES in randomization.py for the full list/rationale).
+#   - right_knee_link     # Feet are deliberately excluded (already in near-continuous ground contact).
+#   - left_elbow_link     # Uncomment and edit to override.
+#   - right_elbow_link
+#   - torso_link
+#   - pelvis
+
+# ------------------------------------------------------------------------------
+# l2sp_weight: L2-SP ("L2 toward Starting Point") continual-learning anchor for
+# the ACTOR. After every actor optimizer step, each actor parameter is pulled a
+# little way back toward the value it had in the checkpoint THIS RUN RESUMED
+# FROM:   p += actor_learning_rate * l2sp_weight * (anchor - p)
+#
+# What it is for: adding motion skill N+1 on top of a checkpoint that already
+# knows skills 1..N trains ONE shared Actor/Critic (there are no per-skill heads)
+# from a UNIFORMLY sampled shared replay buffer, so every gradient step moves the
+# weights that encode the older skills. Lowering an old skill's
+# motion_training_ratio does NOT protect it -- that knob only sets what fraction
+# of envs (hence of the buffer) the skill occupies, so lowering it means LESS
+# rehearsal and FASTER forgetting. Retention has to come from the parameter side
+# instead, which is what this does.
+#
+# Same decoupled mechanism as AdamW's own weight_decay (0.001), just aimed at
+# theta_anchor instead of at 0 -- which is why weight_decay is the natural
+# reference scale for choosing a value here.
+#
+# VALUES TO TRY:
+#   0.0    OFF (default). The right choice for JOINT training of all skills at
+#          once -- catastrophic forgetting is a problem created by SEQUENTIAL
+#          training, so training every skill together avoids it outright and
+#          none of this machinery is needed.
+#   0.001  == weight_decay. Almost certainly too weak to change anything;
+#          useful only as a sanity/A-B rung.
+#   0.01   10x weight_decay. START HERE if you do need it.
+#   0.1    100x weight_decay; roughly the ratio the L2-SP paper used relative to
+#          its own decay. Treat as the practical upper end -- if this still shows
+#          no retention benefit, anchor strength is not the problem and raising
+#          it further will not help.
+#
+# HOW TO TUNE: watch the per-skill EMAs already logged under Kick_skills_{i}
+# (success / topple). An older skill's EMA is the retention signal; the new
+# skill's learning curve is the plasticity cost. Take the LARGEST value that has
+# not yet visibly slowed the new skill. When enabled the run also logs
+# `l2sp_drift` (||theta - theta_anchor||) -- expect it to plateau once the pull
+# balances the gradients, rather than growing without bound.
+#
+# REQUIRES RESUMING from a checkpoint (that checkpoint IS the anchor). Setting
+# this > 0 on a from-scratch run raises at startup rather than silently
+# regularizing toward a randomly initialized actor. See FastSACConfig.l2sp_weight
+# for the full design. NOT yet validated by a training run -- opt-in A/B.
+# ------------------------------------------------------------------------------
+# l2sp_weight: 0.01
+
+# ------------------------------------------------------------------------------
+# RoboNaldo-derived: progressive ee_body_pos termination threshold.
+# S1 = 0.25 (tracking_params.yaml termination_overrides.ee_body_pos.threshold,
+# all 4 tracked bodies uniform) -- also this field's own no-op default.
+# ee_body_pos_warmup_threshold is a SEPARATE field (kick_penalty_ee_body_pos_
+# divergence's own warmup_threshold param, not synced with the termination
+# threshold above -- RoboNaldo's own schedule for it is non-monotonic:
+# 0.25 (S1, their unset base default) -> 0.7 (S2a) -> 0.7 (S2b).
+# ------------------------------------------------------------------------------
+bad_motion_body_pos_threshold: 0.25
+ee_body_pos_warmup_threshold: 0.25
+
+# ------------------------------------------------------------------------------
+# Own-design, no RoboNaldo mapping: kick_recovery_posture_reward's own deadzone
+# params (was Python-hardcoded, no yaml override at all until this plumbing).
+# 2026-08-06: progressive widening B->C1->C2, same shape (~x1.4/step, x2.0
+# cumulative) as bad_motion_body_pos_threshold's own RoboNaldo-derived
+# progression above -- reused deliberately rather than inventing a new ratio,
+# see task_config_stageC2.yaml's own comment for the full per-field table and
+# rationale. Stage B is the anchor point: kept at the existing no-op default
+# (tightest task -- pure imitation, goal_weight=0, randomize_x/y=0.1 -- closest
+# to what these deadzones were originally tuned against). UNVALIDATED against
+# live telemetry -- reasoned from precedent/physical plausibility only.
+# ------------------------------------------------------------------------------
+kick_recovery_stand_height_deadzone: 0.015
+kick_recovery_stand_orientation_deadzone: 0.025
+kick_recovery_stand_feet_width_deadzone: 0.03
+kick_recovery_stand_knee_width_deadzone: 0.03
+
+# ------------------------------------------------------------------------------
+# RoboNaldo-derived: ball spawn randomization (formerly per-skill randomize_x/y,
+# now shared/global -- see skills.example.yaml discussion). DIRECTLY portable,
+# unlike the reward weights -- this is a physical distance in meters, not a
+# reward-magnitude convention needing a ratio scale. RoboNaldo's own
+# init_pos_range (tracking_params.yaml, isotropic -- one scalar for both X/Y)
+# = 0.1 in S1. 2026-08-05 correction: an earlier pass left this at this
+# project's own pre-existing 0.35 across all 3 stages, incorrectly bucketing it
+# with the genuinely own-design fields below (caught by direct comparison
+# against RoboNaldo's source, not derived independently).
+# ------------------------------------------------------------------------------
+randomize_x: 0.1
+randomize_y: 0.1
+
+# ------------------------------------------------------------------------------
+# Formerly per-skill fields, now shared/global (see skills.example.yaml
+# discussion). NOT RoboNaldo-derived -- RoboNaldo's own "target" is a fixed
+# world-Y pitch line (ball_over_line), not a per-episode randomized point, so
+# there's no equivalent to port for these two -- left unchanged across all 3
+# stage files.
+# ------------------------------------------------------------------------------
+# 2026-08-22: randomize_target_x/y REMOVED (azimuth-aim refactor) -- independent target
+# randomization has no replacement; kick_aim_enabled=True (every skill in this project) derives
+# all aim variation from kick_aim_theta instead.
+# 2026-08-24: kick_ball_velocity_v_ref -- SET FOR THE FIRST TIME. This field has never appeared in
+# any task config, so every run to date silently used shooting.py::ball_velocity's own 5.0 default,
+# which puts the Lorentzian s^2/(s^2+v_ref^2) deep in its FLAT TAIL at the speeds these policies
+# actually reach: at the measured ~1.8 m/s it returns 0.115, and rew_kick_ball_velocity realized
+# 0.00005 per episode (skill012/014) -- a rounding error, not a reward. MultiSkillConfig.
+# kick_ball_velocity_v_ref's own docstring already derived the answer from live measurement ("at
+# the measured 1.6 m/s operating point, v_ref=5.0 sits deep in the flat tail (value 0.093, gradient
+# 0.105 per m/s); 2.0 gives 0.390 and 0.297 -- 2.8x steeper exactly where the policy lives"); it
+# was analysed, written down, and then never actually put in a config. This applies it.
+kick_ball_velocity_v_ref: 2.0
+success_radius: 0.5
+shooting_reward_scale: 0.0   # irrelevant here (goal_weight=0.0 zeroes every shooting term regardless); aligned to 1.0 for consistency with the C1/C2 fix (see those files) -- not a functional change in this file
+# 2026-08-06, user-requested opt-in: gates kick_ball_over_line to has_kicked, closing the same
+# class of accidental-non-kick-foot-nudge exposure already fixed (and live-measured) for
+# kick_predicted_error_ball_to_target -- see ball_over_line's own docstring
+# (managers/reward/terms/shooting.py) for the full mechanism. False (default) = off, matching
+# RoboNaldo's own ungated registration exactly; irrelevant here anyway (goal_weight=0.0 zeroes
+# every shooting term). NOT yet live-measured for this specific term -- ships as an opt-in.
+kick_ball_over_line_require_has_kicked: false
+motion_tracking_reward_scale: 2.0
+root_tracking_reward_scale: 1.0
+recovery_tracking_scale: 1.0
+kick_recovery_posture_reward_scale: 1.0
+kick_safety_reward_scale: 1.0
+kick_alive_reward_scale: 1.0
+kick_alive_pre_kick_ratio: 0.1   # only matters if kick_alive itself is nonzero -- see note below
+observation_bias: 0.05
+recovery_duration_s: 1.0
+hold_duration_s: 1.0
+
+# ==============================================================================
+# Reward-term weights -- Stage 1 (S1) values, computed from RoboNaldo's own
+# base RewTerm formulas evaluated at motion_weight=1.0/goal_weight=0.0/
+# reg_weight=0.05, with tracking_params.yaml's reward_overrides applied on top.
+# ==============================================================================
+
+motion_tracking_reward:
+  motion_global_ref_position_error_exp: 0.5    # 1.0*motion_weight, overridden weight_scale=0.5
+  motion_global_ref_orientation_error_exp: 0.5 # overridden weight_scale=0.5
+  motion_relative_body_position_error_exp: 1.0 # no override -> base 1.0*motion_weight
+  motion_relative_body_orientation_error_exp: 1.0
+  motion_global_body_lin_vel: 1.0
+  motion_global_body_ang_vel: 1.0
+  motion_global_feet_lin_vel: 1.0
+
+shooting_reward:
+  # goal_weight=0.0 in S1 -- EVERY term below whose RoboNaldo formula is
+  # "X*goal_weight" is exactly zero, not approximately small. Pure imitation,
+  # by RoboNaldo's own design.
+  kick_ball_proximity: 0.0                  # robot_feet_ball_distance = 1.0*0.0
+  kick_contact_orientation: 0.0             # ball_contact_orientation = 2.0*0.0
+  kick_foot_strike_pitch: 0.0               # 2026-08-07, ours only -- ships as a verified no-op, not yet enabled
+  kick_ball_velocity: 0.0                   # ball_velocity = 0.4*0.0
+  kick_error_ball_to_target: 0.0            # error_ball_to_target = 20.0*0.0
+  kick_predicted_error_ball_to_target: 0.0  # ours only, no RoboNaldo term to derive from
+  kick_goal_success_burst: 0.0              # goal_reward_burst = 0.0 in every stage we follow
+  kick_ball_contact_hit: 0.0                # ours only (robot_ball_contact_count's convergent analog) -- zeroed to match "no ball reward at S1"
+  kick_ball_approach_stance: 0.0            # ours only, zeroed for the same reason
+  kick_ball_over_line: 0.0                  # ball_over_line = 0.05*0.0
+  kick_robot_com_ball_distance: 0.0         # robot_com_ball_distance = 1.0*0.0
+  kick_robot_torso_ball_distance: 0.0       # robot_head_torso_ball_distance = 1.0*0.0
+  kick_penalize_weak_foot_contact: 0.0      # penalize_weak_foot_contact = -0.5*0.0
+  kick_penalize_self_contact_feet: 0.0      # penalize_self_contact_feet = -1.0*0.0
+  _sigma:
+    # 2026-08-23: 4.2 -> 2.0 purely to stay in step with every Stage C/D config (see
+    # task_config_stageC1.yaml's own comment here for the measurement behind that change). STILL
+    # genuinely inert in this file -- kick_error_ball_to_target's weight above is 0.0, so nothing
+    # reads this -- but left matching rather than stale, since these files get copied to seed new
+    # stage configs and a lone 4.2 here would silently reintroduce the flat-aiming-reward problem.
+    # 2026-08-24: 2.0 -> 3.0. The 4.2 -> 2.0 cut made the day before was WRONG and this reverses
+    # it with a rule instead of a guess. That cut was chosen by looking only at how sharply the
+    # kernel discriminates across the +/-15 deg commanded range, without checking how far the
+    # policy was ACTUALLY missing. Measured from the batch-one/batch-two realized-reward ratio
+    # (same skill, same steps, only sigma changed): the real miss is ~3.0 m for skill012/013 and
+    # ~4.6 m for skill014. At those distances sigma=2.0 put the operating point in the DEAD TAIL --
+    # realized rew_kick_error_ball_to_target fell 0.17x / 0.27x / 0.01x, i.e. skill014 lost 99% of
+    # its aiming signal -- and sim2sim direction success fell with it (-0.22 / -0.20 at matched
+    # steps). That is the same gradient-dead-kernel failure the original 4.2 existed to fix,
+    # recreated from the other side.
+    #
+    # THE RULE (use this, don't guess again): the learning signal is the GRADIENT,
+    #   |d/dd exp(-d^2/sigma^2)| = (2d/sigma^2) exp(-d^2/sigma^2),
+    # which for a given miss distance d is MAXIMISED at sigma = d. So sigma should track the
+    # policy's current typical miss, and be revisited as that shrinks -- 4.2 was near-optimal when
+    # misses were ~5 m and simply went stale. Recompute from the survival scan's own
+    # direction/miss telemetry rather than re-deriving by eye.
+    kick_error_ball_to_target: 3.0
+
+kick_recovery_posture_reward:
+  # Own design, no RoboNaldo mapping -- unchanged across all 3 stage files.
+  penalty_kick_recovery_stance_asymmetry: -20.0
+  penalty_kick_recovery_yaw_drift: -2.0
+  penalty_kick_recovery_stand_height: -40.0
+  penalty_kick_recovery_stand_orientation: -20.0
+  penalty_kick_recovery_stand_feet_width: -20.0
+  penalty_kick_recovery_stand_knee_width: -20.0
+
+kick_safety_reward:
+  # Pre-existing, own dynamic-formula design (floor + k*w_g) -- not a literal
+  # RoboNaldo port, unchanged across all 3 stage files.
+  kick_penalty_excess_contact_force: -1.0
+  kick_penalty_hard_landing: -1.0
+  kick_penalty_excess_base_lin_vel: -1.0
+
+  # RoboNaldo-derived, S1 values:
+  kick_penalty_swing_orientation: -0.01        # locomotion_phase_orientation_l2 = -0.2*0.05
+  kick_penalty_swing_torso_orientation: -0.01  # locomotion_phase_torso_orientation_l2 = -0.2*0.05
+  kick_feet_slip: -0.025                       # feet_slip = -0.5*0.05
+  action_rate_l2: -0.1                         # OVERRIDE (tracking_params.yaml: weight: -0.1, literal, not weight_scale)
+  kick_arm_default_pose: -0.025                # arm_default_pose = 0.5*0.05, sign-flipped (positive base -> negative weight, our convention)
+  kick_feet_air_time: 50.0                     # flat, not reg_weight-scaled
+  kick_swing_feet_clearance: -20.0             # flat (jump_flag=False)
+  kick_no_fly: -0.05                           # no_fly = -1.0*0.05
+  kick_penalty_unstable: -0.01                 # unstable_penalty = -0.2*0.05
+  kick_feet_contact_time: -0.5                 # flat
+  kick_penalty_lin_vel_z: -0.025               # locomotion_phase_lin_vel_z_l2 = -0.5*0.05
+  kick_penalty_dof_vel: -3e-5                  # flat
+  kick_penalty_torque: -2e-7                   # flat
+  kick_undesired_contacts: -0.1                # flat
+  kick_penalty_ee_body_pos_divergence: -100.0  # flat weight; threshold synced to bad_motion_body_pos_threshold=0.25 above
+  kick_action_smoothness: -0.0015              # action_smoothness = -0.03*0.05
+
+kick_alive_reward:
+  # RoboNaldo's robot_alive weight = 0.5*goal_weight = 0.5*0.0 = 0.0 -- ZERO
+  # survival reward throughout Stage 1, both pre- and post-kick, by construction
+  # (the phase-dependent 1x/10x multiplier inside robot_alive() cannot rescue a
+  # weight of zero). This is the single most consequential value in this file --
+  # it means Stage-B training would run with NO alive incentive at all, relying
+  # entirely on motion-tracking reward to keep the robot upright. That is a real,
+  # substantial departure from this project's own design (kick_alive has always
+  # been flat/nonzero here) and should be a deliberate, informed choice, not an
+  # artifact of mechanically applying RoboNaldo's numbers. Consider keeping a
+  # small nonzero kick_alive for Stage B instead of the literal RoboNaldo 0.0,
+  # if pure-imitation-with-zero-survival-incentive hasn't been tried/validated
+  # in this project's own setup.
+  kick_alive: 0.0

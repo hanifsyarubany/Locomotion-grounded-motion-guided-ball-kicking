@@ -1,0 +1,131 @@
+# requirements_robojudo.txt -- sim2sim deployment env for unified_ball_kick_enhanced
+# (RoboJuDo/MuJoCo pipeline, the env every mujoco_*_scan.py script in this project drives).
+# Generated 2026-08-30 via `pip freeze` on conda_env/robojudo.
+#
+# THIS ENVIRONMENT IS NOT PURE PIP -- it is a ROS 2 Humble stack built via conda/robostack
+# (rattler-build), not PyPI. `pip install -r requirements_robojudo.txt` alone CANNOT reproduce
+# it. On the new server:
+#
+# 1. Create the env with conda/mamba + the robostack ROS 2 Humble channel FIRST (this supplies
+#    rclpy and the whole ROS 2 Humble Python stack below -- these are NOT reliably installable
+#    from PyPI under these names/versions, regardless of what `pip freeze` printed for them):
+#        mamba create -n robojudo -c robostack-staging -c conda-forge \
+#            ros-humble-ros-base python=3.11
+#    See https://robostack.github.io/GettingStarted.html for the current channel/recipe.
+#
+# 2. THEN pip-install everything below into that same env. The lines under "ROS 2 Humble stack"
+#    are listed for VERSION REFERENCE ONLY (to sanity-check what the robostack install
+#    resolved to) -- do not pip-install them individually, they are conda-native builds:
+#
+#   action_msgs==1.2.2
+#   ament_cmake_test==1.3.14
+#   ament_index_python @ file:///home/runner/conda-bld/bld/rattler-build_ros-humble-ament-index-python_1778813062/work/ros-humble-ament-index-python/src/work
+#   ament_package @ file:///home/runner/conda-bld/bld/rattler-build_ros-humble-ament-package_1778812526/work/ros-humble-ament-package/src/work
+#   builtin_interfaces==1.2.2
+#   catkin_pkg @ file:///home/conda/feedstock_root/build_artifacts/catkin_pkg_1757558439629/work
+#   domain_coordinator @ file:///home/runner/conda-bld/bld/rattler-build_ros-humble-domain-coordinator_1778813016/work/ros-humble-domain-coordinator/src/work
+#   geometry_msgs==4.9.1
+#   lifecycle_msgs==1.2.2
+#   rcl_interfaces==1.2.2
+#   rclpy==3.3.21
+#   rcutils==5.1.8
+#   rmw_dds_common==1.6.0
+#   ros2cli @ file:///home/runner/conda-bld/bld/rattler-build_ros-humble-ros2cli_1778998031/work/ros-humble-ros2cli/src/work
+#   ros2topic @ file:///home/runner/conda-bld/bld/rattler-build_ros-humble-ros2topic_1778998606/work/ros-humble-ros2topic/src/work
+#   rosgraph_msgs==1.2.2
+#   rosidl_adapter==3.1.8
+#   rosidl_cli @ file:///home/runner/conda-bld/bld/rattler-build_ros-humble-rosidl-cli_1778813147/work/ros-humble-rosidl-cli/src/work
+#   rosidl_cmake==3.1.8
+#   rosidl_generator_c==3.1.8
+#   rosidl_generator_cpp==3.1.8
+#   rosidl_generator_py==0.14.6
+#   rosidl_generator_rs==0.4.12
+#   rosidl_parser==3.1.8
+#   rosidl_runtime_py @ file:///home/runner/conda-bld/bld/rattler-build_ros-humble-rosidl-runtime-py_1778997162/work/ros-humble-rosidl-runtime-py/src/work
+#   rosidl_typesupport_c==2.0.2
+#   rosidl_typesupport_cpp==2.0.2
+#   rosidl_typesupport_fastrtps_c==2.2.4
+#   rosidl_typesupport_fastrtps_cpp==2.2.4
+#   rosidl_typesupport_introspection_c==3.1.8
+#   rosidl_typesupport_introspection_cpp==3.1.8
+#   rpyutils @ file:///home/runner/conda-bld/bld/rattler-build_ros-humble-rpyutils_1778813155/work/ros-humble-rpyutils/src/work
+#   std_msgs==4.9.1
+#   unique_identifier_msgs==2.2.1
+#
+# 3. TORCH here is CPU-ONLY (`+cpu` suffix -- this scan is deliberately CPU-only, see
+#    mujoco_kick_survival_scan.py's own docstring: RoboJuDo's ONNX policy runs on
+#    CPUExecutionProvider and never touches the GPU):
+#        pip install torch==2.13.0+cpu --extra-index-url https://download.pytorch.org/whl/cpu
+#
+# 4. RoboJuDo itself and its vendored mujoco_python_viewer are editable installs FROM THIS SAME
+#    repo (humanoid_deployment/RoboJuDo, a separate git repo from unified_ball_kick_enhanced --
+#    see that repo's own remote, RoboJuDo-real.git). Once it's cloned on the new server at the
+#    same relative path this project's mujoco_*_scan.py scripts expect:
+#        cd humanoid_deployment/RoboJuDo && pip install -e . && pip install -e third_party/mujoco_viewer
+#
+# Dropped: `zmq==0.0.0` -- a known placeholder/no-op package on PyPI (the real dependency,
+# pyzmq, is already pinned below). Installing "zmq" by that name does nothing useful.
+
+# PyTorch -- see note 3 above.
+torch==2.13.0+cpu
+
+# Everything else -- plain PyPI, exact-pinned (conda-build provenance stripped where present).
+ImageIO==2.37.3
+Jinja2==3.1.6
+MarkupSafe==3.0.3
+PyOpenGL==3.1.10
+PyYAML==6.0.3
+Pygments==2.21.0
+absl-py==2.5.0
+annotated-types==0.8.0
+argcomplete==3.7.2
+colorama==0.4.6
+colorlog==6.10.1
+docutils==0.23
+easydict==1.13
+empy==4.2.1
+etils==1.14.0
+evdev==2.0.0
+exceptiongroup==1.3.1
+filelock==3.32.3
+flatbuffers==25.12.19
+fsspec==2026.7.0
+glfw==2.10.2
+importlib_metadata==9.0.0
+importlib_resources==7.1.0
+iniconfig==2.3.0
+joblib==1.5.3
+lark-parser==0.12.0
+mpmath==1.3.0
+msgpack-numpy==0.4.8
+msgpack==1.2.1
+mujoco==3.10.0
+netifaces==0.11.0
+networkx==3.6.1
+numpy==2.4.6
+onnxruntime==1.27.0
+packaging==26.3
+pillow==12.3.0
+pluggy==1.6.0
+protobuf==7.36.0
+pydantic==2.13.4
+pydantic_core==2.46.4
+pygame==2.6.1
+pynput==1.8.2
+pyparsing==3.3.2
+pytest==9.1.1
+python-box==7.4.1
+python-dateutil==2.9.0.post0
+python-xlib==0.33
+pyzmq==27.1.0
+redis==8.0.1
+scipy==1.17.1
+setuptools==84.0.0
+six==1.17.0
+sympy==1.14.0
+tomli==2.4.1
+tqdm==4.68.4
+typing-inspection==0.4.4
+typing_extensions==4.16.0
+wheel==0.48.0
+zipp==4.1.0

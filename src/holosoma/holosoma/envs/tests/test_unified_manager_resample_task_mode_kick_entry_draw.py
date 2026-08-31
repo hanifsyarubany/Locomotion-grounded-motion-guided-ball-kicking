@@ -63,6 +63,12 @@ def _make_manager(
     m.is_evaluating = False
     m._post_flip_step = torch.full((num_envs,), -1, dtype=torch.long)
     m._pre_kick_step = torch.full((num_envs,), -1, dtype=torch.long)
+    # Kick ABORT (2026-08-28): _resample_task_mode clears this unconditionally on every reset (same
+    # as the two sentinels above), so it must exist even though these tests exercise the opposite
+    # (locomotion->kick) direction. _kick_abort_prob 0.0 = feature off, matching every config this
+    # file targets -- the draw block short-circuits entirely. See test_kick_abort_flip.py.
+    m._kick_abort_flip_tick = torch.full((num_envs,), -1, dtype=torch.long)
+    m._kick_abort_prob = 0.0
     m._kick_pending = torch.zeros(num_envs, dtype=torch.bool)
     m._kick_pending_best_residual = torch.full((num_envs,), float("inf"))
     m._kick_pending_best_frame = torch.full((num_envs,), -1, dtype=torch.long)

@@ -1062,6 +1062,45 @@ class MuJoCo(BaseSimulator):
         if len(env_ids) > 0:
             self.contact_forces_history[env_ids, :, :, :] = 0.0
 
+    def set_external_body_forces(self, forces_w: torch.Tensor) -> None:
+        """See BaseSimulator.set_external_body_forces. `forces_w` is [num_envs, num_bodies, 3],
+        WORLD frame, HOLOSOMA body order.
+
+        MuJoCo's `xfrc_applied` is already WORLD-frame (unlike the IsaacSim path, which must
+        counter-rotate for IsaacLab's local-frame convention), so only the body-index translation
+        is needed: `_holosoma_body_to_mujoco_id` maps holosoma order to model order, which also
+        counts `world` and the ball. Writing raw holosoma-ordered rows straight into
+        `applied_forces` would shift every body by one -- the exact bug documented on that
+        mapping's own definition.
+
+        WarpBackend only. ClassicBackend's `applied_forces` view is single-environment
+        `[num_bodies, 6]` numpy, which cannot express a per-env disturbance, so it raises rather
+        than silently randomizing one env.
+        """
+        expected = (self.num_envs, len(self.body_names), 3)
+        if tuple(forces_w.shape) != expected:
+            raise ValueError(
+                f"set_external_body_forces expects forces_w of shape {expected} "
+                f"(holosoma body order), got {tuple(forces_w.shape)}"
+            )
+
+        applied = self.applied_forces
+        if not isinstance(applied, torch.Tensor):
+            from holosoma.managers.randomization.exceptions import RandomizerNotSupportedError
+
+            raise RandomizerNotSupportedError(
+                "Body-targeted push randomization requires the MuJoCo WarpBackend; the "
+                "ClassicBackend applied_forces view is single-environment and cannot carry a "
+                "per-env disturbance."
+            )
+
+        # xfrc_applied is [num_envs, nbody, 6] = [force(3), torque(3)]. Zero every robot body
+        # first so a force from a previous step never persists past its window (MuJoCo does NOT
+        # auto-clear this buffer on the Warp path).
+        mj_ids = self._holosoma_body_to_mujoco_id
+        applied[:, mj_ids, :3] = forces_w.to(device=applied.device, dtype=applied.dtype)
+        applied[:, mj_ids, 3:] = 0.0
+
     def apply_torques_at_dof(self, torques: torch.Tensor) -> None:
         """Apply torques with backend-specific optimization.
 

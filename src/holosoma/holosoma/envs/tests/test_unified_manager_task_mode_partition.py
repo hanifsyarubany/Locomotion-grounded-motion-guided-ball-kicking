@@ -11,6 +11,10 @@ from holosoma.envs.unified.unified_manager import TaskMode, UnifiedManager
 class _FakeTerrainState:
     def __init__(self, env_terrain_is_flat: torch.Tensor):
         self.env_terrain_is_flat = env_terrain_is_flat
+        # 2026-08-27: kick eligibility became a SEPARATE, configurable property from literal
+        # flatness (TerrainTermCfg.kick_eligible_terrain_types). These fakes mirror the default
+        # ("flat",), where the two coincide exactly -- which is what every test here assumes.
+        self.env_terrain_kick_eligible = env_terrain_is_flat
 
 
 class _FakeTerrainManager:

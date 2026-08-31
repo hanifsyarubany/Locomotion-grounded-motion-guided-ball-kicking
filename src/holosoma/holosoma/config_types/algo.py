@@ -298,7 +298,19 @@ class FastSACConfig:
 
     Size this by watching `qf_loss`/`qf_max` in wandb flatten under the new reward, not by
     guessing a round number -- too short and the actor unfreezes into a critic that hasn't
-    converged yet, defeating the purpose."""
+    converged yet, defeating the purpose.
+
+    ALPHA IS AUTOMATICALLY FROZEN ALONGSIDE THE ACTOR (2026-08-28). `_update_main` receives
+    `actor_frozen=not warmup_done` and skips the alpha auto-tune step for the whole warmup window.
+    Without that gate this field was actively DANGEROUS with `use_autotune=True`: only the ACTOR
+    was frozen, while alpha's own controller kept integrating against a policy that structurally
+    could not respond, so alpha wound up unboundedly (measured: 0.0010 -> 142.54 over 5000 warmup
+    steps) and destroyed the policy on the very first post-warmup update. That is fixed at the
+    source, so `use_autotune` needs no special handling here -- do NOT set `use_autotune=False`
+    as a workaround anymore: it stops the windup but also disables entropy regulation for the
+    run's entire remaining life, which lets policy sigma drift unopposed (measured on run
+    20260828_085838: action_std 0.0335 -> 0.157 peak, entropy -23.7 -> -7.4, never returning to
+    target)."""
 
     policy_frequency: int = 4
     """the frequency of training policy (delayed)"""
@@ -625,6 +637,76 @@ class FastSACConfig:
     strike-pitch at steps 253k/263k) could plausibly be the same underlying rate. 32 gives ~3.1%
     steps. Still not independently tuned beyond that -- raise further if a specific comparison
     needs finer resolution than 3.1%."""
+
+    mujoco_kick_to_loco_random_flip_every_n_saves: int = 0
+    """2026-08-30: N-trial MuJoCo sim2sim ALIVE-RATE scan for a FORCED kick->locomotion flip at a
+    randomized mid-clip tick (mujoco_kick_loco_flip_scan.py via
+    record_mujoco_kick_to_loco_flip_scan.py) -- the sim2sim deployment-side counterpart of
+    training's kick_abort_prob (MultiSkillConfig.kick_abort_prob's own docstring has the
+    training-time mechanism; UnifiedLocoKickPolicy._return_to_loco/"[RETURN_TO_LOCO]" is the
+    already-wired deployed equivalent this scan drives directly, no new observation-switching
+    logic). Same `global_step % (save_interval * this) == 0` cadence pattern as
+    mujoco_survival_scan_every_n_saves, its own independent knob/thread/lock for the same reason
+    that field is independent of the bundled video-rollout cadence: this produces wandb SCALARS
+    a user may want checked on a different schedule than the fixed 4-rollout video bundle.
+
+    COMPLEMENTS, DOES NOT DUPLICATE, mujoco_survival_scan's own kick_fall_rate: that one measures
+    ordinary in-kick falls under the clip's OWN natural ending; this one isolates the flip itself
+    by forcing it mid-clip, at a tick drawn the same way (and over the same window, 10-60 control
+    ticks since kick trigger) as training's own kick_abort_delay_min/max_steps -- see
+    mujoco_kick_loco_flip_scan.py's own module docstring for why a trial that already fell before
+    ever reaching its scheduled flip is excluded from the alive-rate denominator (reported
+    separately as sim2sim/kick_to_loco_random_flip_pre_flip_fail_rate) rather than conflated into
+    one number with two different failure modes.
+
+    Reuses mujoco_survival_scan_num_trials for trial count (not its own field -- both are "how
+    many episodes for a per-skill sim2sim scan" knobs, and splitting them would be config
+    proliferation for a distinction no run has needed yet). The flip-tick window itself
+    (10/60 ticks) and post-flip hold duration are wrapper-level defaults, not tyro-exposed fields
+    -- same precedent as mujoco_survival_scan's own settle_s/hold_s, which are likewise never read
+    from FastSACConfig at the call site.
+
+    0 (default) = off, exact no-op -- FastSACAgent never imports record_mujoco_kick_to_loco_flip_scan
+    or constructs its thread/queue at this default. Same eligibility gate as the other three
+    sim2sim mechanisms (training env's kick_probability > 0)."""
+
+    mujoco_loco_to_kick_handoff_every_n_saves: int = 0
+    """2026-08-30: N-trial MuJoCo sim2sim FALL-RATE scan for the REVERSE handoff direction --
+    random locomotion (random lin_vel_x/lin_vel_y/ang_vel_yaw, held for a randomized 2-3s window)
+    followed by a forced flip into kick mode, letting the kick play out to completion. The sim2sim
+    deployment-side counterpart of training's mid_episode_kick_entry_prob (Stage D's
+    locomotion->kick handoff; MultiSkillConfig.mid_episode_kick_entry_prob's own docstring has the
+    training-time mechanism). Same `global_step % (save_interval * this) == 0` cadence pattern and
+    own independent knob/thread/lock as mujoco_survival_scan_every_n_saves/
+    mujoco_kick_to_loco_random_flip_every_n_saves, for the same reason those two are independent
+    of the bundled video-rollout cadence and of each other.
+
+    ALSO REPORTS a ball CONTACT HIT rate (2026-08-30, same N trials, no extra rollout cost --
+    mirrors mujoco_survival_scan's own kick_ball_hit_rate, a real MuJoCo geom-geom ball<->foot
+    contact) under "sim2sim/loco_to_kick_handoff_ball_hit_rate". Both the fall rate and the hit
+    rate are computed over the SAME denominator -- trials that survived the random-locomotion
+    lead-in to actually reach the handoff (see below) -- one coherent population for every metric
+    this scan produces, not a separate one per metric.
+
+    THE ONE GENUINELY NEW PIECE, not present in either sibling scan: the ball is placed relative to
+    the robot's ACTUAL pose at the flip instant, not a fixed world position -- because unlike every
+    other sim2sim mechanism (which stays at the world origin all trial), the robot here has just
+    walked an unpredictable distance in an unpredictable direction. Reuses the SAME "robot-spawn-
+    anchored, yaw-rotated" transform training's own
+    WholeBodyTrackingManager.place_ball_at_entry/local_xy_to_world (managers/command/terms/wbt.py)
+    already establishes as the single source of truth for exactly this operation -- see
+    mujoco_loco_to_kick_handoff_scan.py's own module docstring for the numpy/scipy reimplementation
+    via RoboJuDo's calc_heading_quat_np/my_quat_rotate_np.
+
+    Reuses mujoco_survival_scan_num_trials for trial count, same "avoid config proliferation"
+    rationale as mujoco_kick_to_loco_random_flip_every_n_saves. The random-velocity range (defaults
+    to this project's own g1 locomotion training range, config_values/loco/g1/command.py's
+    command_ranges), walk-duration window, and post-flip hold duration are wrapper-level defaults,
+    not tyro-exposed fields -- same precedent as every sibling scan's own settle_s/hold_s.
+
+    0 (default) = off, exact no-op -- FastSACAgent never imports
+    record_mujoco_loco_to_kick_handoff_scan or constructs its thread/queue at this default. Same
+    eligibility gate as the other sim2sim mechanisms (training env's kick_probability > 0)."""
 
     logging_interval: int = 100
     """the interval to log the metrics"""

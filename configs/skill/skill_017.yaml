@@ -1,0 +1,17 @@
+base_robot:
+  target_height: 0.74
+  deadzone: 0.015
+
+motion_skill_1:
+  motion_npz: ../../locomotion_and_motion_tracking/video2robot/data/video_017/npz_holosoma/robot_motion_track_1.npz
+  x: 0.6
+  y: -0.39
+  target_x: 0.0
+  target_y: -1.5
+  strike_start_frame: 32  
+  stand_start_frame:  76   
+  motion_training_ratio: 0.90
+  kick_foot: left
+  kick_aim_enabled: true
+  kick_ankle_pitch_correction_enabled: true  
+  task_config: task_config_stageB

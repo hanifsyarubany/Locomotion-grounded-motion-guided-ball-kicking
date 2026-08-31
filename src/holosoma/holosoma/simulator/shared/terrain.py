@@ -332,6 +332,38 @@ class Terrain(TerrainInterface):
             np.random.uniform(-max_height * 2 - 0.025, -0.025, terrain.height_field_raw.shape) / terrain.vertical_scale
         )
 
+    def _light_rough_terrain_func(self, terrain: Any, difficulty: float) -> None:
+        """Generate LIGHT rough terrain -- small symmetric height noise about ground level.
+
+        Added 2026-08-27 for kick-mode terrain robustness. Two deliberate differences from
+        ``_rough_terrain_func``, both required for a tier a freely-simulated ball can sit on:
+
+        1. **Magnitude.** Peak deviation is ``cfg.light_rough_max_height`` (default 8mm, RoboNaldo's
+           own value for the equivalent tier) versus ``rough``'s 14-25mm. Ported from RoboNaldo's
+           ``right_kick/tracking_mixed_params.yaml``, the only preset in their repo that turns
+           terrain on for the kicking task -- and note they revert to a flat plane for every stage
+           from Stage 2a onward, i.e. the moment the ball starts mattering to the reward.
+        2. **Symmetry.** ``rough`` writes strictly NEGATIVE heights (uniform in
+           ``[-2*max_height - 0.025, -0.025]``), i.e. every tile sits in a depression below nominal
+           ground. This tier is symmetric about 0 (``[-h, +h]``), so the mean ground height stays at
+           the nominal level the ball's configured spawn height assumes. An asymmetric tier would
+           bias every kick-eligible tile downward relative to where the ball is placed.
+
+        ``difficulty`` scales the amplitude linearly, matching how every sibling tier consumes it
+        (``randomized_terrain`` draws it from {0.5, 0.75, 0.9} for non-slope types).
+
+        Parameters
+        ----------
+        terrain : terrain_utils.SubTerrain
+            Terrain object with `height_field_raw` and `vertical_scale` attributes.
+        difficulty : float
+            Difficulty level in range [0, 1], scales the height deviation linearly.
+        """
+        max_height = float(self._cfg.light_rough_max_height) * difficulty
+        terrain.height_field_raw = (
+            np.random.uniform(-max_height, max_height, terrain.height_field_raw.shape) / terrain.vertical_scale
+        )
+
     def _smooth_slope_terrain_func(self, terrain: Any, difficulty: float) -> None:
         """Generate a smooth sloped terrain using pyramid slope pattern.
 

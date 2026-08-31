@@ -231,6 +231,14 @@ class FastSACAgent(BaseAlgo):
         # _drain_mujoco_survival_scan_queue.
         self._survival_scan_thread: threading.Thread | None = None
         self._survival_scan_result_queue: queue.Queue[tuple[int, str, float]] = queue.Queue()
+        # 2026-08-30: forced kick->locomotion flip alive-rate scan -- own thread/queue, same
+        # "run concurrently, not sequentially" rationale as the other rollouts above.
+        self._kick_to_loco_flip_scan_thread: threading.Thread | None = None
+        self._kick_to_loco_flip_scan_result_queue: queue.Queue[tuple[int, str, float]] = queue.Queue()
+        # 2026-08-30: reverse direction -- random locomotion then forced flip into kick, fall-rate
+        # scan. Own thread/queue, same "run concurrently, not sequentially" rationale.
+        self._loco_to_kick_handoff_scan_thread: threading.Thread | None = None
+        self._loco_to_kick_handoff_scan_result_queue: queue.Queue[tuple[int, str, float]] = queue.Queue()
 
     def setup(self) -> None:
         logger.info("Setting up FastSAC")
@@ -572,8 +580,31 @@ class FastSACAgent(BaseAlgo):
         return w / w.mean().clamp(min=1e-8)
 
     def _update_main(
-        self, data: TensorDict
+        self, data: TensorDict, actor_frozen: bool = False
     ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+        """`actor_frozen` (2026-08-28): suppress the alpha auto-tune step for this update.
+
+        Set during `critic_warmup_iters` (see FastSACConfig.critic_warmup_iters). SAC's alpha
+        controller is an INTEGRATOR: it raises alpha whenever policy entropy sits below
+        `target_entropy`, expecting the actor to respond by becoming more stochastic. While the
+        actor is frozen the actor CANNOT respond, so the error signal never clears and alpha
+        integrates in one direction without bound -- textbook integral windup, a controller whose
+        actuator has been disconnected.
+
+        Measured on run 20260827_221312 before this gate existed: alpha/kick ran 0.0010 -> 0.0106
+        -> 1.379 -> 14.38 -> 45.59 -> 142.54 across 5000 warmup steps (142,000x). At unfreeze the
+        actor's loss `alpha*log_probs - qf_value` was then utterly dominated by the entropy term
+        (actor_loss 11.8 -> -4251 in one interval), so the fastest descent direction was "become
+        maximally random": policy_entropy -23.4 -> +74.9, kick_topple_frac 0.028 -> 1.0000, and it
+        never recovered.
+
+        Only `_update_pol` was gated on `warmup_done` before this; the alpha step lives here in
+        `_update_main` and ran unconditionally, which is why freezing the actor silently broke
+        alpha. The workaround at the time was `use_autotune=False` for the whole run, which stops
+        the windup but also removes entropy regulation entirely for the run's whole remaining life
+        -- this gate is the targeted fix, so autotune can stay ON and resume normal regulation the
+        moment the actor unfreezes.
+        """
         args = self.config
 
         scaler = self.scaler
@@ -724,7 +755,12 @@ class FastSACAgent(BaseAlgo):
         scaler.step(q_optimizer)
         scaler.update()
         alpha_loss = torch.tensor(0.0, device=self.device)
-        if self.config.use_autotune:
+        # `and not actor_frozen`: see this method's own docstring for the measured windup this
+        # prevents. Deliberately skips the ENTIRE block (no backward, no step) rather than
+        # zeroing the gradient afterward -- Adam carries momentum state (exp_avg/exp_avg_sq), so
+        # accumulating gradients through warmup and only suppressing the step would still leave a
+        # primed optimizer that lurches on the first post-warmup update.
+        if self.config.use_autotune and not actor_frozen:
             alpha_optimizer.zero_grad(set_to_none=True)
             with self._maybe_amp():
                 if self.num_alpha_groups == 2:
@@ -1537,7 +1573,13 @@ class FastSACAgent(BaseAlgo):
                         batch_size, args.num_updates, normalize_obs, normalize_critic_obs
                     )
                     for i, data in enumerate(prepared_batches):
-                        # Data is already normalized, just run the updates
+                        # Data is already normalized, just run the updates.
+                        # actor_frozen=not warmup_done (2026-08-28): suppresses the alpha
+                        # auto-tune step while the actor is frozen -- see _update_main's own
+                        # docstring for the measured 142,000x windup this prevents. Under
+                        # args.compile this bool is a torch.compile guard, so it triggers exactly
+                        # ONE recompile when warmup ends (it never flips back), which is a
+                        # negligible one-off against a 5000-step warmup.
                         (
                             buffer_rewards,
                             critic_grad_norm,
@@ -1545,7 +1587,7 @@ class FastSACAgent(BaseAlgo):
                             qf_max,
                             qf_min,
                             alpha_loss,
-                        ) = update_main(data)
+                        ) = update_main(data, actor_frozen=not warmup_done)
                         if args.num_updates > 1:
                             if warmup_done and i % args.policy_frequency == 1:
                                 actor_grad_norm, actor_loss, policy_entropy, action_std, deterministic_loss = (
@@ -1620,11 +1662,15 @@ class FastSACAgent(BaseAlgo):
                         self._maybe_start_mujoco_walk_rollout(onnx_path)
                         self._maybe_start_mujoco_kick_handoff_rollout(onnx_path)
                         self._maybe_start_mujoco_survival_scan(onnx_path)
+                        self._maybe_start_mujoco_kick_to_loco_flip_scan(onnx_path)
+                        self._maybe_start_mujoco_loco_to_kick_handoff_scan(onnx_path)
                 if self.is_main_process:
                     self._drain_mujoco_kick_rollout_queue()
                     self._drain_mujoco_walk_rollout_queue()
                     self._drain_mujoco_kick_handoff_rollout_queue()
                     self._drain_mujoco_survival_scan_queue()
+                    self._drain_mujoco_kick_to_loco_flip_scan_queue()
+                    self._drain_mujoco_loco_to_kick_handoff_scan_queue()
 
             # Avoid global_step being incremented beyond args.num_learning_iterations, so that the final checkpoint is
             # saved at exactly args.num_learning_iterations. In the `while` condition, we check for self.global_step <=
@@ -1990,6 +2036,259 @@ class FastSACAgent(BaseAlgo):
                 )
             except Exception:
                 logger.exception(f"[sim2sim] Failed to wandb.log MuJoCo survival scan result ({wandb_key})")
+
+    # ------------------------------------------------------------------
+    # MuJoCo sim2sim FORCED KICK->LOCOMOTION FLIP alive-rate scan (holosoma.
+    # record_mujoco_kick_to_loco_flip_scan) -- the sim2sim deployment-side counterpart of
+    # training's kick_abort_prob. See FastSACConfig.mujoco_kick_to_loco_random_flip_every_n_saves's
+    # own docstring for the full motivation and how this complements the survival scan above.
+    # Own thread + own result queue + own cross-process lock, same "run concurrently, not
+    # sequentially" rationale as every other sim2sim mechanism in this class.
+    # ------------------------------------------------------------------
+
+    def _maybe_start_mujoco_kick_to_loco_flip_scan(self, onnx_path: str) -> None:
+        """Never raises; only ever logs and returns. See `_mujoco_rollout_gate_open` for the
+        cadence/eligibility gate (reused as-is, keyed on this field's own
+        mujoco_kick_to_loco_random_flip_every_n_saves value); also skips if a previous scan is
+        still running (pileup guard), and if the live env has no ball configured at all (nothing
+        to kick before the forced flip)."""
+        args = self.config
+        n = args.mujoco_kick_to_loco_random_flip_every_n_saves
+        if not self._mujoco_rollout_gate_open(n):
+            return
+
+        motion_command = self.unwrapped_env.command_manager.get_state("motion_command")
+        if motion_command is None or not getattr(motion_command, "has_ball", False):
+            logger.warning(
+                f"[sim2sim] mujoco_kick_to_loco_random_flip_every_n_saves={n} > 0 but this run has "
+                "no ball (motion_command.has_ball is False) -- skipping, nothing to kick before "
+                "the forced flip."
+            )
+            return
+
+        if self._kick_to_loco_flip_scan_thread is not None and self._kick_to_loco_flip_scan_thread.is_alive():
+            logger.warning(
+                f"[sim2sim] Previous MuJoCo kick-to-loco-flip scan still running at global_step="
+                f"{self.global_step} -- skipping this checkpoint, will retry at the next "
+                f"scheduled interval (every {n} saves)."
+            )
+            return
+
+        kick_aim_info = self._kick_aim_info_per_motion()
+
+        self._kick_to_loco_flip_scan_thread = threading.Thread(
+            target=self._kick_to_loco_flip_scan_worker,
+            args=(onnx_path, self.global_step, args.mujoco_survival_scan_num_trials, kick_aim_info),
+            daemon=True,
+            name="MuJoCoKickToLocoFlipScan",
+        )
+        self._kick_to_loco_flip_scan_thread.start()
+
+    def _kick_to_loco_flip_scan_worker(
+        self,
+        onnx_path: str,
+        global_step: int,
+        num_trials: int,
+        kick_aim_info: "tuple[list[bool], float] | None",
+    ) -> None:
+        """Thread target. Loops SEQUENTIALLY over every configured motion skill, same rationale as
+        `_mujoco_survival_scan_worker` (one cross-process lock, so N concurrent subprocess launches
+        from this one process would just lose the lock race against each other). Only spawns +
+        waits on an OS subprocess -- never touches torch/CUDA, so this thread never contends with
+        the GPU training loop. Never raises."""
+        from holosoma.record_mujoco_kick_to_loco_flip_scan import (
+            MUJOCO_KICK_TO_LOCO_FLIP_ALIVE_WANDB_KEY,
+            MUJOCO_KICK_TO_LOCO_FLIP_PRE_FLIP_FAIL_WANDB_KEY,
+            record_kick_to_loco_flip_scan,
+        )
+
+        num_skills = max(len(getattr(self.unwrapped_env, "_skill_motion_training_ratios", [])), 1)
+        for skill_idx in range(num_skills):
+            # Same "always Kick_skills_{i}/..." convention as the survival scan -- lands in the
+            # SAME per-skill wandb section as its training-time and survival-scan siblings.
+            alive_wandb_key = f"Kick_skills_{skill_idx}/{MUJOCO_KICK_TO_LOCO_FLIP_ALIVE_WANDB_KEY}"
+            pre_flip_fail_wandb_key = f"Kick_skills_{skill_idx}/{MUJOCO_KICK_TO_LOCO_FLIP_PRE_FLIP_FAIL_WANDB_KEY}"
+
+            kick_aim_enabled = False
+            if kick_aim_info is not None:
+                kick_aim_enabled_per_motion, _kick_aim_theta_ref_deg = kick_aim_info
+                row = skill_idx if skill_idx < len(kick_aim_enabled_per_motion) else 0
+                kick_aim_enabled = bool(kick_aim_enabled_per_motion[row])
+
+            try:
+                alive_rate, pre_flip_fail_rate = record_kick_to_loco_flip_scan(
+                    onnx_path=onnx_path,
+                    step_label=str(global_step),
+                    num_trials=num_trials,
+                    skill_id=skill_idx,
+                    seed=global_step,  # varies per checkpoint; identical trials would be a weaker read
+                    kick_aim_enabled=kick_aim_enabled,
+                )
+            except Exception:
+                logger.exception(
+                    f"[sim2sim] MuJoCo kick-to-loco-flip scan crashed for skill_id={skill_idx} at "
+                    f"global_step={global_step}"
+                )
+                continue
+
+            if alive_rate is None and pre_flip_fail_rate is None:
+                logger.warning(
+                    f"[sim2sim] MuJoCo kick-to-loco-flip scan produced no result for skill_id={skill_idx} "
+                    f"at global_step={global_step}"
+                )
+                continue
+
+            if alive_rate is not None:
+                self._kick_to_loco_flip_scan_result_queue.put((global_step, alive_wandb_key, alive_rate))
+            if pre_flip_fail_rate is not None:
+                self._kick_to_loco_flip_scan_result_queue.put(
+                    (global_step, pre_flip_fail_wandb_key, pre_flip_fail_rate)
+                )
+
+    def _drain_mujoco_kick_to_loco_flip_scan_queue(self) -> None:
+        """Logs any finished scan's rate(s) to wandb as scalars. Runs on the MAIN thread only --
+        see `_drain_mujoco_kick_rollout_queue` for why. Cheap no-op when nothing is pending -- safe
+        to call every iteration."""
+        while True:
+            try:
+                triggered_at_step, wandb_key, rate = self._kick_to_loco_flip_scan_result_queue.get_nowait()
+            except queue.Empty:
+                return
+            try:
+                wandb.log({wandb_key: rate}, step=self.global_step)
+                logger.info(
+                    f"[sim2sim] Logged MuJoCo kick-to-loco-flip scan ({wandb_key}={rate:.4f}, "
+                    f"triggered at step {triggered_at_step}) to wandb at step {self.global_step}"
+                )
+            except Exception:
+                logger.exception(f"[sim2sim] Failed to wandb.log MuJoCo kick-to-loco-flip scan result ({wandb_key})")
+
+    # ------------------------------------------------------------------
+    # MuJoCo sim2sim LOCOMOTION->KICK HANDOFF fall-rate scan (holosoma.
+    # record_mujoco_loco_to_kick_handoff_scan) -- the reverse direction of the kick->loco-flip scan
+    # above: random locomotion for a randomized 2-3s window, then a forced flip into kick mode. See
+    # FastSACConfig.mujoco_loco_to_kick_handoff_every_n_saves's own docstring for the full
+    # motivation. Own thread + own result queue + own cross-process lock, same "run concurrently,
+    # not sequentially" rationale as every other sim2sim mechanism in this class.
+    # ------------------------------------------------------------------
+
+    def _maybe_start_mujoco_loco_to_kick_handoff_scan(self, onnx_path: str) -> None:
+        """Never raises; only ever logs and returns. See `_mujoco_rollout_gate_open` for the
+        cadence/eligibility gate (reused as-is, keyed on this field's own
+        mujoco_loco_to_kick_handoff_every_n_saves value); also skips if a previous scan is still
+        running (pileup guard), and if the live env has no ball configured at all (nothing to
+        place at the handoff)."""
+        args = self.config
+        n = args.mujoco_loco_to_kick_handoff_every_n_saves
+        if not self._mujoco_rollout_gate_open(n):
+            return
+
+        motion_command = self.unwrapped_env.command_manager.get_state("motion_command")
+        if motion_command is None or not getattr(motion_command, "has_ball", False):
+            logger.warning(
+                f"[sim2sim] mujoco_loco_to_kick_handoff_every_n_saves={n} > 0 but this run has no "
+                "ball (motion_command.has_ball is False) -- skipping, nothing to place at the "
+                "handoff."
+            )
+            return
+
+        if (
+            self._loco_to_kick_handoff_scan_thread is not None
+            and self._loco_to_kick_handoff_scan_thread.is_alive()
+        ):
+            logger.warning(
+                f"[sim2sim] Previous MuJoCo loco-to-kick-handoff scan still running at "
+                f"global_step={self.global_step} -- skipping this checkpoint, will retry at the "
+                f"next scheduled interval (every {n} saves)."
+            )
+            return
+
+        self._loco_to_kick_handoff_scan_thread = threading.Thread(
+            target=self._loco_to_kick_handoff_scan_worker,
+            args=(onnx_path, self.global_step, args.mujoco_survival_scan_num_trials),
+            daemon=True,
+            name="MuJoCoLocoToKickHandoffScan",
+        )
+        self._loco_to_kick_handoff_scan_thread.start()
+
+    def _loco_to_kick_handoff_scan_worker(self, onnx_path: str, global_step: int, num_trials: int) -> None:
+        """Thread target. Loops SEQUENTIALLY over every configured motion skill, same rationale as
+        every sibling scan worker (one cross-process lock, so N concurrent subprocess launches
+        from this one process would just lose the lock race against each other). Only spawns +
+        waits on an OS subprocess -- never touches torch/CUDA, so this thread never contends with
+        the GPU training loop. Never raises.
+
+        Unlike the sibling workers, no per-skill kick_aim_enabled gather is needed here --
+        record_loco_to_kick_handoff_scan always passes --kick-aim-enabled (this scan REQUIRES it;
+        see mujoco_loco_to_kick_handoff_scan.py's own module docstring for why). A skill trained
+        WITHOUT kick_aim_enabled is simply not a valid target for this particular scan -- same
+        "only ever fires for runs where the mechanism actually applies" contract every sibling
+        gate already enforces at a coarser (whole-run) grain."""
+        from holosoma.record_mujoco_loco_to_kick_handoff_scan import (
+            MUJOCO_LOCO_TO_KICK_HANDOFF_FALL_WANDB_KEY,
+            MUJOCO_LOCO_TO_KICK_HANDOFF_HIT_WANDB_KEY,
+            MUJOCO_LOCO_TO_KICK_HANDOFF_PRE_HANDOFF_FAIL_WANDB_KEY,
+            record_loco_to_kick_handoff_scan,
+        )
+
+        num_skills = max(len(getattr(self.unwrapped_env, "_skill_motion_training_ratios", [])), 1)
+        for skill_idx in range(num_skills):
+            fall_wandb_key = f"Kick_skills_{skill_idx}/{MUJOCO_LOCO_TO_KICK_HANDOFF_FALL_WANDB_KEY}"
+            hit_wandb_key = f"Kick_skills_{skill_idx}/{MUJOCO_LOCO_TO_KICK_HANDOFF_HIT_WANDB_KEY}"
+            pre_handoff_fail_wandb_key = (
+                f"Kick_skills_{skill_idx}/{MUJOCO_LOCO_TO_KICK_HANDOFF_PRE_HANDOFF_FAIL_WANDB_KEY}"
+            )
+
+            try:
+                fall_rate, hit_rate, pre_handoff_fail_rate = record_loco_to_kick_handoff_scan(
+                    onnx_path=onnx_path,
+                    step_label=str(global_step),
+                    num_trials=num_trials,
+                    skill_id=skill_idx,
+                    seed=global_step,  # varies per checkpoint; identical trials would be a weaker read
+                )
+            except Exception:
+                logger.exception(
+                    f"[sim2sim] MuJoCo loco-to-kick-handoff scan crashed for skill_id={skill_idx} "
+                    f"at global_step={global_step}"
+                )
+                continue
+
+            if fall_rate is None and hit_rate is None and pre_handoff_fail_rate is None:
+                logger.warning(
+                    f"[sim2sim] MuJoCo loco-to-kick-handoff scan produced no result for "
+                    f"skill_id={skill_idx} at global_step={global_step}"
+                )
+                continue
+
+            if fall_rate is not None:
+                self._loco_to_kick_handoff_scan_result_queue.put((global_step, fall_wandb_key, fall_rate))
+            if hit_rate is not None:
+                self._loco_to_kick_handoff_scan_result_queue.put((global_step, hit_wandb_key, hit_rate))
+            if pre_handoff_fail_rate is not None:
+                self._loco_to_kick_handoff_scan_result_queue.put(
+                    (global_step, pre_handoff_fail_wandb_key, pre_handoff_fail_rate)
+                )
+
+    def _drain_mujoco_loco_to_kick_handoff_scan_queue(self) -> None:
+        """Logs any finished scan's rate(s) to wandb as scalars. Runs on the MAIN thread only --
+        see `_drain_mujoco_kick_rollout_queue` for why. Cheap no-op when nothing is pending -- safe
+        to call every iteration."""
+        while True:
+            try:
+                triggered_at_step, wandb_key, rate = self._loco_to_kick_handoff_scan_result_queue.get_nowait()
+            except queue.Empty:
+                return
+            try:
+                wandb.log({wandb_key: rate}, step=self.global_step)
+                logger.info(
+                    f"[sim2sim] Logged MuJoCo loco-to-kick-handoff scan ({wandb_key}={rate:.4f}, "
+                    f"triggered at step {triggered_at_step}) to wandb at step {self.global_step}"
+                )
+            except Exception:
+                logger.exception(
+                    f"[sim2sim] Failed to wandb.log MuJoCo loco-to-kick-handoff scan result ({wandb_key})"
+                )
 
     # ------------------------------------------------------------------
     # MuJoCo sim2sim WALK rollout (holosoma.record_mujoco_locomotion_rollout) -- forward-walk ->

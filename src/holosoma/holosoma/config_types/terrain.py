@@ -181,6 +181,31 @@ class TerrainTermCfg:
     that terrain type (must sum to ≤ 1.0).
     """
 
+    light_rough_max_height: float = 0.008
+    """Peak height deviation (meters) of the ``light_rough`` terrain tier -- see
+    ``TerrainBase._light_rough_terrain_func``. Only consulted when ``terrain_config`` gives
+    ``light_rough`` a non-zero proportion (zero-proportion types are filtered out before
+    generation, so this is inert otherwise).
+
+    Default 0.008 is RoboNaldo's own ``mixed_terrain.random_rough.noise_range`` upper bound
+    (``right_kick/tracking_mixed_params.yaml``), the magnitude they use for their optional
+    "Stage 1b" mixed-terrain tracking-robustness fine-tune. Deliberately ~2-3x GENTLER than this
+    project's existing ``rough`` tier (``0.025 * difficulty / 0.9`` at difficulty 0.5-0.9, i.e.
+    14-25mm): the point of this tier is footing variation small enough that a freely-simulated
+    ball still rests where it was placed, which ``rough`` cannot promise."""
+
+    kick_eligible_terrain_types: tuple[str, ...] = ("flat",)
+    """Which terrain-type names a kick-mode env may be assigned to -- see
+    ``TerrainLocomotion.env_terrain_kick_eligible`` and ``UnifiedManager.
+    _build_task_mode_partition``. Default ``("flat",)`` reproduces the previous hardcoded
+    flat-only gate exactly.
+
+    Kept SEPARATE from ``terrain_config``'s proportions on purpose: generating ``light_rough``
+    tiles and letting kick envs stand on them are two independent switches, so an A/B can flip
+    exactly one variable (generate the tier for both arms, vary only eligibility). Also kept
+    separate from ``env_terrain_is_flat``, which still means LITERAL flatness and has its own
+    unrelated consumer (kick-mode video-recorder env selection in ``UnifiedManager``)."""
+
     max_slope: float = 0.3
     """Maximum slope angle allowed before correction to vertical."""
 

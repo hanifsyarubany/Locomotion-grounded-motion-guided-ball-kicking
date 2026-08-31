@@ -1,0 +1,50 @@
+task_config: task_config_stageB2-diag-flipoff
+
+base_robot:
+  target_height: 0.74
+  deadzone: 0.015
+
+# l2sp_weight: 0.01    
+
+motion_skill_1:
+  motion_npz: ../../locomotion_and_motion_tracking/video2robot/data/video_012/npz_holosoma/robot_motion_track_1.npz
+  x: 1.39
+  y: 0.02
+  target_x: 6.554
+  target_y: -0.099
+  strike_start_frame: 120   
+  stand_start_frame: 154    
+  motion_training_ratio: 0.3
+  kick_foot: right
+  kick_ankle_pitch_correction_enabled: true 
+  kick_aim_enabled: true 
+  task_config: task_config_stageB2-diag-flipoff
+
+motion_skill_2:
+  motion_npz: ../../locomotion_and_motion_tracking/video2robot/data/video_013/npz_holosoma/robot_motion_track_1.npz
+  x: 1.99
+  y: -0.14
+  target_x: 6.579
+  target_y: -2.782
+  strike_start_frame: 153   
+  stand_start_frame:  220   
+  motion_training_ratio: 0.3
+  kick_foot: right
+  kick_ankle_pitch_correction_enabled: true 
+  kick_aim_enabled: true
+  task_config: task_config_stageB2-diag-flipoff
+
+motion_skill_3:
+  motion_npz: ../../locomotion_and_motion_tracking/video2robot/data/video_015/npz_holosoma/robot_motion_track_1.npz
+  x: 0.73
+  y: -0.36
+  target_x: 0.73
+  target_y: -3.36
+  strike_start_frame: 70  
+  stand_start_frame:  116   
+  motion_training_ratio: 0.3
+  kick_foot: right
+  kick_aim_enabled: true
+  kick_ankle_pitch_correction_enabled: true  
+  task_config: task_config_stageB2-diag-flipoff
+

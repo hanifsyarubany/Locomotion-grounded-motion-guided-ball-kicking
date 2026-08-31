@@ -1,48 +1,17 @@
-# ==============================================================================
-# DRAFT / FOR DISCUSSION -- not yet consumed by any code path.
-#
-# Proposed "skills" file: ONLY the lego-like motion_skill_N blocks, and ONLY the
-# fields that are genuinely per-clip content (which clip, where it's spawned/
-# aimed, which frames bound the strike, how much of training it gets, which foot
-# kicks). Everything tunable (randomization ranges, success radius, per-category
-# reward scales, timing/observation misc) lives once in task_config.example.yaml
-# instead of being repeated -- usually identically -- on every skill block.
-#
-# Add a new skill by adding a new motion_skill_N block -- no other file needs to
-# change. All 9 fields below are required; there are no optional/defaulted fields
-# left in this file (the ones that had defaults all moved to task_config).
-#
-# 2026-08-14: base_robot + each skill's own task_config field are now live (holosoma/__init__.py
-# derives HOLOSOMA_TASK_CONFIG from task_config below when it isn't set explicitly -- an explicit
-# export always wins, so every existing launch command that already sets HOLOSOMA_TASK_CONFIG is
-# completely unaffected). base_robot's values below are the pre-existing hardcoded defaults
-# (config_values/unified/g1/reward.py) -- a byte-identical no-op until you actually change them.
-# ==============================================================================
 base_robot:
-  target_height: 0.74 # previously 0.76 ->recommend 0.742
+  target_height: 0.74 
   deadzone: 0.015
 
 motion_skill_1:
   motion_npz: ../../locomotion_and_motion_tracking/video2robot/data/video_012/npz_holosoma/robot_motion_track_1.npz
   x: 1.39
   y: 0.02
-  # 2026-08-22: CALIBRATED, not authored -- see scripts/calibrate_nominal_bearing.py. The
-  # original target_x=6.39/target_y=0.02 (bearing 0.0 deg, dead straight) was never measured
-  # against this clip's real contact physics -- this is a GROUND-ROLLING strike (ball_z rises
-  # only ~3mm above rest), so a z-height-based contact detector misses it entirely (a real bug in
-  # this script's first version, caught here). A real MuJoCo rollout of this skill's own trained
-  # Stage B checkpoint (2026-08-22 run, model_0350000.onnx) shows the ball actually departs at
-  # -16.91 deg (robot's RIGHT), reproduced across 4 deterministic trials over a 2.85m window.
-  # target_x/target_y below encode that measured bearing at D=5.0m
-  # (kick_aim_nominal_distance_m's default).
-  # target_x: 6.174
-  # target_y: -1.434
   target_x: 6.554
   target_y: -0.099
-  strike_start_frame: 120   # auto-estimate, T=250 @ 50fps -- verify visually
-  stand_start_frame: 154    # auto-estimate, T=250 @ 50fps
+  strike_start_frame: 120   
+  stand_start_frame: 154   
   motion_training_ratio: 0.90
   kick_foot: right
-  kick_ankle_pitch_correction_enabled: true  # 2026-08-08: self-calibrating strike-window ankle-pitch fix, see kick_ankle_pitch_correction.py
+  kick_ankle_pitch_correction_enabled: true  
   kick_aim_enabled: true
-  task_config: task_config_stageC1-skill012
+  task_config: task_config_stageB2

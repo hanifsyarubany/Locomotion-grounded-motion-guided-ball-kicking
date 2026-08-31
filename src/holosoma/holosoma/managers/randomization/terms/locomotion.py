@@ -278,6 +278,199 @@ class PushRandomizerState(RandomizationTermBase):
         self._max_push_vel_tensor = tensor.clone()
 
 
+# Default target bodies for BodyPushRandomizerState. Chosen as the contacts a walking humanoid
+# actually makes with unmodelled scenery: knees/shins into low obstacles, elbows and hands
+# brushing walls and doorframes, torso/pelvis into people and furniture. Feet are deliberately
+# EXCLUDED -- they are already in near-continuous commanded contact with the ground, so an
+# external force there is indistinguishable from a ground-reaction modelling error rather than a
+# collision. Names verified against data/robots/g1/g1_29dof.urdf, not assumed.
+DEFAULT_BODY_PUSH_BODIES: tuple[str, ...] = (
+    "left_knee_link",
+    "right_knee_link",
+    "left_elbow_link",
+    "right_elbow_link",
+    "torso_link",
+    "pelvis",
+)
+
+
+class BodyPushRandomizerState(RandomizationTermBase):
+    """Sustained, body-targeted external-force disturbances -- a collision model, not a push model.
+
+    Why this exists (2026-08-27). ``PushRandomizerState``/``_push_robots`` is the only disturbance
+    this project has ever trained against, and it is a one-tick additive velocity impulse written
+    straight into ``robot_root_states[:, 7:13]``. A real collision differs from that in three ways:
+
+    1. **Location.** The impulse always lands on the ROOT. A real contact lands on a shin, an
+       elbow, a hand -- which induces joint torques (ankle, knee, shoulder) that a root-frame
+       velocity change never produces at all.
+    2. **Duration.** The impulse is instantaneous. A real contact sustains force for roughly
+       50-200 ms, and the recovery for a sustained push is a different behavior from catching a
+       step change in velocity.
+    3. **Constraint.** After a velocity impulse the robot is free to move anywhere. A real obstacle
+       is still physically there and BLOCKS the recovery motion.
+
+    This term addresses (1) and (2). **It does NOT address (3)** -- a force is not a constraint,
+    and nothing here stops the robot moving straight through the notional obstacle. Genuine
+    blocking needs collision geometry in the scene, which is a scene-level change of a different
+    size and is deliberately left out of scope. Do not describe this mechanism as covering (3).
+
+    Ships DISABLED (``enabled=False``), a verified no-op: with no config change every run is
+    bit-identical to before this class existed. It is additive to the existing root push rather
+    than a replacement -- both can be active, and disabling the old one is a separate deliberate
+    choice (``push_enabled`` in the task-config yaml), so that enabling this does not silently
+    remove the disturbance coverage all 21 prior runs trained under.
+    """
+
+    def __init__(self, cfg: Any, env: Any):
+        super().__init__(cfg, env)
+        params = cfg.params or {}
+
+        self.enabled: bool = bool(params.get("enabled", False))
+        interval = params.get("interval_s", [4.0, 8.0])
+        self.interval_range: list[float] = [float(interval[0]), float(interval[1])]
+        force_range = params.get("force_range", [20.0, 80.0])
+        self.force_range: list[float] = [float(force_range[0]), float(force_range[1])]
+        duration = params.get("duration_s", [0.05, 0.20])
+        self.duration_range: list[float] = [float(duration[0]), float(duration[1])]
+        self.vertical_fraction: float = float(params.get("vertical_fraction", 0.2))
+        body_names = params.get("body_names") or DEFAULT_BODY_PUSH_BODIES
+        self.body_names: list[str] = [str(n) for n in body_names]
+
+        self._validate()
+
+        # Allocated in setup()
+        self.counter: torch.Tensor | None = None
+        self.interval_steps: torch.Tensor | None = None
+        self.remaining_steps: torch.Tensor | None = None
+        self.force_buf: torch.Tensor | None = None
+        self.body_indices: torch.Tensor | None = None
+        # True while a non-zero force is standing in the simulator's persistent buffer, so the
+        # active->idle transition writes exactly one clearing frame and idle steps then cost
+        # nothing. Without this the term would either leak a force forever or pay a full
+        # num_envs x num_bodies write on every step of a run that never fires.
+        self._forces_written: bool = False
+
+    def _validate(self) -> None:
+        if self.interval_range[0] <= 0.0 or self.interval_range[1] < self.interval_range[0]:
+            raise ValueError(f"body push interval_s must be 0 < min <= max, got {self.interval_range}")
+        if self.force_range[0] < 0.0 or self.force_range[1] < self.force_range[0]:
+            raise ValueError(f"body push force_range must be 0 <= min <= max, got {self.force_range}")
+        if self.duration_range[0] <= 0.0 or self.duration_range[1] < self.duration_range[0]:
+            raise ValueError(f"body push duration_s must be 0 < min <= max, got {self.duration_range}")
+        if not 0.0 <= self.vertical_fraction <= 1.0:
+            raise ValueError(f"body push vertical_fraction must be in [0, 1], got {self.vertical_fraction}")
+        if not self.body_names:
+            raise ValueError("body push body_names must be non-empty")
+
+    def setup(self) -> None:
+        env = self.env
+        device = env.device
+        num_envs = env.num_envs
+
+        simulator = env.simulator
+        # NOT simulator.num_bodies: that attribute is backend-inconsistent (on MuJoCo it is
+        # root_model.nbody, which additionally counts the `world` body and the ball -- see
+        # mujoco.py's own comment on this exact trap on `_holosoma_body_to_mujoco_id`). body_names
+        # is the one handle both set_external_body_forces implementations actually index against
+        # (holosoma order, robot-only), so it is the only correct source for this shape here.
+        num_bodies = len(simulator.body_names)
+
+        self.counter = torch.zeros(num_envs, dtype=torch.int32, device=device)
+        self.interval_steps = torch.zeros(num_envs, dtype=torch.int32, device=device)
+        self.remaining_steps = torch.zeros(num_envs, dtype=torch.int32, device=device)
+        self.force_buf = torch.zeros(num_envs, int(num_bodies), 3, dtype=torch.float32, device=device)
+
+        resolved: list[int] = []
+        missing: list[str] = []
+        for name in self.body_names:
+            idx = simulator.find_rigid_body_indice(name)
+            if idx is None:
+                missing.append(name)
+            elif isinstance(idx, list):
+                resolved.extend(int(i) for i in idx)
+            else:
+                resolved.append(int(idx))
+        if missing:
+            # Loud, not silent: a typo'd link name would otherwise quietly shrink the target set,
+            # and a disturbance randomizer that pushes fewer bodies than configured is exactly the
+            # kind of thing that surfaces as an unexplained robustness result months later.
+            raise ValueError(
+                f"body push body_names not found on this robot: {missing}. "
+                f"Available example names come from robot_config.body_names."
+            )
+        self.body_indices = torch.as_tensor(resolved, dtype=torch.long, device=device)
+
+        self._resample_intervals(torch.arange(num_envs, device=device, dtype=torch.long))
+
+    def reset(self, env_ids: torch.Tensor | None) -> None:
+        if self.counter is None or self.force_buf is None or self.remaining_steps is None:
+            return
+        idx = self._ensure_indices(env_ids)
+        if idx.numel() == 0:
+            return
+        self.counter[idx] = 0
+        self.remaining_steps[idx] = 0
+        self.force_buf[idx] = 0.0
+        self._resample_intervals(idx)
+
+    def step(self) -> None:
+        if not self.enabled or self.counter is None:
+            return
+        self.counter += 1
+
+    # ------------------------------------------------------------------ #
+
+    def _ensure_indices(self, env_ids: torch.Tensor | None) -> torch.Tensor:
+        if env_ids is None:
+            return torch.arange(self.env.num_envs, device=self.env.device, dtype=torch.long)
+        if isinstance(env_ids, torch.Tensor):
+            return env_ids.to(device=self.env.device, dtype=torch.long)
+        return torch.as_tensor(env_ids, device=self.env.device, dtype=torch.long)
+
+    def _resample_intervals(self, env_ids: torch.Tensor) -> None:
+        if self.interval_steps is None or env_ids.numel() == 0:
+            return
+        dt = float(self.env.dt)
+        low = max(1, int(round(self.interval_range[0] / dt)))
+        high = max(low + 1, int(round(self.interval_range[1] / dt)))
+        samples = torch.randint(low, high, (env_ids.shape[0],), device=self.env.device, dtype=torch.int32)
+        self.interval_steps[env_ids] = samples
+
+    def _sample_forces(self, env_ids: torch.Tensor) -> None:
+        """Assign each due env a fresh (body, direction, magnitude, duration)."""
+        assert self.force_buf is not None and self.remaining_steps is not None
+        assert self.body_indices is not None
+        n = env_ids.shape[0]
+        device = self.env.device
+
+        # Direction: uniform in azimuth, with a bounded vertical component. A collision with
+        # scenery is overwhelmingly horizontal, hence vertical_fraction defaulting well below 1.
+        azimuth = torch.rand(n, device=device) * (2.0 * torch.pi)
+        z = (torch.rand(n, device=device) * 2.0 - 1.0) * self.vertical_fraction
+        horizontal = torch.sqrt(torch.clamp(1.0 - z * z, min=0.0))
+        direction = torch.stack([horizontal * torch.cos(azimuth), horizontal * torch.sin(azimuth), z], dim=1)
+
+        magnitude = torch_rand_float(
+            self.force_range[0], self.force_range[1], (n, 1), device=str(device)
+        )
+        force = direction * magnitude
+
+        body_slot = torch.randint(0, self.body_indices.numel(), (n,), device=device)
+        body_idx = self.body_indices[body_slot]
+
+        # Clear whatever this env had before, then write the new single-body force.
+        self.force_buf[env_ids] = 0.0
+        self.force_buf[env_ids, body_idx] = force
+
+        dt = float(self.env.dt)
+        low = max(1, int(round(self.duration_range[0] / dt)))
+        high = max(low + 1, int(round(self.duration_range[1] / dt)))
+        self.remaining_steps[env_ids] = torch.randint(
+            low, high, (n,), device=device, dtype=torch.int32
+        )
+
+
 class ActuatorRandomizerState(RandomizationTermBase):
     """Stateful actuator randomizer managing PD gain and RFI scales."""
 
@@ -1392,6 +1585,66 @@ def apply_pushes(
     state.resample(push_robot_env_ids)
     env._max_push_vel = state.max_push_vel.clone()
     env._push_robots(push_robot_env_ids)
+
+
+def apply_body_pushes(env, **_) -> None:
+    """Apply sustained, body-targeted disturbance forces based on the current schedule.
+
+    See BodyPushRandomizerState's docstring for the full rationale. Structurally mirrors
+    apply_pushes (schedule check -> resample -> apply) but forces are STATEFUL across steps
+    (a duration, not an instant), so this also has to tick down and clear expired ones -- apply_
+    pushes never needs that, a velocity impulse has nothing left to hold after the tick it fires.
+
+    Gated on env.is_evaluating exactly like apply_pushes, so eval rollouts see zero disturbance
+    from this mechanism, matching the existing push's own behavior.
+    """
+    state = env.randomization_manager.get_state("body_push_randomizer_state")
+    if state is None:
+        raise AttributeError("BodyPushRandomizerState is not registered with the randomization manager.")
+
+    if env.is_evaluating or not state.enabled:
+        # One clearing write if a disturbance was mid-flight when eval started or the term was
+        # disabled -- otherwise a force already resident in the simulator's persistent external-
+        # force buffer would keep being reapplied every physics step forever (see
+        # set_external_body_forces's docstring: both backends hold the last value written until
+        # explicitly overwritten, neither auto-clears per step).
+        if state._forces_written and state.force_buf is not None:
+            state.force_buf.zero_()
+            env.simulator.set_external_body_forces(state.force_buf)
+            state._forces_written = False
+        return
+
+    assert state.counter is not None and state.interval_steps is not None
+    assert state.remaining_steps is not None and state.force_buf is not None
+
+    due = (state.counter >= state.interval_steps).nonzero(as_tuple=False).flatten()
+
+    # Snapshot BEFORE sampling: a freshly-sampled disturbance must get its full first tick applied
+    # untouched. Without this exclusion, an env due this exact call would be sampled (remaining_
+    # steps set to its full duration) and then immediately decremented by the block below in the
+    # SAME call -- at a 1-step duration that zeros it before a single write ever reaches the
+    # simulator, silently dropping the disturbance entirely. Caught by
+    # test_apply_body_pushes_fires_when_due_and_clears_on_expiry.
+    already_active = state.remaining_steps > 0
+
+    if due.numel() > 0:
+        state.counter[due] = 0
+        state._resample_intervals(due)
+        state._sample_forces(due)
+
+    if already_active.any():
+        state.remaining_steps[already_active] -= 1
+        just_expired = already_active & (state.remaining_steps == 0)
+        if just_expired.any():
+            state.force_buf[just_expired] = 0.0
+
+    still_active = bool((state.remaining_steps > 0).any())
+    # Write whenever something is live OR the last call left a nonzero buffer (covers the exact
+    # step every active env expires simultaneously: still_active is False but the simulator still
+    # holds last step's nonzero forces until this write clears them).
+    if still_active or state._forces_written:
+        env.simulator.set_external_body_forces(state.force_buf)
+    state._forces_written = still_active
 
 
 # --- Per-episode ball-observation bias (2026-07-21; made per-SKILL 2026-07-23) ---------------------

@@ -44,12 +44,18 @@ SUMMARY_PREFLIPFAIL reports the excluded fraction separately so a checkpoint tha
 survive an ordinary kick doesn't silently produce a misleadingly high (or NA) flip-alive rate.
 
 Per-trial output: "RESULT <step> <trial> <flip_tick> <pre_flip_fall_step_or_-1>
-<post_flip_fall_step_or_-1> <min_z>". pre_flip_fall_step/post_flip_fall_step are ticks relative to
-the start of their own window (kick trigger for the former, the flip itself for the latter), or -1
-if no fall was observed in that window. Two summary lines: "SUMMARY_PREFLIPFAIL <step>
-<num_pre_flip_fail>/<num_trials> <rate>" (always defined) and "SUMMARY_LOCOFLIP <step>
-<num_alive>/<num_reached_flip> <rate_or_NA>" ("NA" when num_reached_flip is 0 -- every trial fell
-before ever reaching its scheduled flip, nothing to measure the flip against).
+<post_flip_fall_step_or_-1> <min_z> <post_flip_min_z>". pre_flip_fall_step/post_flip_fall_step are
+ticks relative to the start of their own window (kick trigger for the former, the flip itself for
+the latter), or -1 if no fall was observed in that window. min_z is the whole-trial minimum height
+(includes the pre-flip kick crouch, where dipping low is normal); post_flip_min_z is the minimum
+over ONLY the post-flip hold window -- the number to read against training's own post-flip
+locomotion floor (base_height_below_threshold_sustained_post_flip_graced, 0.70m), since FALL_Z
+(0.40, used for pre_flip_fall_step/post_flip_fall_step above) only detects an outright topple, not
+a sustained sub-0.70m crouch that training's own termination would end the episode over. Two
+summary lines: "SUMMARY_PREFLIPFAIL <step> <num_pre_flip_fail>/<num_trials> <rate>" (always
+defined) and "SUMMARY_LOCOFLIP <step> <num_alive>/<num_reached_flip> <rate_or_NA>" ("NA" when
+num_reached_flip is 0 -- every trial fell before ever reaching its scheduled flip, nothing to
+measure the flip against).
 
 Usage:
     /workspaces/isaaclab_arena/submodules/workspaces/conda_env/robojudo/bin/python \\
@@ -216,14 +222,29 @@ def run(args: argparse.Namespace) -> int:
             inner.post_step_callback(["[RETURN_TO_LOCO]"])
 
             post_flip_fall_step = -1
+            # Post-flip-window-ONLY minimum height, tracked separately from the whole-trial min_z
+            # below. FALL_Z (0.40) answers "did it topple"; this answers the different and, for a
+            # handoff, more informative question "did it recover to a stance LOCOMOTION would
+            # accept" -- training's own post-flip locomotion floor is base_height_below_threshold_
+            # sustained_post_flip_graced at 0.70m, not 0.40m, so a robot can score a perfect
+            # non-topple rate while still settling into a sustained sub-0.70m crouch that training
+            # would terminate. Kept separate from min_z because min_z spans the PRE-flip kick ticks
+            # too, where dipping below 0.70 is normal (kicking crouches; that is exactly why kick
+            # mode uses a 0.40 floor) -- pooling the two makes a legitimate kick crouch
+            # indistinguishable from a failed recovery.
+            post_flip_min_z = float("inf")
             for i in range(post_flip_hold_steps):
                 step_zero_vel()
                 z = float(env.base_pos[2])
                 z_series.append(z)
+                if z < post_flip_min_z:
+                    post_flip_min_z = z
                 if post_flip_fall_step == -1 and z < FALL_Z:
                     post_flip_fall_step = i
 
             min_z = min(z_series) if z_series else float("nan")
+            if post_flip_min_z == float("inf"):  # post_flip_hold_steps == 0
+                post_flip_min_z = float("nan")
             if pre_flip_fall_step != -1:
                 num_pre_flip_fail += 1
             else:
@@ -233,7 +254,7 @@ def run(args: argparse.Namespace) -> int:
 
             print(
                 f"RESULT {args.step_label} {trial} {flip_tick} {pre_flip_fall_step} "
-                f"{post_flip_fall_step} {min_z:.4f}",
+                f"{post_flip_fall_step} {min_z:.4f} {post_flip_min_z:.4f}",
                 flush=True,
             )
 

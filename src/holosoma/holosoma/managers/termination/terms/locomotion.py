@@ -95,6 +95,22 @@ def base_height_below_threshold_sustained(
     return counter >= consecutive_steps
 
 
+def _kick_state_init_grace_active(env) -> torch.Tensor:
+    """[num_envs] bool: True for envs still inside their kick-state-init STARTUP grace (see
+    MultiSkillConfig.kick_state_init_grace_steps). Delegates entirely to
+    ``UnifiedManager.kick_state_init_grace_active`` so the window is defined in exactly one place.
+
+    Unlike ``_post_flip_grace_active`` this takes no ``grace_steps`` parameter: the window is not a
+    per-term tunable, it is a property of the env's own init mechanism, so plumbing it through
+    every term's params would let two terms disagree about when the same episode's grace ends.
+    Returns all-False for any env without the method (loco-only / WBT-only experiments, and every
+    run with the feature off), making this an exact no-op there rather than a special case."""
+    fn = getattr(env, "kick_state_init_grace_active", None)
+    if fn is None:
+        return torch.zeros(env.num_envs, dtype=torch.bool, device=env.device)
+    return fn()
+
+
 def _post_flip_grace_active(env, grace_steps: float) -> torch.Tensor:
     """[num_envs] bool: True for envs currently within ``grace_steps`` ticks of having crossed
     UnifiedManager's kick->locomotion flip boundary (``kick_recovery_locomotion_flip_enabled``).
@@ -197,7 +213,7 @@ def contact_forces_exceeded_post_flip_graced(
     termination.py) -- the loco-only baseline's own registration is untouched, so a standalone
     locomotion experiment is unaffected regardless of this field's value."""
     result = contact_forces_exceeded(env, force_threshold=force_threshold, contact_indices_attr=contact_indices_attr)
-    return result & ~_post_flip_grace_active(env, post_flip_grace_steps)
+    return result & ~_post_flip_grace_active(env, post_flip_grace_steps) & ~_kick_state_init_grace_active(env)
 
 
 def base_height_below_threshold_sustained_post_flip_graced(
@@ -218,7 +234,7 @@ def base_height_below_threshold_sustained_post_flip_graced(
     result = base_height_below_threshold_sustained(
         env, min_height=min_height, consecutive_steps=consecutive_steps, counter_attr=counter_attr
     )
-    return result & ~_post_flip_grace_active(env, post_flip_grace_steps)
+    return result & ~_post_flip_grace_active(env, post_flip_grace_steps) & ~_kick_state_init_grace_active(env)
 
 
 def joint_pos_sanity_exceeded(env, joint_pos_sanity_threshold: float = 20.0) -> torch.Tensor:

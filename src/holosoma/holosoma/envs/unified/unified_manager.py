@@ -470,6 +470,17 @@ class UnifiedManager(BaseTask):
         self._kick_abort_delay_max_steps = int(
             getattr(self.command_manager.command_cfg, "kick_abort_delay_max_steps", 60)
         )
+        # Kick-state locomotion init (2026-08-31) -- see MultiSkillConfig.kick_state_init_prob.
+        # LOCOMOTION-partitioned envs only; deliberately shares nothing with the abort above.
+        self._kick_state_init_prob = float(
+            getattr(self.command_manager.command_cfg, "kick_state_init_prob", 0.0)
+        )
+        self._kick_state_init_grace_steps = float(
+            getattr(self.command_manager.command_cfg, "kick_state_init_grace_steps", 25.0)
+        )
+        self._kick_state_transplant_prob = float(
+            getattr(self.command_manager.command_cfg, "kick_state_transplant_prob", 0.0)
+        )
         self._post_flip_obs_ramp_steps = float(
             getattr(self.command_manager.command_cfg, "post_flip_obs_ramp_steps", 0.0)
         )
@@ -555,6 +566,25 @@ class UnifiedManager(BaseTask):
         # is already the tick counter every other handoff mechanism keys off, so a direct equality
         # test needs no separate decrement bookkeeping that could drift.
         self._kick_abort_flip_tick = torch.full((self.num_envs,), -1, dtype=torch.long, device=self.device)
+        # Kick-state locomotion init (2026-08-31): True for the remainder of the episode for a
+        # LOCOMOTION env that was teleported into a kick-clip pose at its last reset. Read by the
+        # startup termination grace (kick_state_init_grace_steps) and by telemetry. Set in
+        # _reset_robot_states_callback, cleared there unconditionally on every reset first, same
+        # clear-then-conditionally-set discipline as _kick_abort_flip_tick above.
+        self._kick_state_init_active = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        # Kick-state TRANSPLANT (2026-08-31, see MultiSkillConfig.kick_state_transplant_prob) --
+        # separate from _kick_state_init_active above (which is source-agnostic and drives the
+        # shared grace window) so telemetry can tell the two mechanisms apart: this one also sets
+        # _kick_state_init_active, but not vice versa.
+        self._kick_state_transplant_active = torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        # EMA over DRAW EVENTS (not envs) of "this reset had at least one env drawn for transplant,
+        # but zero donors were currently eligible" -- see _maybe_kick_state_transplant's own
+        # comment. Same _KICK_EMA_DECAY/rolling-average methodology as every other rare-event rate
+        # this class already tracks (_kick_ep_len_ema etc.), for the same reason: this fallback
+        # firing often (e.g. early in training, before any kick env has run long enough to be
+        # eligible) would otherwise silently make the configured probability meaningless without
+        # ever showing up as an error.
+        self._kick_state_transplant_no_donor_ema = torch.zeros((), dtype=torch.float, device=self.device)
         # Locomotion -> kick direction's own per-env state, mirroring _post_flip_step's shape
         # exactly (mirror mechanism, mirror bookkeeping). _kick_pending: this env reset into
         # LOCOMOTION carrying a pending kick-entry rather than teleporting immediately (see
@@ -1466,12 +1496,141 @@ class UnifiedManager(BaseTask):
         # BaseTask.reset_envs_idx via command_manager.reset(), already filtered to exactly this
         # env's kick-mode subset via CommandTermCfg.task_mode="kick") places their robot pose.
         loco_ids = env_ids[self.task_mode[env_ids] == TaskMode.LOCOMOTION]
+        # Cleared unconditionally for every resetting env before the draws below -- a stale flag
+        # from a prior episode must never keep granting this episode a startup grace.
+        self._kick_state_init_active[env_ids] = False
+        self._kick_state_transplant_active[env_ids] = False
         if target_states is not None:
             self._reset_dofs(loco_ids, target_states["dof_states"])
             self._reset_root_states(loco_ids, target_states["root_states"])
         else:
             self._reset_dofs(loco_ids)
             self._reset_root_states(loco_ids)
+            # Kick-state locomotion init (see MultiSkillConfig.kick_state_init_prob): OVERWRITE the
+            # ordinary locomotion pose just written above, for a random subset of these envs, with
+            # a random authored kick-clip frame. Ordered after _reset_dofs/_reset_root_states so it
+            # wins, and skipped entirely on the target_states path (that branch is a deterministic
+            # state RESTORE -- video-recording pinning / eval replay -- where injecting a random
+            # pose would corrupt exactly the state the caller asked to reproduce).
+            self._maybe_kick_state_init(loco_ids)
+            # Kick-state TRANSPLANT (see MultiSkillConfig.kick_state_transplant_prob): the live-
+            # donor sibling of the reference-frame init just above. Deliberately runs SECOND, so if
+            # both mechanisms draw the same env this reset, the transplant's pose wins -- a
+            # documented ordering, not a race (see that field's own docstring).
+            self._maybe_kick_state_transplant(loco_ids)
+
+    def _maybe_kick_state_init(self, loco_ids: torch.Tensor) -> None:
+        """Teleport a probability-selected subset of just-reset LOCOMOTION envs into a random
+        authored kick-clip pose, so locomotion trains to recover to a stable stance (or walk) from
+        the off-balance, momentum-carrying states a kick actually produces.
+
+        Touches LOCOMOTION-partitioned envs ONLY, and never changes their task_mode -- they run as
+        entirely ordinary locomotion episodes from tick 0, with no flip and no kick-mode phase. That
+        is the whole point: every kick-side metric is computed over the permanent kick partition, so
+        nothing here can move kick_alive_frac / kick_episode_length / kick_active_frac. See
+        MultiSkillConfig.kick_state_init_prob's own docstring for why the flip-based mechanisms
+        (kick_abort_prob, kick_recovery_locomotion_flip_enabled) cannot satisfy that constraint.
+
+        No-op at the 0.0 default, and a no-op for any env class whose command manager has no
+        motion_command (the getattr guard) -- this is a kick-clip-sourced mechanism and a run with
+        no clips has nothing to sample."""
+        if self._kick_state_init_prob <= 0.0 or loco_ids.numel() == 0 or self.is_evaluating:
+            return
+        motion_command = self.command_manager.get_state("motion_command")
+        if motion_command is None or not hasattr(motion_command, "sample_authored_clip_frames"):
+            return
+        drawn = torch.rand(loco_ids.shape[0], device=self.device) < self._kick_state_init_prob
+        selected = loco_ids[drawn]
+        if selected.numel() == 0:
+            return
+        _motion_ids, frames = motion_command.sample_authored_clip_frames(selected)
+        motion_command.teleport_to_frames(selected, frames)
+        self._kick_state_init_active[selected] = True
+
+    def _maybe_kick_state_transplant(self, loco_ids: torch.Tensor) -> None:
+        """Live-donor sibling of ``_maybe_kick_state_init`` -- see
+        MultiSkillConfig.kick_state_transplant_prob's own docstring for the full rationale (trains
+        recovery from what the CURRENT policy's real dynamics actually produce, not the reference
+        clip's kinematic ground truth) and for the verified-against-the-telemetry-formulas
+        guarantee that this never touches any kick-partitioned env's own metrics.
+
+        Eligibility is recomputed fresh here, not cached: it must reflect exactly which kick envs
+        are live and mid-clip AT THIS INSTANT, and that population changes every tick as envs
+        progress through their own clips or terminate.
+
+        Falls back to leaving the ordinary locomotion pose in place (already written by
+        _reset_dofs/_reset_root_states before this call) whenever nothing is eligible right now --
+        e.g. early in training, or a run with very few kick-partitioned envs. This is the ONLY
+        case _kick_state_transplant_no_donor_ema tracks; drawing zero envs in the first place
+        (ordinary Bernoulli variance) is not a fallback and is not counted."""
+        if self._kick_state_transplant_prob <= 0.0 or loco_ids.numel() == 0 or self.is_evaluating:
+            return
+        motion_command = self.command_manager.get_state("motion_command")
+        if motion_command is None:
+            return
+        drawn = torch.rand(loco_ids.shape[0], device=self.device) < self._kick_state_transplant_prob
+        selected = loco_ids[drawn]
+        if selected.numel() == 0:
+            return
+
+        # Live and still mid-clip -- same authored-content-only exclusion as
+        # sample_authored_clip_frames, same reason: the recovery/hold tail is already
+        # near-nominal, not worth donating.
+        eligible = (self.task_mode == TaskMode.KICK) & (
+            motion_command.time_steps < motion_command.pre_recovery_motion_end_idx[motion_command.motion_ids]
+        )
+        eligible_ids = eligible.nonzero(as_tuple=False).flatten()
+        d = self._KICK_EMA_DECAY
+        if eligible_ids.numel() == 0:
+            self._kick_state_transplant_no_donor_ema.mul_(d).add_(1.0 * (1.0 - d))
+            return
+        self._kick_state_transplant_no_donor_ema.mul_(d).add_(0.0 * (1.0 - d))
+
+        # WITH replacement: independent per-recipient draws, so multiple envs resetting on the
+        # same tick can land on the same donor's current pose -- a minor diversity cost against
+        # the complexity of enforcing distinct donors, not a correctness issue (see this
+        # mechanism's own config docstring).
+        donor_idx = torch.randint(0, eligible_ids.numel(), (selected.numel(),), device=self.device)
+        donor_ids = eligible_ids[donor_idx]
+
+        # Pure READS off the donor's live simulator state -- advanced indexing on the right-hand
+        # side always allocates a fresh tensor (a gather), so nothing is ever written back into
+        # the donor's own dof_pos/dof_vel/robot_root_states, task_mode, termination counters, or
+        # replay-buffer transitions. Its rollout this tick is unaffected by being read from.
+        sim = self.simulator
+        env_origins = sim.scene.env_origins
+        donor_root = sim.robot_root_states[donor_ids]
+        recipient_root_pos = donor_root[:, :3] - env_origins[donor_ids] + env_origins[selected]
+        sim.dof_pos[selected] = sim.dof_pos[donor_ids]
+        sim.dof_vel[selected] = sim.dof_vel[donor_ids]
+        sim.robot_root_states[selected, :3] = recipient_root_pos
+        sim.robot_root_states[selected, 3:13] = donor_root[:, 3:13]
+
+        self._kick_state_transplant_active[selected] = True
+        self._kick_state_init_active[selected] = True  # shared grace window, see that flag's own comment
+
+    def kick_state_init_grace_active(self) -> torch.Tensor:
+        """[num_envs] bool: True for envs still inside their kick-state-init startup grace.
+
+        Exposed for the locomotion termination terms (see
+        MultiSkillConfig.kick_state_init_grace_steps): a mid-swing init pose routinely sits below
+        locomotion's own 0.70m height floor, which needs only 10 consecutive ticks to fire, so
+        without this every such episode would die before the policy could recover from the state
+        the mechanism exists to train on. Keyed on episode_length_buf rather than a flip stamp --
+        these envs begin perturbed at tick 0 rather than arriving at a perturbation mid-episode.
+
+        Gated on EITHER source being enabled -- kick_state_init_prob (reference-frame) and
+        kick_state_transplant_prob (live-donor) both set the SAME _kick_state_init_active flag
+        this reads (see that field's own docstring), so checking only the first would incorrectly
+        force an all-False result for a run using the transplant alone.
+
+        All-False (exact no-op, never consulted) whenever BOTH sources are off, or grace_steps<=0."""
+        if (
+            (self._kick_state_init_prob <= 0.0 and self._kick_state_transplant_prob <= 0.0)
+            or self._kick_state_init_grace_steps <= 0.0
+        ):
+            return torch.zeros(self.num_envs, dtype=torch.bool, device=self.device)
+        return self._kick_state_init_active & (self.episode_length_buf < self._kick_state_init_grace_steps)
 
     def _reset_buffers_callback(self, env_ids, target_buf=None):
         self.need_to_refresh_envs[env_ids] = True
@@ -1642,6 +1801,38 @@ class UnifiedManager(BaseTask):
             )
             self.log_dict["kick_abort_post_flip_frac"] = (
                 (abort_drawn & (~kick_mask) & (self._post_flip_step >= 0)).float().mean().detach().cpu()
+            )
+
+        # Kick-state locomotion init (see MultiSkillConfig.kick_state_init_prob). Two numbers
+        # because they answer different questions: _active_frac is "how much of the env population
+        # is currently living out a kick-state-initialized locomotion episode" (the exposure this
+        # mechanism actually buys, which decays through the episode as those envs terminate), while
+        # _in_grace_frac is "how many are still inside the startup grace" -- if the second is
+        # ~equal to the first, these episodes are dying at or just after the grace expires and the
+        # grace is too short to be teaching recovery.
+        if self._kick_state_init_prob > 0.0:
+            self.log_dict["kick_state_init_active_frac"] = (
+                self._kick_state_init_active.float().mean().detach().cpu()
+            )
+            self.log_dict["kick_state_init_in_grace_frac"] = (
+                self.kick_state_init_grace_active().float().mean().detach().cpu()
+            )
+
+        # Kick-state TRANSPLANT (see MultiSkillConfig.kick_state_transplant_prob). _active_frac is
+        # the live-donor analogue of kick_state_init_active_frac above (separate flag, so the two
+        # sources are distinguishable in wandb even when both are enabled). _no_donor_frac is the
+        # one number that isn't visible any other way: it's an EMA over DRAW EVENTS, not envs, of
+        # how often the fallback fired because zero donors were currently eligible -- if this
+        # tracks near 1.0, the configured probability is not actually buying any exposure at all,
+        # a silent-no-op failure mode this metric exists specifically to catch (same rationale as
+        # kick_abort_pending_frac/kick_abort_post_flip_frac's own "pooled metrics can't see a small
+        # subpopulation" reasoning).
+        if self._kick_state_transplant_prob > 0.0:
+            self.log_dict["kick_state_transplant_active_frac"] = (
+                self._kick_state_transplant_active.float().mean().detach().cpu()
+            )
+            self.log_dict["kick_state_transplant_no_donor_frac"] = (
+                self._kick_state_transplant_no_donor_ema.detach().cpu()
             )
 
         # Kick stability, the signal that was previously missing entirely.

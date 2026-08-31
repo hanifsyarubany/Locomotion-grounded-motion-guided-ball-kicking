@@ -2416,6 +2416,101 @@ class MotionCommand(CommandTermBase):
         self._ref_anchor_active = True
         self.time_steps[env_ids] = time_steps
 
+    def sample_authored_clip_frames(self, env_ids: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        """Draw a uniformly random (motion_id, GLOBAL frame index) per env, restricted to AUTHORED
+        clip content -- ``motion_start_idx .. pre_recovery_motion_end_idx`` -- for
+        UnifiedManager's kick-state locomotion initialization (see
+        MultiSkillConfig.kick_state_init_prob).
+
+        Deliberately excludes the synthetic recovery-transition + static-hold tail past
+        pre_recovery_motion_end_idx: that tail is scripted filler in which the robot is already
+        standing near-nominal, so sampling it would mostly reproduce the ordinary locomotion
+        reset pose and add no state diversity -- the entire point of this mechanism is the
+        off-balance, momentum-carrying poses that only real captured kick footage contains. Same
+        boundary, and the same reasoning, as ``rsi_scope_to_authored_clip``'s own authored-content
+        scoping and as ``kick_recovery_locomotion_flip_enabled``'s flip boundary.
+
+        Uniform over MOTIONS as well as frames: a locomotion-partitioned env's ``skill_id`` is
+        meaningless (UnifiedManager._build_task_mode_partition only assigns it meaningfully to
+        kick-partitioned envs), so the caller has no per-env skill to inherit and every clip
+        should contribute recovery states equally.
+
+        Returns ``(motion_ids, frames)``, both ``[len(env_ids)]`` long tensors; ``frames`` are
+        GLOBAL indices into the concatenated motion buffers, directly usable against
+        ``self.motion.joint_pos``/``body_pos_w``/etc. Touches NO per-env state."""
+        n = env_ids.numel()
+        if n == 0:
+            empty = torch.zeros(0, dtype=torch.long, device=self.device)
+            return empty, empty.clone()
+        motion_ids = torch.randint(0, self.motion.num_motions, (n,), device=self.device, dtype=torch.long)
+        start = self.motion.motion_start_idx[motion_ids]
+        end = self.pre_recovery_motion_end_idx[motion_ids]
+        # clamp(min=1): a degenerate motion whose authored span is empty/inverted would otherwise
+        # make the width-scaled draw below produce a frame outside its own clip.
+        width = (end - start).clamp(min=1)
+        offset = (torch.rand(n, device=self.device) * width.float()).long().clamp(max=width - 1)
+        return motion_ids, start + offset
+
+    def teleport_to_frames(self, env_ids: torch.Tensor, frames: torch.Tensor) -> None:
+        """Write robot dof + root state into the simulator for ``env_ids`` from the motion data at
+        the given GLOBAL ``frames``, applying the SAME per-reset init-pose noise
+        ``reset()``'s own teleport applies (``init_pose_cfg``) so these envs land
+        in-distribution with every other reset rather than exactly on-clip.
+
+        Deliberately mirrors -- and is deliberately separate from -- ``reset()``'s own teleport
+        block (section "2.2/3" there). Separate because ``reset()`` is registered
+        ``task_mode="kick"``-tagged (CommandManager filters reset_terms by mode; see reset()'s own
+        docstring), so it is structurally unreachable for the LOCOMOTION-partitioned envs this
+        method exists to serve, and because reset() also owns RSI frame selection, ball placement
+        and ref-anchor clearing -- none of which a locomotion env wants. This method touches NO
+        per-env MotionCommand state at all (not ``motion_ids``, not ``time_steps``, not the ref
+        anchor): a locomotion-mode env must keep its motion-tracking state meaningless/inert, and
+        writing it would leak a kick reference into an env whose kick-tagged observation and
+        reward terms are masked off anyway.
+
+        Root state is body index 0, matching ``root_pos_w``/``root_lin_vel_w``'s own convention."""
+        if env_ids.numel() == 0:
+            return
+        dof_pos = self.motion.joint_pos[frames]
+        dof_vel = self.motion.joint_vel[frames]
+        root_pos = self.motion.body_pos_w[frames, 0] + self._env.simulator.scene.env_origins[env_ids]
+        root_rot = self.motion.body_quat_w[frames, 0]
+        root_lin_vel = self.motion.body_lin_vel_w[frames, 0]
+        root_ang_vel = self.motion.body_ang_vel_w[frames, 0]
+
+        scale = self.init_pose_cfg.overall_noise_scale
+        dof_pos_noise = self.init_pose_cfg.dof_pos * scale
+        root_pos_noise = torch.tensor(self.init_pose_cfg.root_pos, device=self.device) * scale
+        root_rot_noise_rpy = torch.tensor(self.init_pose_cfg.root_rot, device=self.device) * scale
+        root_vel_noise = torch.tensor(self.init_pose_cfg.root_vel, device=self.device) * scale
+        root_ang_vel_noise_rpy = torch.tensor(self.init_pose_cfg.root_ang_vel, device=self.device) * scale
+
+        target_dof_pos = dof_pos + (torch.rand(dof_pos.shape, device=self.device) - 0.5) * 2 * dof_pos_noise
+        soft_joint_pos_limits = self._env.simulator.dof_pos_limits  # type: ignore[attr-defined]
+        target_dof_pos = torch.clip(target_dof_pos, soft_joint_pos_limits[:, 0], soft_joint_pos_limits[:, 1])
+
+        target_root_pos = root_pos + (
+            torch.rand(root_pos.shape, device=self.device) - 0.5
+        ) * 2 * root_pos_noise.unsqueeze(0)
+        rand_sample_rpy = (torch.rand((env_ids.numel(), 3), device=self.device) - 0.5) * 2 * root_rot_noise_rpy
+        orientations_delta = quat_from_euler_xyz(
+            rand_sample_rpy[:, 0], rand_sample_rpy[:, 1], rand_sample_rpy[:, 2]
+        )
+        target_root_rot = quat_mul(orientations_delta, root_rot, w_last=True)
+        target_root_lin_vel = root_lin_vel + (
+            torch.rand(root_lin_vel.shape, device=self.device) - 0.5
+        ) * 2 * root_vel_noise.unsqueeze(0)
+        target_root_ang_vel = root_ang_vel + (
+            torch.rand(root_ang_vel.shape, device=self.device) - 0.5
+        ) * 2 * root_ang_vel_noise_rpy.unsqueeze(0)
+
+        self._env.simulator.dof_pos[env_ids] = target_dof_pos
+        self._env.simulator.dof_vel[env_ids] = dof_vel
+        self._env.simulator.robot_root_states[env_ids, :3] = target_root_pos
+        self._env.simulator.robot_root_states[env_ids, 3:7] = target_root_rot
+        self._env.simulator.robot_root_states[env_ids, 7:10] = target_root_lin_vel
+        self._env.simulator.robot_root_states[env_ids, 10:13] = target_root_ang_vel
+
     def update_metrics(self):
         """Update the metrics. After action, before step() is called."""
         self.metrics["motion/error_ref_pos"] = torch.norm(self.ref_pos_w - self.robot_ref_pos_w, dim=-1)

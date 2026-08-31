@@ -1221,6 +1221,98 @@ class MultiSkillConfig:
     boundary flip simply fires first and this episode is a normal one -- a safe, silent fallback,
     not an error."""
 
+    kick_state_init_prob: float = 0.0
+    """2026-08-31: fraction of LOCOMOTION-partitioned envs that, at reset, are teleported to a
+    random frame of a random kick clip instead of the ordinary locomotion init pose -- then run as
+    an entirely normal locomotion episode from tick 0 (locomotion rewards, locomotion
+    terminations, ``task_mode == LOCOMOTION`` throughout, no flip ever).
+
+    WHAT THIS IS FOR: training the policy to reach stable locomotion (walking, or standing still
+    under a zero command) from the off-balance, momentum-carrying poses a kick actually produces.
+
+    WHY IT IS NOT kick_abort_prob. ``kick_abort_prob``/``kick_recovery_locomotion_flip_enabled``
+    both flip a KICK-partitioned env mid-episode, which necessarily costs the kick-side metrics:
+    those are computed over the PERMANENT partition (``_task_mode_partition == KICK``, see
+    UnifiedManager's own kick_ids derivation) while the episode's FATE is then decided by
+    locomotion's stricter rules -- measured live, enabling the flip took kick_episode_length
+    906 -> 503 and early-term frac 0.2 -> 0.7. This mechanism touches LOCOMOTION-partitioned envs
+    only, so ``kick_alive_frac``/``kick_episode_length``/``kick_active_frac``/``kick_topple_frac``
+    are all structurally unaffected and every kick env still runs its full episode. That is the
+    entire design constraint this field exists to satisfy.
+
+    WHY A STARTUP GRACE IS MANDATORY, not optional: a mid-swing pose routinely sits below
+    locomotion's own 0.70m ``low_height`` floor (which needs only 10 consecutive ticks to fire).
+    Without ``kick_state_init_grace_steps`` below, essentially every one of these episodes is
+    terminated within its first few ticks and the mechanism teaches nothing at all while still
+    consuming its share of envs. The grace is what makes the state reachable long enough to
+    recover from.
+
+    Frames are drawn uniformly over AUTHORED clip content only (motion_start_idx ..
+    pre_recovery_motion_end_idx, see MotionCommand.sample_authored_clip_frames) and uniformly over
+    motions -- the synthetic recovery/hold tail is excluded deliberately, since the robot is
+    already standing near-nominal there and it would just reproduce the ordinary reset pose.
+
+    0.0 (default) = off, exact no-op: no draw is made and no env is ever teleported. NOT VALIDATED
+    BY A TRAINING RUN."""
+
+    kick_state_init_grace_steps: float = 25.0
+    """Ticks after episode start during which the locomotion height/contact terminations are
+    suppressed for a ``kick_state_init_prob`` env. Only read when that field is > 0.0.
+
+    Mirrors ``post_flip_termination_grace_steps``'s own role at the other boundary (and its 50.0
+    default is the reference point) -- but keyed on ``episode_length_buf`` rather than a flip
+    stamp, since these envs start in the perturbed state at tick 0 rather than arriving at one
+    mid-episode. 25.0 (0.5s at dt=0.02) is deliberately shorter than the flip's 50.0: there is no
+    preceding kick phase to settle out of here, only the initial pose itself. Must be >= 0.0.
+
+    ALSO covers ``kick_state_transplant_prob`` below -- both mechanisms set the SAME
+    UnifiedManager._kick_state_init_active flag (the termination guard cares that an episode
+    started from an injected kick-derived pose, not which of the two supplied it), so one shared
+    grace window is enough; a second, near-duplicate field would just risk the two disagreeing
+    about when an episode's leniency ends."""
+
+    kick_state_transplant_prob: float = 0.0
+    """2026-08-31: like ``kick_state_init_prob``, but the injected pose comes from a LIVE DONOR --
+    a currently-running KICK-partitioned env's ACTUAL, dynamically-simulated
+    dof_pos/dof_vel/root state, copied via a pure simulator-tensor READ -- rather than
+    ``MotionCommand``'s reference-clip kinematics.
+
+    WHY THIS EXISTS ALONGSIDE kick_state_init_prob, not instead of it: reference frames are the
+    motion CAPTURE ground truth, not what the ACTUAL policy's dynamics produce at that tick --
+    measured on this project's own checkpoints, error_joint_pos_strike sits around 1.3-2.5 (never
+    zero), and real ground-reaction forces during contact have no representation in mocap data at
+    all. This mechanism trains recovery from whatever the CURRENT policy's real rollout actually
+    produced, closing that gap directly, at the cost of less control over which clip phase gets
+    sampled (driven by whichever kick env happens to be live and eligible at an asynchronous
+    reset moment, not a controlled uniform draw).
+
+    THE GUARANTEE THIS DOES NOT COST ANY KICK METRIC, verified against this codebase's own
+    telemetry formulas, not asserted: kick_episode_length/kick_alive_frac/kick_topple_frac all key
+    off ``self._task_mode_partition[env_ids] == KICK`` (the PERMANENT assignment,
+    UnifiedManager._reset_buffers_callback's own kick_ids derivation); kick_active_frac keys off
+    the LIVE ``self.task_mode == KICK`` (UnifiedManager's own kick_mask). This mechanism writes
+    dof_pos/dof_vel/robot_root_states for the RECIPIENT (a LOCOMOTION-partitioned env, at ITS OWN
+    reset) ONLY -- the donor's own task_mode, termination counters, and replay-buffer transitions
+    are never touched, so its rollout for that tick is identical to what it would have been had no
+    recipient ever sampled it. NOT guaranteed: the underlying shared actor/critic WEIGHTS, since a
+    recipient's recovery gradients still flow through the same network that also produces kicking
+    -- the same shared-trunk exposure kick_state_init_prob already carries, not something either
+    mechanism can remove while both tasks share one network.
+
+    Donor eligibility (recomputed fresh at every draw, not cached): task_mode==KICK AND still
+    within the AUTHORED clip (time_steps < that motion's pre_recovery_motion_end_idx) -- same
+    exclusion of the synthetic recovery/hold tail as kick_state_init_prob's own frame sampling,
+    same reason (already near-nominal there). Falls back to the ordinary locomotion reset pose
+    (exact no-op for that env) when zero donors are currently eligible -- e.g. early in training,
+    or a run with very few kick-partitioned envs. Donors are drawn WITH replacement across
+    multiple envs resetting on the same tick -- several recipients landing on the same donor's
+    current pose is a minor diversity cost, not a correctness issue.
+
+    If both this and kick_state_init_prob draw the same env on the same reset, the transplant
+    (checked second) wins -- a deliberate ordering, not a race.
+
+    0.0 (default) = off, exact no-op. NOT VALIDATED BY A TRAINING RUN."""
+
     mid_episode_kick_entry_prob: float = 0.0
     """Shared (not per-skill) switch for the LOCOMOTION->KICK direction of the handoff (the
     "separate, later increment" kick_recovery_locomotion_flip_enabled's own docstring names) --
@@ -2253,6 +2345,23 @@ def _parse_multi_skill_global_fields(raw: dict, source_path: Path) -> dict:
     kick_recovery_locomotion_flip_enabled = bool(
         raw.get("kick_recovery_locomotion_flip_enabled", False)
     )
+    kick_state_init_prob = float(raw.get("kick_state_init_prob", 0.0))
+    if not (0.0 <= kick_state_init_prob <= 1.0):
+        raise ValueError(
+            f"{source_path}: kick_state_init_prob must be in [0.0, 1.0], got {kick_state_init_prob}"
+        )
+    kick_state_init_grace_steps = float(raw.get("kick_state_init_grace_steps", 25.0))
+    if kick_state_init_grace_steps < 0.0:
+        raise ValueError(
+            f"{source_path}: kick_state_init_grace_steps must be >= 0.0, got {kick_state_init_grace_steps}"
+        )
+    kick_state_transplant_prob = float(raw.get("kick_state_transplant_prob", 0.0))
+    if not (0.0 <= kick_state_transplant_prob <= 1.0):
+        raise ValueError(
+            f"{source_path}: kick_state_transplant_prob must be in [0.0, 1.0], got "
+            f"{kick_state_transplant_prob}"
+        )
+
     kick_abort_prob = float(raw.get("kick_abort_prob", 0.0))
     if not (0.0 <= kick_abort_prob <= 1.0):
         raise ValueError(f"{source_path}: kick_abort_prob must be in [0.0, 1.0], got {kick_abort_prob}")
@@ -2512,6 +2621,9 @@ def _parse_multi_skill_global_fields(raw: dict, source_path: Path) -> dict:
         balance_potential_weight=balance_potential_weight,
         use_foot_strike_pitch_reference_relative=use_foot_strike_pitch_reference_relative,
         kick_recovery_locomotion_flip_enabled=kick_recovery_locomotion_flip_enabled,
+        kick_state_init_prob=kick_state_init_prob,
+        kick_state_init_grace_steps=kick_state_init_grace_steps,
+        kick_state_transplant_prob=kick_state_transplant_prob,
         kick_abort_prob=kick_abort_prob,
         kick_abort_delay_min_steps=kick_abort_delay_min_steps,
         kick_abort_delay_max_steps=kick_abort_delay_max_steps,

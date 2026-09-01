@@ -74,15 +74,9 @@ body_push_vertical_fraction: 0.2
 # KICK -> LOCOMOTION HANDOFF
 # Kick recovery and random locomotion flipping
 # ------------------------------------------------------------------------------
-kick_recovery_locomotion_flip_enabled: true
-penalty_curriculum_enabled: false
-motion_head_velocity_smoothing_frames: 3
-post_flip_termination_grace_steps: 50.0
-post_flip_reward_decay_steps: 50.0
-post_flip_obs_ramp_steps: 0.0
-kick_abort_prob: 0.1
-kick_abort_delay_min_steps: 10
-kick_abort_delay_max_steps: 60
+kick_state_transplant_prob: 0.3
+kick_state_init_prob: 0.1
+kick_state_init_grace_steps: 25.0
 
 # ------------------------------------------------------------------------------
 # BAD MOTION & BODY POS WARMUP CONFIG

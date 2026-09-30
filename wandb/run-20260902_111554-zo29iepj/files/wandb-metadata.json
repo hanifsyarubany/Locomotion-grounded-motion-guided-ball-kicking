@@ -1,0 +1,65 @@
+{
+  "os": "Linux-5.15.0-140-generic-x86_64-with-glibc2.39",
+  "python": "CPython 3.11.15",
+  "startedAt": "2026-09-02T11:15:54.840201Z",
+  "args": [
+    "--config",
+    "configs/sim2sim_eval/example.yaml"
+  ],
+  "program": "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/sim2sim_eval.py",
+  "codePath": "src/holosoma/holosoma/sim2sim_eval.py",
+  "codePathLocal": "src/holosoma/holosoma/sim2sim_eval.py",
+  "git": {
+    "remote": "https://github.com/hanifsyarubany/Locomotion-grounded-motion-guided-ball-kicking.git",
+    "commit": "a5ea77cf74bb0f0faaaaeaeff6b581c74b7252c9"
+  },
+  "email": "haniflitium@gmail.com",
+  "root": "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced",
+  "host": "RL1",
+  "executable": "/workspaces/isaaclab_arena/submodules/workspaces/conda_env/hssim/bin/python",
+  "cpu_count": 64,
+  "cpu_count_logical": 128,
+  "gpu": "NVIDIA GeForce RTX 5090",
+  "gpu_count": 4,
+  "disk": {
+    "/": {
+      "total": "7937302376448",
+      "used": "2620532105216"
+    }
+  },
+  "memory": {
+    "total": "269496197120"
+  },
+  "gpu_nvidia": [
+    {
+      "name": "NVIDIA GeForce RTX 5090",
+      "memoryTotal": "34190917632",
+      "cudaCores": 21760,
+      "architecture": "Blackwell",
+      "uuid": "GPU-c38ca60a-e264-249d-1f74-b7d5cc2f33c2"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 5090",
+      "memoryTotal": "34190917632",
+      "cudaCores": 21760,
+      "architecture": "Blackwell",
+      "uuid": "GPU-80a3d79a-8afb-3082-e9b6-580e1978d88f"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 5090",
+      "memoryTotal": "34190917632",
+      "cudaCores": 21760,
+      "architecture": "Blackwell",
+      "uuid": "GPU-602a019a-31ff-47fe-3a96-8bcdfd788f70"
+    },
+    {
+      "name": "NVIDIA GeForce RTX 5090",
+      "memoryTotal": "34190917632",
+      "cudaCores": 21760,
+      "architecture": "Blackwell",
+      "uuid": "GPU-0c740030-e1f4-22db-da4f-4f0023619528"
+    }
+  ],
+  "cudaVersion": "12.8",
+  "writerId": "udqdbqmr848mz3bawyfobaqwhvhwon2z"
+}

@@ -12,16 +12,25 @@ concurrently-training runs on this machine, same rationale as the kick lock.
 
 from __future__ import annotations
 
+import contextlib
 import os
 import subprocess
+import time
 
 from loguru import logger
 
+from holosoma.utils.render_gpu import render_subprocess_env
 from holosoma.utils.rollout_lock import (
     DEFAULT_STALE_LOCK_TIMEOUT_S,
     acquire_global_lock,
     release_global_lock,
 )
+
+# See record_mujoco_kick_rollout.py for these -- worker aborts with this marker on an all-black
+# render (a transient GL-context/GPU-contention failure), and we re-run once after a cooldown.
+_RENDER_BLACK_MARKER = "RENDER_BLACK_FRAMES"
+_RENDER_ATTEMPTS = 2
+_RENDER_RETRY_DELAY_S = 5.0
 
 # "mujoco_media/" prefix -- see record_mujoco_kick_rollout.py's MUJOCO_KICK_WANDB_KEY for the full
 # rationale (wandb UI panel-section grouping, mirrors "isaacsim_media/" on the IsaacSim side).
@@ -81,24 +90,38 @@ def record_locomotion_rollout(
             "--stand-s", str(stand_s),
             "--forward-speed", str(forward_speed),
         ]
-        try:
-            result = subprocess.run(argv, timeout=timeout_s, capture_output=True, text=True)
-        except subprocess.TimeoutExpired:
-            logger.warning(f"[sim2sim] MuJoCo walk rollout timed out after {timeout_s:.0f}s for {onnx_path}")
-            return False
+        for attempt in range(1, _RENDER_ATTEMPTS + 1):
+            try:
+                # env: only differs from the default os.environ if HOLOSOMA_SIM2SIM_RENDER_GPU is
+                # explicitly set (see holosoma.utils.render_gpu for why this isn't automatic).
+                result = subprocess.run(
+                    argv, timeout=timeout_s, capture_output=True, text=True, env=render_subprocess_env()
+                )
+            except subprocess.TimeoutExpired:
+                logger.warning(f"[sim2sim] MuJoCo walk rollout timed out after {timeout_s:.0f}s for {onnx_path}")
+                break  # host contention, not a transient render fault -- don't retry
 
-        if result.returncode != 0:
+            if result.returncode == 0 and os.path.exists(output_video_path):
+                return True
+
+            is_black = _RENDER_BLACK_MARKER in (result.stderr or "")
+            retrying = is_black and attempt < _RENDER_ATTEMPTS
+            reason = "render came back all-black" if is_black else f"worker exited {result.returncode}"
+            tail = "" if is_black else f"\nstdout(tail): {result.stdout[-2000:]}\nstderr(tail): {result.stderr[-2000:]}"
             logger.warning(
-                f"[sim2sim] MuJoCo walk rollout worker exited {result.returncode} for {onnx_path}\n"
-                f"stdout(tail): {result.stdout[-2000:]}\nstderr(tail): {result.stderr[-2000:]}"
+                f"[sim2sim] MuJoCo walk rollout {reason} for {onnx_path} "
+                f"(attempt {attempt}/{_RENDER_ATTEMPTS})"
+                + (f" -- retrying after {_RENDER_RETRY_DELAY_S:.0f}s" if retrying else "")
+                + tail
             )
-            return False
+            if not is_black:
+                break  # a real crash / missing file -- a re-run won't help
+            if retrying:
+                time.sleep(_RENDER_RETRY_DELAY_S)  # let a transient GL/GPU hiccup pass before retrying
 
-        if not os.path.exists(output_video_path):
-            logger.warning(f"[sim2sim] MuJoCo walk rollout worker exited 0 but no video at {output_video_path}")
-            return False
-
-        return True
+        with contextlib.suppress(OSError):
+            os.remove(output_video_path)  # drop any partial/black stub so it isn't mistaken for a real video
+        return False
 
     except Exception:
         logger.exception(f"[sim2sim] Unhandled error recording MuJoCo walk rollout for {onnx_path}")

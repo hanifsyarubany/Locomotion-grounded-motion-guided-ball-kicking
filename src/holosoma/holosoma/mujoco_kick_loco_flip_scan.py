@@ -44,18 +44,27 @@ SUMMARY_PREFLIPFAIL reports the excluded fraction separately so a checkpoint tha
 survive an ordinary kick doesn't silently produce a misleadingly high (or NA) flip-alive rate.
 
 Per-trial output: "RESULT <step> <trial> <flip_tick> <pre_flip_fall_step_or_-1>
-<post_flip_fall_step_or_-1> <min_z> <post_flip_min_z>". pre_flip_fall_step/post_flip_fall_step are
-ticks relative to the start of their own window (kick trigger for the former, the flip itself for
-the latter), or -1 if no fall was observed in that window. min_z is the whole-trial minimum height
-(includes the pre-flip kick crouch, where dipping low is normal); post_flip_min_z is the minimum
-over ONLY the post-flip hold window -- the number to read against training's own post-flip
-locomotion floor (base_height_below_threshold_sustained_post_flip_graced, 0.70m), since FALL_Z
-(0.40, used for pre_flip_fall_step/post_flip_fall_step above) only detects an outright topple, not
-a sustained sub-0.70m crouch that training's own termination would end the episode over. Two
-summary lines: "SUMMARY_PREFLIPFAIL <step> <num_pre_flip_fail>/<num_trials> <rate>" (always
-defined) and "SUMMARY_LOCOFLIP <step> <num_alive>/<num_reached_flip> <rate_or_NA>" ("NA" when
+<post_flip_fall_step_or_-1> <min_z> <post_flip_min_z> <post_flip_recovery_step_or_-1>".
+pre_flip_fall_step/post_flip_fall_step are ticks relative to the start of their own window (kick
+trigger for the former, the flip itself for the latter), or -1 if no fall was observed in that
+window. min_z is the whole-trial minimum height (includes the pre-flip kick crouch, where dipping
+low is normal); post_flip_min_z is the minimum over ONLY the post-flip hold window -- the number
+to read against training's own post-flip locomotion floor
+(base_height_below_threshold_sustained_post_flip_graced, 0.70m), since FALL_Z (0.40, used for
+pre_flip_fall_step/post_flip_fall_step above) only detects an outright topple, not a sustained
+sub-0.70m crouch that training's own termination would end the episode over. post_flip_recovery_step
+(see RECOVERY_MIN_HEIGHT/RECOVERY_CONSECUTIVE_STEPS above) is the first tick of the first
+sustained-recovery streak -- how many ticks it took to get back up and STAY up, not merely graze
+the threshold once -- or -1 if no such streak completed within the hold window (this can happen
+even for a trial that never crossed FALL_Z: settling into a sub-0.70m crouch that never falls but
+also never recovers is exactly the case post_flip_min_z's own docstring note above describes).
+Three summary lines: "SUMMARY_PREFLIPFAIL <step> <num_pre_flip_fail>/<num_trials> <rate>" (always
+defined), "SUMMARY_LOCOFLIP <step> <num_alive>/<num_reached_flip> <rate_or_NA>" ("NA" when
 num_reached_flip is 0 -- every trial fell before ever reaching its scheduled flip, nothing to
-measure the flip against).
+measure the flip against), and "SUMMARY_RECOVERY_STEPS <step> <num_recovered>/<num_reached_flip>
+<recovered_rate_or_NA> <mean_recovery_steps_or_NA>" (both NA together, only when num_reached_flip
+is 0; recovered_rate can be defined and 0.0 while mean_recovery_steps is separately NA, when
+num_reached_flip>0 but num_recovered==0).
 
 Usage:
     /workspaces/isaaclab_arena/submodules/workspaces/conda_env/robojudo/bin/python \\
@@ -77,6 +86,17 @@ import sys
 
 ROBOJUDO_REPO = "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo"
 FALL_Z = 0.4  # same physical-fall threshold as mujoco_kick_survival_scan.py, for direct comparability
+
+# "Recovered" = sustained AT/ABOVE this height for this many consecutive ticks. Mirrors training's
+# own base_height_below_threshold_sustained_post_flip_graced (managers/termination/terms/
+# locomotion.py, registered with min_height=0.70/consecutive_steps=10 in config_values/unified/g1/
+# termination.py) -- same threshold, same sustained-duration requirement, inverted (sustained
+# ABOVE instead of sustained BELOW a floor), so "how many ticks to recover" uses the exact
+# definition of "recovered" training itself enforces, not an independently-chosen number. A brief
+# transient crossing (e.g. mid-stride) does not count as recovered, same reasoning training's own
+# term documents for why a brief dip doesn't count as a fail.
+RECOVERY_MIN_HEIGHT = 0.70
+RECOVERY_CONSECUTIVE_STEPS = 10
 
 sys.path.insert(0, ROBOJUDO_REPO)
 # This file's OWN directory -- same cross-fork-contamination guard as mujoco_kick_survival_scan.py
@@ -147,7 +167,7 @@ def run(args: argparse.Namespace) -> int:
     env = pl.env
     env.viewer.is_alive = False
     inner = pl.policy.policy
-    inner._update_velocity_command = lambda cd: None
+    inner._update_velocity_command = lambda cd, ball_pos_b=None: None
 
     ball_jid = mujoco.mj_name2id(env.model, mujoco.mjtObj.mjOBJ_JOINT, "ball_freejoint")
     assert ball_jid != -1, "ball_freejoint not found in compiled model -- is SCENE_WITH_BALL correct?"
@@ -174,10 +194,12 @@ def run(args: argparse.Namespace) -> int:
         num_pre_flip_fail = 0
         num_reached_flip = 0
         num_post_flip_fall = 0
+        num_recovered = 0
+        sum_recovery_steps = 0
         for trial in range(args.num_trials):
             mujoco.mj_resetDataKeyframe(env.model, env.data, 0)
             inner.reset()
-            inner._update_velocity_command = lambda cd: None
+            inner._update_velocity_command = lambda cd, ball_pos_b=None: None
 
             env.data.qpos[ball_qpos_addr] = nominal_ball_xy[0]
             env.data.qpos[ball_qpos_addr + 1] = nominal_ball_xy[1]
@@ -233,6 +255,13 @@ def run(args: argparse.Namespace) -> int:
             # mode uses a 0.40 floor) -- pooling the two makes a legitimate kick crouch
             # indistinguishable from a failed recovery.
             post_flip_min_z = float("inf")
+            # First tick of the first RECOVERY_CONSECUTIVE_STEPS-long streak at/above
+            # RECOVERY_MIN_HEIGHT, or -1 if no such streak completes within the hold window. Tracks
+            # the STREAK START (when it got back up and stayed), not the tick recovery is
+            # CONFIRMED (streak_start + RECOVERY_CONSECUTIVE_STEPS - 1) -- "how many ticks to
+            # recover" reads naturally as the former.
+            post_flip_recovery_step = -1
+            _streak_start = None
             for i in range(post_flip_hold_steps):
                 step_zero_vel()
                 z = float(env.base_pos[2])
@@ -241,6 +270,24 @@ def run(args: argparse.Namespace) -> int:
                     post_flip_min_z = z
                 if post_flip_fall_step == -1 and z < FALL_Z:
                     post_flip_fall_step = i
+                if post_flip_recovery_step == -1:
+                    if z >= RECOVERY_MIN_HEIGHT:
+                        if _streak_start is None:
+                            _streak_start = i
+                        elif i - _streak_start + 1 >= RECOVERY_CONSECUTIVE_STEPS:
+                            post_flip_recovery_step = _streak_start
+                    else:
+                        _streak_start = None
+
+            # A streak found BEFORE a later fall is not a recovery -- the streak search runs
+            # independently of post_flip_fall_step and would otherwise report e.g. "recovered in 0
+            # steps" for a trial that stood fine for its first 10 ticks and then toppled at tick 50
+            # (caught empirically, 2026-09-09: 4/5 trials in a deep-strike-frame smoke test fell at
+            # ticks 44-57 while all 5 still reported post_flip_recovery_step=0). A trial that falls
+            # at any point in this window has not recovered, full stop, regardless of what its
+            # height did earlier -- same all-or-nothing standard Topple (%) already applies.
+            if post_flip_fall_step != -1:
+                post_flip_recovery_step = -1
 
             min_z = min(z_series) if z_series else float("nan")
             if post_flip_min_z == float("inf"):  # post_flip_hold_steps == 0
@@ -251,10 +298,13 @@ def run(args: argparse.Namespace) -> int:
                 num_reached_flip += 1
                 if post_flip_fall_step != -1:
                     num_post_flip_fall += 1
+                if post_flip_recovery_step != -1:
+                    num_recovered += 1
+                    sum_recovery_steps += post_flip_recovery_step
 
             print(
                 f"RESULT {args.step_label} {trial} {flip_tick} {pre_flip_fall_step} "
-                f"{post_flip_fall_step} {min_z:.4f} {post_flip_min_z:.4f}",
+                f"{post_flip_fall_step} {min_z:.4f} {post_flip_min_z:.4f} {post_flip_recovery_step}",
                 flush=True,
             )
 
@@ -271,8 +321,23 @@ def run(args: argparse.Namespace) -> int:
                 f"SUMMARY_LOCOFLIP {args.step_label} {num_alive}/{num_reached_flip} {alive_rate:.4f}",
                 flush=True,
             )
+            # Denominator is num_reached_flip (same population alive_rate uses), NOT num_recovered
+            # -- so a low recovered_rate is visible on its own, same "don't let the mean's own
+            # subset population hide a bad rate" reasoning pre_flip_fail_rate/alive_rate already
+            # follow. mean_recovery_steps is then only over trials that DID recover -- "NA" (not
+            # 0/undefined) when none did, so a checkpoint that never recovers doesn't silently
+            # report a misleadingly small/zero mean.
+            recovered_rate = num_recovered / num_reached_flip
+            mean_recovery_steps = (sum_recovery_steps / num_recovered) if num_recovered > 0 else None
+            mrs = f"{mean_recovery_steps:.4f}" if mean_recovery_steps is not None else "NA"
+            print(
+                f"SUMMARY_RECOVERY_STEPS {args.step_label} {num_recovered}/{num_reached_flip} "
+                f"{recovered_rate:.4f} {mrs}",
+                flush=True,
+            )
         else:
             print(f"SUMMARY_LOCOFLIP {args.step_label} 0/0 NA", flush=True)
+            print(f"SUMMARY_RECOVERY_STEPS {args.step_label} 0/0 NA NA", flush=True)
         return 0
     finally:
         pl.env.shutdown()

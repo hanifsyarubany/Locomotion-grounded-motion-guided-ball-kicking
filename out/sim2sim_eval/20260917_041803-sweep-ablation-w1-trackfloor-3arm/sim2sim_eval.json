@@ -1,0 +1,2301 @@
+{
+  "run_timestamp": "20260917_041803",
+  "generated_at": "2026-09-17T04:37:37",
+  "config_path": "configs/sim2sim_eval/sweep-ablation-w1-trackfloor-3arm.yaml",
+  "iterations": 15,
+  "max_concurrent_scans": 10,
+  "logged_count": 3600,
+  "wandb": {
+    "project": "Policy_Evaluation",
+    "entity": null,
+    "group": "sim2sim-eval-sweep",
+    "run_name": "20260917_041803-sweep-ablation-w1-trackfloor-3arm",
+    "mode": "offline",
+    "run_id": "49z0r67n",
+    "url": null
+  },
+  "targets": [
+    {
+      "name": "hardzero_250000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0250000.onnx",
+      "base_step": 250000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "hardzero_257000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0257000.onnx",
+      "base_step": 257000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "hardzero_264000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0264000.onnx",
+      "base_step": 264000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "hardzero_271000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0271000.onnx",
+      "base_step": 271000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "hardzero_279000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0279000.onnx",
+      "base_step": 279000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "hardzero_286000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0286000.onnx",
+      "base_step": 286000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "hardzero_293000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0293000.onnx",
+      "base_step": 293000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "hardzero_300000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0300000.onnx",
+      "base_step": 300000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "floor01_250000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260917_013536-stageB-skill011-h076-abl-w1-f01-locomotion/model_0250000.onnx",
+      "base_step": 250000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "floor01_257000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260917_013536-stageB-skill011-h076-abl-w1-f01-locomotion/model_0257000.onnx",
+      "base_step": 257000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "floor01_264000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260917_013536-stageB-skill011-h076-abl-w1-f01-locomotion/model_0264000.onnx",
+      "base_step": 264000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "floor01_271000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260917_013536-stageB-skill011-h076-abl-w1-f01-locomotion/model_0271000.onnx",
+      "base_step": 271000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "floor01_279000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260917_013536-stageB-skill011-h076-abl-w1-f01-locomotion/model_0279000.onnx",
+      "base_step": 279000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "floor01_286000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260917_013536-stageB-skill011-h076-abl-w1-f01-locomotion/model_0286000.onnx",
+      "base_step": 286000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "floor01_293000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260917_013536-stageB-skill011-h076-abl-w1-f01-locomotion/model_0293000.onnx",
+      "base_step": 293000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "floor01_300000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260917_013536-stageB-skill011-h076-abl-w1-f01-locomotion/model_0300000.onnx",
+      "base_step": 300000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "floor05_250000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260917_013034-stageB-skill011-h076-abl-w1-f05-locomotion/model_0250000.onnx",
+      "base_step": 250000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "floor05_257000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260917_013034-stageB-skill011-h076-abl-w1-f05-locomotion/model_0257000.onnx",
+      "base_step": 257000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "floor05_264000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260917_013034-stageB-skill011-h076-abl-w1-f05-locomotion/model_0264000.onnx",
+      "base_step": 264000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "floor05_271000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260917_013034-stageB-skill011-h076-abl-w1-f05-locomotion/model_0271000.onnx",
+      "base_step": 271000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "floor05_279000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260917_013034-stageB-skill011-h076-abl-w1-f05-locomotion/model_0279000.onnx",
+      "base_step": 279000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "floor05_286000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260917_013034-stageB-skill011-h076-abl-w1-f05-locomotion/model_0286000.onnx",
+      "base_step": 286000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "floor05_293000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260917_013034-stageB-skill011-h076-abl-w1-f05-locomotion/model_0293000.onnx",
+      "base_step": 293000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "floor05_300000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260917_013034-stageB-skill011-h076-abl-w1-f05-locomotion/model_0300000.onnx",
+      "base_step": 300000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    }
+  ],
+  "results": {
+    "hardzero_250000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.3091506894652268,
+            "std": 0.0008997899073678578,
+            "min": 0.3074345003690183,
+            "max": 0.3110280780120321,
+            "last": 0.30820682550161715
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.38098716470346994,
+            "std": 0.00015312213859191735,
+            "min": 0.3806974889733774,
+            "max": 0.38126579670404215,
+            "last": 0.3808234081164061
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.38662076899010067,
+            "std": 0.00030436944391784413,
+            "min": 0.3860901552139584,
+            "max": 0.38710346764295644,
+            "last": 0.38689066771168384
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.14498378972404558,
+            "std": 0.0009426825374248426,
+            "min": 0.1431091313511133,
+            "max": 0.1464801123579964,
+            "last": 0.1450395228145644
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 0.9733333333333333,
+            "std": 0.06798692684790378,
+            "min": 0.8,
+            "max": 1.0,
+            "last": 0.8
+          }
+        }
+      }
+    },
+    "hardzero_257000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.35634131328031404,
+            "std": 0.0003836028368229296,
+            "min": 0.35571444985181505,
+            "max": 0.3570447781751266,
+            "last": 0.3570447781751266
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.4834913058347365,
+            "std": 0.00035446793637390606,
+            "min": 0.48289476032627,
+            "max": 0.48408538745730245,
+            "last": 0.4829728989977891
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.3757441049236537,
+            "std": 0.00013259523207351215,
+            "min": 0.3755770931048293,
+            "max": 0.37596945368346174,
+            "last": 0.375699838358374
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.12791932369889691,
+            "std": 0.00024287368155888006,
+            "min": 0.127601903361734,
+            "max": 0.12844864387810231,
+            "last": 0.127601903361734
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 0.9733333333333333,
+            "std": 0.06798692684790378,
+            "min": 0.8,
+            "max": 1.0,
+            "last": 0.8
+          }
+        }
+      }
+    },
+    "hardzero_264000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.3789041240381391,
+            "std": 0.000295211760933839,
+            "min": 0.3784827335237383,
+            "max": 0.37942047283879904,
+            "last": 0.37928594430671136
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.5140756971605815,
+            "std": 0.00014969683900700493,
+            "min": 0.513862902028457,
+            "max": 0.5143742719672295,
+            "last": 0.5141412046567713
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.36127055560244103,
+            "std": 0.00010453720162185366,
+            "min": 0.3610998140745136,
+            "max": 0.3614272094906039,
+            "last": 0.3612366135701709
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.13090147994558016,
+            "std": 0.00028349824012871637,
+            "min": 0.13033828477561474,
+            "max": 0.131326189301908,
+            "last": 0.13058224831521512
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "hardzero_271000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.3342586713444603,
+            "std": 0.0002603978620053845,
+            "min": 0.3338366688881409,
+            "max": 0.33472432709007777,
+            "last": 0.3343385672947676
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.4656956594961835,
+            "std": 9.381870853692777e-05,
+            "min": 0.46552997564285975,
+            "max": 0.46587397640679484,
+            "last": 0.46559526980015364
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.35090267861910396,
+            "std": 7.811683711706418e-05,
+            "min": 0.3507543366798112,
+            "max": 0.35105498255030987,
+            "last": 0.3509177113768437
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.13359767503961922,
+            "std": 0.0003282798289328893,
+            "min": 0.1332018521092832,
+            "max": 0.13424072070233523,
+            "last": 0.1333219372779131
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 0.9866666666666667,
+            "std": 0.04988876515698588,
+            "min": 0.8,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "hardzero_279000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.34044503277119825,
+            "std": 0.00026809530905140685,
+            "min": 0.33988820390501917,
+            "max": 0.3409548074174047,
+            "last": 0.3405974321350088
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.46156617096297325,
+            "std": 0.00013999863232980016,
+            "min": 0.4612662731588828,
+            "max": 0.4618901662192131,
+            "last": 0.46159177721878486
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.34719699663229864,
+            "std": 8.850321893552013e-05,
+            "min": 0.34700882408135136,
+            "max": 0.3473803333447136,
+            "last": 0.3471500754497805
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.1599968684087197,
+            "std": 0.0001412601416709112,
+            "min": 0.15972126890718938,
+            "max": 0.16029255579411986,
+            "last": 0.16007284538447858
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "hardzero_286000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.33226741882257677,
+            "std": 0.0002839010403783363,
+            "min": 0.33186394396842867,
+            "max": 0.33271036642649915,
+            "last": 0.33190262778687674
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.44919791525982145,
+            "std": 0.00020447935216527766,
+            "min": 0.448852231146651,
+            "max": 0.44957913468018057,
+            "last": 0.44898421139698674
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.3389249560643342,
+            "std": 4.960514631763338e-05,
+            "min": 0.33883607888303674,
+            "max": 0.33902739924579994,
+            "last": 0.33883607888303674
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.17124250026742616,
+            "std": 0.00011880396420519127,
+            "min": 0.17093516516685484,
+            "max": 0.1714997380077839,
+            "last": 0.1712260902225971
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 0.9733333333333333,
+            "std": 0.06798692684790378,
+            "min": 0.8,
+            "max": 1.0,
+            "last": 0.8
+          }
+        }
+      }
+    },
+    "hardzero_293000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.3648677258236191,
+            "std": 0.00034237927948177824,
+            "min": 0.36417463006916334,
+            "max": 0.3652861581707571,
+            "last": 0.36524960093276965
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.48669245599129657,
+            "std": 0.00019755033077012917,
+            "min": 0.4863097239475799,
+            "max": 0.48703210504318256,
+            "last": 0.48690781354835533
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.351421449884678,
+            "std": 9.931899494607601e-05,
+            "min": 0.35126223762324493,
+            "max": 0.35157624017722233,
+            "last": 0.35145449050057814
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.1695678393577536,
+            "std": 0.00043422775225940676,
+            "min": 0.16874903643131256,
+            "max": 0.1704476901963353,
+            "last": 0.1692994653210044
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "hardzero_300000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.2989711225113878,
+            "std": 0.0002690768898632975,
+            "min": 0.2985201746721962,
+            "max": 0.29931813839379773,
+            "last": 0.29908615697968405
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.4491704071518003,
+            "std": 0.00011783352155464373,
+            "min": 0.44894051049705663,
+            "max": 0.4494517079236891,
+            "last": 0.44924042143232923
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.3065845747136852,
+            "std": 0.00010940197296273832,
+            "min": 0.3063414246055779,
+            "max": 0.3067659045702521,
+            "last": 0.3067568388616384
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.1352043229702084,
+            "std": 0.00045135912687151614,
+            "min": 0.13458802134077996,
+            "max": 0.1360228016451001,
+            "last": 0.13599463533237577
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 0.9733333333333333,
+            "std": 0.06798692684790378,
+            "min": 0.8,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "floor01_250000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.3095158593105837,
+            "std": 0.0006890933996338183,
+            "min": 0.3086197727312274,
+            "max": 0.311133832586579,
+            "last": 0.3098712966453978
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.3869314999810728,
+            "std": 0.00025850273302620313,
+            "min": 0.3864155391934368,
+            "max": 0.3873764449782531,
+            "last": 0.3873764449782531
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.3888381650526292,
+            "std": 0.00015781223868428093,
+            "min": 0.3885259470529876,
+            "max": 0.38919611696243067,
+            "last": 0.3888297743052887
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.14805651079105833,
+            "std": 0.0006749262929993194,
+            "min": 0.14699014580622316,
+            "max": 0.14930866631586104,
+            "last": 0.14699014580622316
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 0.9866666666666667,
+            "std": 0.04988876515698588,
+            "min": 0.8,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "floor01_257000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.41134420223062784,
+            "std": 0.0002622010581585352,
+            "min": 0.41092519668563465,
+            "max": 0.41185435620014665,
+            "last": 0.4115456751796446
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.5812743421508976,
+            "std": 9.896963497134732e-05,
+            "min": 0.5810913662622228,
+            "max": 0.5814353218089956,
+            "last": 0.5814353218089956
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.4023247646684584,
+            "std": 7.007557365100912e-05,
+            "min": 0.40216037551334394,
+            "max": 0.40241860138756885,
+            "last": 0.40241794196740777
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.16297524911079864,
+            "std": 0.00023861472923646278,
+            "min": 0.16256025404855606,
+            "max": 0.163288655731827,
+            "last": 0.16289349701907488
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 0.9866666666666667,
+            "std": 0.04988876515698588,
+            "min": 0.8,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "floor01_264000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.3758559552856696,
+            "std": 0.00020672585293657017,
+            "min": 0.3754592916366678,
+            "max": 0.3763668587824559,
+            "last": 0.3756817878738107
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.441664077409549,
+            "std": 0.0002321616350709668,
+            "min": 0.4412063094526575,
+            "max": 0.44208627103903825,
+            "last": 0.4412063094526575
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.36175653483801185,
+            "std": 6.56634563507597e-05,
+            "min": 0.3616220631593282,
+            "max": 0.36185848876264515,
+            "last": 0.3617185534421284
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.1358904082765182,
+            "std": 0.00023663178282084133,
+            "min": 0.13546242153644564,
+            "max": 0.13642681680619714,
+            "last": 0.13642681680619714
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "floor01_271000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.4466408180772225,
+            "std": 0.0001605480619182917,
+            "min": 0.44628909430870517,
+            "max": 0.4469111960150281,
+            "last": 0.44628909430870517
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.5979866696279431,
+            "std": 0.0001695098826009406,
+            "min": 0.5977707074116949,
+            "max": 0.5983489766118326,
+            "last": 0.5983489766118326
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.3691779296687501,
+            "std": 0.00014534090919595384,
+            "min": 0.3689054047762085,
+            "max": 0.36943530872387703,
+            "last": 0.36899007660294714
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.14685173719995948,
+            "std": 0.00028400111261862117,
+            "min": 0.14632279101014137,
+            "max": 0.14729382229596377,
+            "last": 0.14678949480690062
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 0.9866666666666667,
+            "std": 0.04988876515698588,
+            "min": 0.8,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "floor01_279000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.3697483048369599,
+            "std": 0.00024059749543234416,
+            "min": 0.369242549344738,
+            "max": 0.3700675464612123,
+            "last": 0.37003678680907315
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.5799549390495281,
+            "std": 7.118825127343278e-05,
+            "min": 0.5798287961160196,
+            "max": 0.5800870590393817,
+            "last": 0.5800870590393817
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.37335342904221935,
+            "std": 0.00014357769332568447,
+            "min": 0.3731071569694769,
+            "max": 0.3735978176323437,
+            "last": 0.3735496595538282
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.0887875937240819,
+            "std": 0.00020104284369403883,
+            "min": 0.08825977396965026,
+            "max": 0.08906727562099695,
+            "last": 0.0886872147321701
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 0.92,
+            "std": 0.15999999999999998,
+            "min": 0.4,
+            "max": 1.0,
+            "last": 0.8
+          }
+        }
+      }
+    },
+    "floor01_286000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.3830041320171763,
+            "std": 0.0003438695575426072,
+            "min": 0.38214277360119864,
+            "max": 0.38360854248768045,
+            "last": 0.3827799759948717
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.6128613292188728,
+            "std": 0.0001213748275051645,
+            "min": 0.6126355747609755,
+            "max": 0.6130750383628862,
+            "last": 0.6129024716679651
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.35654563355902275,
+            "std": 9.887433845923414e-05,
+            "min": 0.3563789883413014,
+            "max": 0.35675274910755406,
+            "last": 0.356479259880828
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.13804948182279864,
+            "std": 0.00022153914799864845,
+            "min": 0.1375874375700951,
+            "max": 0.1384736977443099,
+            "last": 0.13817209547013046
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 0.9866666666666667,
+            "std": 0.04988876515698588,
+            "min": 0.8,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "floor01_293000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.37432399464127347,
+            "std": 0.0002303274835478796,
+            "min": 0.3739860073125804,
+            "max": 0.37472085839352537,
+            "last": 0.3741308610341834
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.5765220463630126,
+            "std": 8.31359585045522e-05,
+            "min": 0.576381321483901,
+            "max": 0.5766565360339879,
+            "last": 0.5765348129283149
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.3652241947694935,
+            "std": 0.00020765120908379124,
+            "min": 0.3647638186948318,
+            "max": 0.3656589979046997,
+            "last": 0.3654879940892096
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.15640663725100457,
+            "std": 0.00022360582649586414,
+            "min": 0.1559843531921506,
+            "max": 0.1567875106036663,
+            "last": 0.15636222563311458
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 0.9733333333333333,
+            "std": 0.06798692684790378,
+            "min": 0.8,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "floor01_300000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.34773414084930965,
+            "std": 0.0002895227866742807,
+            "min": 0.34727053896366766,
+            "max": 0.3481543892754658,
+            "last": 0.34752676726407344
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.6335153495261159,
+            "std": 0.00012133484213015585,
+            "min": 0.6333011771322279,
+            "max": 0.6336780695300378,
+            "last": 0.6335622476638497
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.41080271632401766,
+            "std": 7.607319056157971e-05,
+            "min": 0.4106482435834867,
+            "max": 0.4108853139865419,
+            "last": 0.4108574309694054
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.1890470364715904,
+            "std": 0.0004251767885464541,
+            "min": 0.18828447212278845,
+            "max": 0.1898206242620945,
+            "last": 0.18943717473745347
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 0.9066666666666666,
+            "std": 0.14360439485692011,
+            "min": 0.6,
+            "max": 1.0,
+            "last": 0.6
+          }
+        }
+      }
+    },
+    "floor05_250000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.30868957988054974,
+            "std": 0.0007043050329984637,
+            "min": 0.30704821165975704,
+            "max": 0.3096487492559078,
+            "last": 0.3093577649923924
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.38887261845797705,
+            "std": 0.00024541882587407796,
+            "min": 0.38846740501496957,
+            "max": 0.3893120539894434,
+            "last": 0.3887342685663081
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.38958340766709854,
+            "std": 0.0002028017992507108,
+            "min": 0.389245554879577,
+            "max": 0.38997695633919605,
+            "last": 0.38972207660532704
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.14967986165218075,
+            "std": 0.0007051341163083873,
+            "min": 0.1488498849309981,
+            "max": 0.15112327252514662,
+            "last": 0.14894799132924527
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 0.9600000000000001,
+            "std": 0.1083205120618128,
+            "min": 0.6,
+            "max": 1.0,
+            "last": 0.6
+          }
+        }
+      }
+    },
+    "floor05_257000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.6060905515571888,
+            "std": 0.00024910263047801275,
+            "min": 0.6056694626913899,
+            "max": 0.6065134753225403,
+            "last": 0.606310290559702
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.7422345723159112,
+            "std": 4.57417223996321e-05,
+            "min": 0.7421704580151043,
+            "max": 0.742353296255141,
+            "last": 0.7422146313292777
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.3960662462916484,
+            "std": 0.00012490722722976723,
+            "min": 0.39583343166262047,
+            "max": 0.3964586178919557,
+            "last": 0.39583343166262047
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.15833360447299977,
+            "std": 0.0003109471997376229,
+            "min": 0.1579927075356245,
+            "max": 0.1591038027536124,
+            "last": 0.1591038027536124
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "floor05_264000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.6339769817549274,
+            "std": 0.00019261969037349792,
+            "min": 0.6335678429218612,
+            "max": 0.6342267788321344,
+            "last": 0.634007700602299
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.8180635918697808,
+            "std": 9.329588977845245e-05,
+            "min": 0.8179318777422997,
+            "max": 0.8182066958237263,
+            "last": 0.8179443136926304
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.43445849744616366,
+            "std": 7.432600859717146e-05,
+            "min": 0.43436408336608084,
+            "max": 0.43467394348735955,
+            "last": 0.4344240740598873
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.1834880648305019,
+            "std": 0.0001788575131888118,
+            "min": 0.18311177291721104,
+            "max": 0.18386594226956368,
+            "last": 0.18349671131372453
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "floor05_271000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.6815153782516116,
+            "std": 0.00012491712215663344,
+            "min": 0.6813337912576152,
+            "max": 0.6817138904550293,
+            "last": 0.6816575623323248
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.7938584399753512,
+            "std": 5.2402137949334767e-05,
+            "min": 0.7937922594143931,
+            "max": 0.7939642064846852,
+            "last": 0.7938208549377856
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.3991728220781417,
+            "std": 2.750160111604526e-05,
+            "min": 0.39911386660787673,
+            "max": 0.3992178072870024,
+            "last": 0.3991922898271642
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.17272864619245132,
+            "std": 0.0001746152507846519,
+            "min": 0.1725360800176859,
+            "max": 0.17322819706052545,
+            "last": 0.17254960860311988
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "floor05_279000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.6771548434812207,
+            "std": 0.0002064215182214413,
+            "min": 0.6766641399997002,
+            "max": 0.6774956232269147,
+            "last": 0.6774956232269147
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.7775467394755203,
+            "std": 4.538552940059319e-05,
+            "min": 0.7774840680468191,
+            "max": 0.7776228876596651,
+            "last": 0.7775497244288359
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.3868397865919399,
+            "std": 8.646400584315905e-05,
+            "min": 0.3867263116799807,
+            "max": 0.3870703627037283,
+            "last": 0.3868588516764396
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.14826975703136608,
+            "std": 0.00012660627621664057,
+            "min": 0.14803601130651078,
+            "max": 0.14854127924283964,
+            "last": 0.14836300878343173
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "floor05_286000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.6771789890183423,
+            "std": 0.00010457404838209985,
+            "min": 0.6770409605793906,
+            "max": 0.6773898483046231,
+            "last": 0.6771834344920965
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.8302727315060421,
+            "std": 0.00011378549842934007,
+            "min": 0.8301155519501666,
+            "max": 0.8304617172907894,
+            "last": 0.8301951840537715
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.4106026514805532,
+            "std": 4.017907573723453e-05,
+            "min": 0.4105234320461995,
+            "max": 0.4106603640633534,
+            "last": 0.41062719504201184
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.2075025616676391,
+            "std": 8.194943416785864e-05,
+            "min": 0.2073852290799841,
+            "max": 0.20766178164130542,
+            "last": 0.2074161287974566
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "floor05_293000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.6694085657857282,
+            "std": 0.00010121482838614955,
+            "min": 0.6691348769399373,
+            "max": 0.6695143771966481,
+            "last": 0.6693835911345896
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.7871978112890919,
+            "std": 4.3214975634519574e-05,
+            "min": 0.7871314962555702,
+            "max": 0.7872912934550678,
+            "last": 0.7871699920778894
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.4095598890225974,
+            "std": 9.55417997779845e-05,
+            "min": 0.4093733745553624,
+            "max": 0.4097072593621327,
+            "last": 0.40945752500448734
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.23091526990632605,
+            "std": 0.00010113159054785937,
+            "min": 0.23072725435090252,
+            "max": 0.2311290418386925,
+            "last": 0.23080668020388112
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    },
+    "floor05_300000": {
+      "None": {
+        "locomotion": {
+          "v_x_forward_mae": {
+            "n": 15,
+            "mean": 0.6947291500129797,
+            "std": 0.00011112819852118599,
+            "min": 0.6945434714707861,
+            "max": 0.695013890449625,
+            "last": 0.6947200828515104
+          },
+          "v_x_forward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_x_backward_mae": {
+            "n": 15,
+            "mean": 0.8029461456840606,
+            "std": 4.089291525474853e-05,
+            "min": 0.8028619150449071,
+            "max": 0.8030511360334724,
+            "last": 0.8029756413616397
+          },
+          "v_x_backward_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "v_y_lateral_mae": {
+            "n": 15,
+            "mean": 0.39842026409577413,
+            "std": 7.820189634159789e-05,
+            "min": 0.3982822203558126,
+            "max": 0.39856104319564556,
+            "last": 0.39842162597914044
+          },
+          "v_y_lateral_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "omega_z_yaw_mae": {
+            "n": 15,
+            "mean": 0.17283105231424173,
+            "std": 0.00010933323186229146,
+            "min": 0.1726717392206192,
+            "max": 0.17304168433696032,
+            "last": 0.1728335475921631
+          },
+          "omega_z_yaw_fall_rate": {
+            "n": 15,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "push_recovery_rate": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "terrain_traversal_success": {
+            "n": 15,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          }
+        }
+      }
+    }
+  }
+}

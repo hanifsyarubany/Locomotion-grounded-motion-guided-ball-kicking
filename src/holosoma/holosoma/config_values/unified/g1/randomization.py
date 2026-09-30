@@ -126,6 +126,29 @@ g1_29dof_unified_randomization = RandomizationManagerCfg(
                 "base_com_range": {"x": [-0.05, 0.05], "y": [-0.05, 0.05], "z": [-0.05, 0.05]},
             },
         ),
+        # 2026-09-14: lower the foot<->floor friction floor from WBT's [0.3, 1.6]/[0.3, 1.2] to
+        # [0.1, 1.6]/[0.1, 1.2] -- scoped here (unified only), not edited in the shared WBT base
+        # file, so this doesn't change any other WBT-derived project's training. Motivated by a
+        # real RoboJuDo deployment finding: sustained lateral/rotational (vy/wz) locomotion widens
+        # stance and causes visible foot slip once foot<->floor friction is AT OR BELOW 0.3 --
+        # confirmed BOTH in MuJoCo sim2sim (reproduced on demand via RoboJuDo's
+        # --sim-foot-floor-friction) AND on the real robot at that same 0.3 value, i.e. the
+        # CURRENT trained low edge is already where the real robot's own floor sits, not safely
+        # below it. Only the LOW end moves -- the upper bound (1.6/1.2) has no evidence of being a
+        # problem, so it's left alone to avoid changing what's already working there.
+        # UNVALIDATED as a training change: this widens the distribution the policy has to cover,
+        # which costs SOME capacity/sample-efficiency elsewhere -- has not yet been checked against
+        # a real training run's overall locomotion quality, only reasoned from the deployment-side
+        # measurement above. Pair with locomotion_feet_slip (reward.py) enabled via a task_config
+        # weight override for the actual training run this is meant to inform.
+        "randomize_robot_rigid_body_material_startup": replace(
+            g1_29dof_wbt_randomization.setup_terms["randomize_robot_rigid_body_material_startup"],
+            params={
+                **g1_29dof_wbt_randomization.setup_terms["randomize_robot_rigid_body_material_startup"].params,
+                "static_friction_range": [0.1, 1.6],
+                "dynamic_friction_range": [0.1, 1.2],
+            },
+        ),
         # (3) Robot MASS randomization -- the biggest axis stock loco has and unified/WBT lacks.
         # link_mass scales each link 90-120%; base adds -1..+3 kg to the torso. Values copied
         # verbatim from the proven g1_29dof_randomization.

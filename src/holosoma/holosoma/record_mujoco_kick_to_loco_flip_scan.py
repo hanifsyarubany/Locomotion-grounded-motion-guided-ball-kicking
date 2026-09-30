@@ -60,6 +60,7 @@ def record_kick_to_loco_flip_scan(
     flip_delay_min_steps: int = 10,
     flip_delay_max_steps: int = 60,
     post_flip_hold_s: float = 5.0,
+    recovery_metrics_out: dict | None = None,
     lock_path: str = DEFAULT_LOCK_PATH,
     stale_lock_timeout_s: float = DEFAULT_STALE_LOCK_TIMEOUT_S,
 ) -> tuple[float | None, float | None]:
@@ -78,6 +79,16 @@ def record_kick_to_loco_flip_scan(
     MultiSkillConfig.kick_abort_delay_min_steps/max_steps's own defaults for direct comparability
     with the training-time mechanism this scan evaluates -- override only to test a different
     window than the checkpoint was (or would be) trained against.
+
+    `recovery_metrics_out` (default None -- opt-in, same output-param pattern
+    record_survival_scan's own `extra_metrics_out` already establishes): when a dict is passed, it
+    is populated with `"recovered_rate"` and `"mean_recovery_steps"` (the latter None when
+    `recovered_rate` is 0 -- nothing to average) from the worker's SUMMARY_RECOVERY_STEPS line --
+    see mujoco_kick_loco_flip_scan.py's own RECOVERY_MIN_HEIGHT/RECOVERY_CONSECUTIVE_STEPS for what
+    "recovered" means. The RETURN SIGNATURE stays `(alive_rate, pre_flip_fail_rate)` unchanged --
+    this function is shared with FastSACAgent's own training-time periodic sim2sim checks (see
+    `_pool_flip_rates`'s own docstring in sim2sim_eval.py), so that isn't something to change for
+    just this; every existing caller that omits this parameter is completely unaffected.
 
     Serialized cluster-wide via a lock file at `lock_path` -- if already held, returns (None, None)
     immediately without launching anything (does not block/wait).
@@ -104,7 +115,12 @@ def record_kick_to_loco_flip_scan(
         if kick_aim_enabled:
             argv.append("--kick-aim-enabled")
         try:
-            result = subprocess.run(argv, timeout=timeout_s, capture_output=True, text=True)
+            # ROBOJUDO_ORT_INTRA_OP_NUM_THREADS=1: caps this worker's own ONNX Runtime session to
+            # a single thread -- see unified_loco_kick_policy.py's own docstring on that env var,
+            # and record_mujoco_loco_to_kick_handoff_scan.py's identical guard for the full
+            # oversubscription story (observed: ~67 threads/session on a 128-core box).
+            worker_env = {**os.environ, "ROBOJUDO_ORT_INTRA_OP_NUM_THREADS": "1"}
+            result = subprocess.run(argv, timeout=timeout_s, capture_output=True, text=True, env=worker_env)
         except subprocess.TimeoutExpired:
             logger.warning(f"[sim2sim] MuJoCo kick-to-loco-flip scan timed out after {timeout_s:.0f}s for {onnx_path}")
             return None, None
@@ -118,9 +134,29 @@ def record_kick_to_loco_flip_scan(
 
         alive_rate: float | None = None
         pre_flip_fail_rate: float | None = None
+        recovered_rate: float | None = None
+        mean_recovery_steps: float | None = None
+        recovery_line_seen = False
+        # Forward print order is PREFLIPFAIL, LOCOFLIP, RECOVERY_STEPS (worker's own docstring) --
+        # a REVERSED pass over stdout therefore meets RECOVERY_STEPS first, one pass finds all
+        # three regardless of caller-requested subset.
         for line in reversed(result.stdout.splitlines()):
-            # "SUMMARY_PREFLIPFAIL " never matches "SUMMARY_LOCOFLIP " as a prefix -- one reversed
-            # pass over stdout finds both, in whichever order they were printed.
+            if not recovery_line_seen and line.startswith("SUMMARY_RECOVERY_STEPS "):
+                recovery_line_seen = True
+                parts = line.split()
+                if len(parts) >= 5:
+                    if parts[3] != "NA":
+                        try:
+                            recovered_rate = float(parts[3])
+                        except ValueError:
+                            logger.warning(f"[sim2sim] Unparseable SUMMARY_RECOVERY_STEPS rate from kick-to-loco-flip scan: {line!r}")
+                    # "NA" (num_recovered == 0, an expected state -- nothing recovered to average)
+                    # stays None with no warning, same convention as SUMMARY_LOCOFLIP's own "NA".
+                    if parts[4] != "NA":
+                        try:
+                            mean_recovery_steps = float(parts[4])
+                        except ValueError:
+                            logger.warning(f"[sim2sim] Unparseable SUMMARY_RECOVERY_STEPS mean from kick-to-loco-flip scan: {line!r}")
             if pre_flip_fail_rate is None and line.startswith("SUMMARY_PREFLIPFAIL "):
                 parts = line.split()
                 try:
@@ -136,7 +172,7 @@ def record_kick_to_loco_flip_scan(
                         alive_rate = float(parts[3])
                     except ValueError:
                         logger.warning(f"[sim2sim] Unparseable SUMMARY_LOCOFLIP line from kick-to-loco-flip scan: {line!r}")
-            if alive_rate is not None and pre_flip_fail_rate is not None:
+            if alive_rate is not None and pre_flip_fail_rate is not None and recovery_line_seen:
                 break
 
         if alive_rate is None and pre_flip_fail_rate is None:
@@ -144,6 +180,9 @@ def record_kick_to_loco_flip_scan(
                 f"[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 0 but printed no SUMMARY line for {onnx_path}\n"
                 f"stdout(tail): {result.stdout[-2000:]}"
             )
+        if recovery_metrics_out is not None:
+            recovery_metrics_out["recovered_rate"] = recovered_rate
+            recovery_metrics_out["mean_recovery_steps"] = mean_recovery_steps
         return alive_rate, pre_flip_fail_rate
 
     except Exception:
@@ -180,10 +219,16 @@ if __name__ == "__main__":
         flip_delay_max_steps=ns.flip_delay_max_steps,
         post_flip_hold_s=ns.post_flip_hold_s,
         timeout_s=ns.timeout_s,
+        recovery_metrics_out=(recovery_metrics := {}),
     )
     ok = alive_rate is not None or pre_flip_fail_rate is not None
     print(
         "record_kick_to_loco_flip_scan: "
-        + (f"SUCCESS alive_rate={alive_rate} pre_flip_fail_rate={pre_flip_fail_rate}" if ok else "FAILED")
+        + (
+            f"SUCCESS alive_rate={alive_rate} pre_flip_fail_rate={pre_flip_fail_rate} "
+            f"recovered_rate={recovery_metrics.get('recovered_rate')} "
+            f"mean_recovery_steps={recovery_metrics.get('mean_recovery_steps')}"
+            if ok else "FAILED"
+        )
     )
     raise SystemExit(0 if ok else 1)

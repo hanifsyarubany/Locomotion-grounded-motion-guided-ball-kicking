@@ -1,0 +1,50 @@
+# Stage-A locomotion seed/run noise floor for Table XI (2026-09-16).
+#
+# WHY: Table XI's claim is an ABSENCE of effect (attaching seven skills should not
+# degrade locomotion), and the paper previously reported each Delta against a SINGLE
+# loco-only checkpoint. A claim of no-effect with n=1 cannot be distinguished from
+# noise. This sweep measures the noise floor directly.
+#
+# FOUR RUNS, all identical Stage-A config (from scratch, no skills, target_height
+# 0.74, deadzone 0.015, num_envs 2048), differing only as noted:
+#   s42a -- 20260823_035011, seed 42. The run Table XI's loco-only column comes from.
+#   s42b -- 20260915_002653, seed 42 AGAIN, torch_deterministic=false. Same seed, so
+#           the s42a-vs-s42b difference is pure run-to-run CUDA nondeterminism, not
+#           seed variance. This separates the two components.
+#   s07  -- 20260916_220122, seed 7.   Trained for this measurement.
+#   s13  -- 20260916_220347, seed 13.  Trained for this measurement.
+#
+# THREE CHECKPOINTS each (14k/15k/16k) rather than only the 15k the paper reports, so
+# within-run checkpoint spread is separable from between-run spread. 15k is the
+# paper's own choice and stays the headline comparison.
+#
+# WHAT THIS DOES NOT GIVE: the WITH-LIBRARY side of Table XI remains a single seed.
+# Replicating it needs Stage A + 7x Stage B + distillation, which is a multi-day job.
+# So this bounds how much the BASELINE moves under reseeding, not how much the library
+# side does -- report it as a one-sided noise floor and say so.
+wandb:
+  project: Policy_Evaluation
+  group: sim2sim-eval-sweep
+  run_name: sweep-stageA-seed-noise
+  tags: [checkpoint-sweep, seed-noise, table-xi]
+
+iterations: 15
+max_concurrent_scans: 10
+
+onnx_targets:
+  - {path: logs/LocomotionAndBallKicking/20260823_035011-unified-stageA-locomotion-height-074-locomotion/model_0014000.onnx, name: s42a_014000}
+  - {path: logs/LocomotionAndBallKicking/20260823_035011-unified-stageA-locomotion-height-074-locomotion/model_0015000.onnx, name: s42a_015000}
+  - {path: logs/LocomotionAndBallKicking/20260823_035011-unified-stageA-locomotion-height-074-locomotion/model_0016000.onnx, name: s42a_016000}
+  - {path: logs/LocomotionAndBallKicking/20260915_002653-unified-stageA-locomotion-height-074-locomotion/model_0014000.onnx, name: s42b_014000}
+  - {path: logs/LocomotionAndBallKicking/20260915_002653-unified-stageA-locomotion-height-074-locomotion/model_0015000.onnx, name: s42b_015000}
+  - {path: logs/LocomotionAndBallKicking/20260915_002653-unified-stageA-locomotion-height-074-locomotion/model_0016000.onnx, name: s42b_016000}
+  - {path: logs/LocomotionAndBallKicking/20260916_220122-unified-stageA-locomotion-height-074-seed7-locomotion/model_0014000.onnx, name: s07_014000}
+  - {path: logs/LocomotionAndBallKicking/20260916_220122-unified-stageA-locomotion-height-074-seed7-locomotion/model_0015000.onnx, name: s07_015000}
+  - {path: logs/LocomotionAndBallKicking/20260916_220122-unified-stageA-locomotion-height-074-seed7-locomotion/model_0016000.onnx, name: s07_016000}
+  - {path: logs/LocomotionAndBallKicking/20260916_220347-unified-stageA-locomotion-height-074-seed13-locomotion/model_0014000.onnx, name: s13_014000}
+  - {path: logs/LocomotionAndBallKicking/20260916_220347-unified-stageA-locomotion-height-074-seed13-locomotion/model_0015000.onnx, name: s13_015000}
+  - {path: logs/LocomotionAndBallKicking/20260916_220347-unified-stageA-locomotion-height-074-seed13-locomotion/model_0016000.onnx, name: s13_016000}
+
+evaluations:
+  - type: locomotion_metrics
+    num_episodes: 5

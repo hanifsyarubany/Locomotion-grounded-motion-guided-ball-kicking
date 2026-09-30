@@ -1,0 +1,93 @@
+# ===============================================================================================
+# 60_eval_shooting.py config template. Run with:
+#     python scripts/60_eval_shooting.py --config configs/eval_shooting/example.yaml
+#
+# --output (default: out/eval_shooting, override to redirect) names a BASE directory, not a file
+# -- results land at out/eval_shooting/<run_timestamp>-<run_name>/eval_shooting.json (bare
+# <run_timestamp>, no dash/name segment, if run_name below is omitted) -- same "<timestamp>-<name>"
+# folder convention sim2sim_eval.py already uses for its own output/ runs.
+#
+# Each skill's own geometry (nominal bearing, +/-theta_max reachable band, angular tolerance) is
+# read straight from that checkpoint's own embedded ONNX metadata -- NOT from configs/skill/*.yaml
+# -- so it can't go stale the way a hand-copied markdown table can (see 60_eval_shooting.py's own
+# module docstring for the skill_016 staleness bug this avoids).
+#
+# Copy this file for a specific comparison (e.g. specialist-vs-unified for A2 negative transfer)
+# rather than editing it in place.
+# ===============================================================================================
+
+run_name: skill_library    # optional -- names the output subfolder alongside the auto timestamp
+                            # (e.g. "20260906_070733-skill_library"). Omit for a bare timestamp.
+
+num_trials: 100          # per target. Split across num_bins equal-width angle bins BY THE
+                          # UNDERLYING SCAN'S OWN uniform random draw, not stratified -- expected
+                          # ~15 trials/bin at the defaults below (150/10), enough to keep a bin's
+                          # success_rate from being single-trial noise. Raise this before trusting
+                          # a lobe's fine detail; see the module docstring's own sizing note.
+num_bins: 10              # equal-width bins across [-theta_max, +theta_max] (that skill's OWN
+                          # sampled range, read from its checkpoint -- not necessarily +/-15 for
+                          # every skill, though every skill in this library happens to share that
+                          # value today).
+success_radius_m: 0.5     # matches RoboNaldo's success@0.5m (Table 2) -- also drives
+                          # angular_tolerance_deg = asin(success_radius_m / kick_aim_nominal_
+                          # distance_m) per skill.
+ball_pos_randomization_x: 0.1  # 2026-09-06: matches this checkpoint's OWN real training-time
+ball_pos_randomization_y: 0.1  # BallConfig.position_randomization -- VERIFIED (not guessed)
+                          # against this exact run's own resolved holosoma_config.yaml
+                          # (randomize_x/y: 0.1, uniform across all 6 skill blocks in that file).
+                          # 0.0 (this field's own default) means every trial spawns the ball at
+                          # the EXACT same nominal (x, y), testing only aim-angle coverage from a
+                          # single fixed position -- narrower than what training actually covered.
+                          # Don't copy 0.1 blindly onto a DIFFERENT checkpoint -- a specialist's
+                          # own individual training config can use a different value (e.g. 0.15)
+                          # -- check that checkpoint's own resolved holosoma_config.yaml, or use a
+                          # target's own ball_pos_randomization_x/y_override below instead.
+seed: 0
+max_concurrent_targets: 6 # one real MuJoCo subprocess per target, independent -- see sim2sim_eval
+                          # .py's own max_concurrent_scans docstring for the measured speedup this
+                          # buys on an otherwise-idle machine. Natural ceiling = len(targets).
+timeout_s: 2000.0         # 2026-09-06: raised from 300 after a real run measured the old default
+                          # too short -- 5 of 6 targets timed out at exactly 300s running this
+                          # file's own defaults (150 trials, 6-way concurrency). Per-trial cost
+                          # measured solo (max_concurrent_targets=1) is ~2.2s/trial, so 150 trials
+                          # alone is already ~330s before ANY contention; running 6 of them
+                          # concurrently (this file's own setting) adds real CPU contention on top
+                          # -- a separate same-session measurement needed 450s for just 60
+                          # trials/target under load. 1200s leaves real headroom rather than
+                          # matching the observed minimum exactly. If you want faster iteration
+                          # while tuning a config, lower num_trials for a quick/loose pass instead
+                          # of lowering this -- a short timeout just fails the same real work
+                          # partway through rather than making it faster.
+
+# ------------------------------------------------------------------------------
+# TARGETS -- one entry per (checkpoint, skill_id) to sweep. A SINGLE entry evaluates one skill in
+# isolation (e.g. a specialist checkpoint for A2's negative-transfer comparison); the SIX entries
+# below, one per skill_id of the SAME unified checkpoint, produce the full library sweep for F2 --
+# same code path either way, just a different-length list.
+#
+# NOTE (2026-09-06, updated): the six targets below now point at a REAL 6-skill unified
+# checkpoint (20260905_100147-distill-6skills-121617181920-distill), skill_id 0..5 -- NOT
+# skill_ids 011-016 (the paper's own canonical library) -- this checkpoint's actual skills are
+# 12/16/17/18/19/20, confirmed via each skill_id's own embedded bearing matching those real
+# skills' known geometry. Swap in a true 011-016 unified checkpoint's path here once one exists,
+# with no other change needed (still skill_id 0..5, just a different onnx path).
+# ------------------------------------------------------------------------------
+targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260905_100147-distill-6skills-121617181920-distill/model_0595000.onnx
+    skill_id: 0
+    label: skill_012
+  - path: logs/UnifiedBallKickingEnhanced/20260905_100147-distill-6skills-121617181920-distill/model_0595000.onnx
+    skill_id: 1
+    label: skill_016
+  - path: logs/UnifiedBallKickingEnhanced/20260905_100147-distill-6skills-121617181920-distill/model_0595000.onnx
+    skill_id: 2
+    label: skill_017
+  - path: logs/UnifiedBallKickingEnhanced/20260905_100147-distill-6skills-121617181920-distill/model_0595000.onnx
+    skill_id: 3
+    label: skill_018
+  - path: logs/UnifiedBallKickingEnhanced/20260905_100147-distill-6skills-121617181920-distill/model_0595000.onnx
+    skill_id: 4
+    label: skill_019
+  - path: logs/UnifiedBallKickingEnhanced/20260905_100147-distill-6skills-121617181920-distill/model_0595000.onnx
+    skill_id: 5
+    label: skill_020

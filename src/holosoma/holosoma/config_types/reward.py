@@ -56,6 +56,18 @@ class RewardTermCfg:
     UnifiedManager). ``None`` (the default) means always active, matching every existing
     experiment's behavior exactly."""
 
+    task_mode_floor: float = 0.0
+    """2026-09-16, W1 ablation: softens ``task_mode``'s hard zero into a *discount*. When > 0.0,
+    envs outside ``task_mode`` are multiplied by this factor instead of 0.0, so the term still
+    shapes them at reduced weight. ``0.0`` (the default) leaves the mask a strict {0, 1} gate --
+    RewardManager skips the clamp entirely at that value, so every existing run is bit-identical
+    to before this field existed. Ignored when ``task_mode is None`` (nothing is being masked).
+
+    Exists to make the paper's own architectural claim testable: Sec. III-A argues the gate must
+    be a hard zero because "tracking rewards left active at reduced weight would still shape the
+    reachable gait space". Setting this to 0.1 on the 7 motion-tracking terms builds exactly the
+    counterfactual that sentence asserts, so it can be measured rather than assumed."""
+
 
 @dataclass(frozen=True)
 class RewardManagerCfg:

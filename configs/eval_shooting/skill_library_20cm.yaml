@@ -1,0 +1,65 @@
+# ===============================================================================================
+# 60_eval_shooting.py config template. Run with:
+#     python scripts/60_eval_shooting.py --config configs/eval_shooting/skill_library_20cm.yaml --with-trajectories
+#
+# Copy of example.yaml with two deliberate changes, both requested 2026-09-10:
+#
+#   1. ball_pos_randomization_x/y widened 0.1 -> 0.2. This is per-skill jitter around EACH
+#      skill's own trained ball spawn (flows straight into record_survival_scan's own
+#      ball_pos_randomization -- see that function's docstring), NOT a shared bounding box across
+#      skills like 74_eval_ball_placement_sweep.py's own --trained-jitter-m/--pad-m. Per-skill
+#      breakdown (out/ball_placement_sweep/20260910_122718, gated to the strike window) showed
+#      most skills hold up at 10-20cm about as well as at 0-10cm (skill_3: 16% -> 50% -> 76%;
+#      skill_4: 57% -> 61% -> 24%), with the real cliff past ~30cm -- so 0.2 stays inside where
+#      the checkpoint is known to still behave reasonably. skill_5 and skill_6 already score 0%
+#      inside their OWN 0-10cm trained box in that same sweep, so widening will not hide their
+#      problem -- it is a skill-quality issue, not a placement-tolerance one.
+#
+#   2. targets now point at the SAME 7-skill checkpoint Tables V-XI report
+#      (20260907_100900-distill-7skills-12161718192011-distill/model_0440000.onnx, skill_id 0-6,
+#      labels skill_1..skill_7 matching the paper's skill_012->skill_1 .. skill_011->skill_7
+#      renaming) -- NOT example.yaml's own 6-skill 20260905_100147-distill-6skills-121617181920
+#      checkpoint, which has no skill_011/skill_7 at all (a different library entirely, not a
+#      subset -- confirmed by each skill_id's own embedded bearing). Any figure meant to
+#      illustrate the paper's own library must come from this checkpoint or it will show a
+#      different set of skills than what Tables V-XI number.
+# ===============================================================================================
+
+run_name: skill_library_20cm
+
+num_trials: 100          # per target -- same as example.yaml, unchanged
+num_bins: 10              # equal-width bins across each skill's own [-theta_max, +theta_max]
+success_radius_m: 0.5     # matches RoboNaldo's success@0.5m (Table 2), same as example.yaml
+ball_pos_randomization_x: 0.2  # widened from example.yaml's 0.1 -- see header
+ball_pos_randomization_y: 0.2  # widened from example.yaml's 0.1 -- see header
+seed: 0
+max_concurrent_targets: 7  # = len(targets), the natural ceiling -- one MuJoCo subprocess per
+                            # target, and each is capped to ~1-4 threads via
+                            # ROBOJUDO_ORT_INTRA_OP_NUM_THREADS=1 (record_mujoco_survival_scan.py's
+                            # own worker_env), so 7-way concurrency is cheap. Confirmed 2026-09-10:
+                            # machine load ~45-52/128 cores at the time this was raised from 6.
+timeout_s: 2000.0          # unchanged from example.yaml -- see that file's own sizing note;
+                            # wider placements are not expected to change per-trial cost
+
+targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0440000.onnx
+    skill_id: 0
+    label: skill_1
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0440000.onnx
+    skill_id: 1
+    label: skill_2
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0440000.onnx
+    skill_id: 2
+    label: skill_3
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0440000.onnx
+    skill_id: 3
+    label: skill_4
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0440000.onnx
+    skill_id: 4
+    label: skill_5
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0440000.onnx
+    skill_id: 5
+    label: skill_6
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0440000.onnx
+    skill_id: 6
+    label: skill_7

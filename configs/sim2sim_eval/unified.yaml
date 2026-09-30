@@ -1,0 +1,28 @@
+wandb:
+  project: Policy_Evaluation 
+  group: sim2sim-eval                   
+  run_name: unified-distill       
+  tags: []                           
+
+iterations: 100
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260904_145551-distill-6skills-121617181920-distill/model_0400000.onnx
+    name: 6skills            
+    kick_aim_enabled: true              
+
+evaluations:
+  - type: kick_survival
+    num_trials: 10
+    success_sigma_m: [0.5, 1.0]          
+    ball_pos_randomization: [0.1, 0.1]   
+  - type: kick_to_loco_flip
+    num_trials: 10
+    split_by_strike_phase: true  
+  - type: loco_to_kick_handoff
+    num_trials: 10
+    loco_duration_min_s: 5.0
+    loco_duration_max_s: 6.0
+    track_transition_metrics: true  
+    transition_window_steps: 50     

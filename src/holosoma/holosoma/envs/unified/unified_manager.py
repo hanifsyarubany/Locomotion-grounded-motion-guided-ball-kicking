@@ -854,9 +854,15 @@ class UnifiedManager(BaseTask):
         per-env rationale above generalizes directly from a 2-way (locomotion/kick) draw to an
         (N+1)-way categorical (locomotion, skill_1, ..., skill_N) — a skill with short early
         episodes needs the same protection kick_probability originally got. Also fixes
-        self._skill_id_partition (0..N-1, meaningless where task_mode==LOCOMOTION). When ratios
-        is empty (no N-skill config wired in), this reduces to exactly the legacy 2-way path
-        below, unchanged."""
+        self._skill_id_partition (0..N-1). When ratios is empty (no N-skill config wired in),
+        this reduces to exactly the legacy 2-way path below, unchanged.
+
+        Locomotion envs' own skill_id (2026-09-14): spread across 0..N-1 (a per-env random draw),
+        not fixed at 0 — this value is still meaningless to THIS class's own reward/observation
+        code while task_mode==LOCOMOTION, but distill_specialists.py's DAgger loop now defaults to
+        reading each env's own skill_id to pick which teacher supervises it even during locomotion
+        ticks (see that script's own locomotion_teacher_id docstring), so pinning every locomotion
+        env's skill_id to 0 would silently funnel ALL of them through skill 0's own teacher again."""
         if getattr(self, "_task_mode_partition", None) is not None:
             return
 
@@ -876,7 +882,12 @@ class UnifiedManager(BaseTask):
             draw = torch.multinomial(probs, self.num_envs, replacement=True)
             draw = torch.where(kick_eligible, draw, torch.zeros_like(draw))  # ineligible -> locomotion
             self._task_mode_partition = torch.where(draw > 0, kick_mode_t, loco_mode_t)
-            self._skill_id_partition = (draw - 1).clamp_min(0)
+            # draw>0 (kick) envs keep (draw-1) as their real, fixed-for-life skill id. draw==0
+            # (locomotion) envs get an independent random draw across the SAME 0..N-1 range instead
+            # of a fixed 0 -- see this method's own docstring for why (distill_specialists.py's
+            # default teacher-selection now reads this value even for locomotion-mode ticks).
+            random_skill_for_loco = torch.randint(0, len(ratios), (self.num_envs,), device=self.device)
+            self._skill_id_partition = torch.where(draw > 0, (draw - 1).clamp_min(0), random_skill_for_loco)
             kick_frac = float((self._task_mode_partition == TaskMode.KICK).float().mean().item())
             target_frac = sum(ratios) * float(kick_eligible.float().mean().item())
             logger.info(

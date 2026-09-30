@@ -1,0 +1,122 @@
+# Table VIII (handoff robustness) checkpoint sweep, unified N=7 distillation.
+#
+# Same 16 checkpoints as sweep-unified-7.yaml (387k-444k, 8 operator picks + bridge/neighbour
+# points -- see that file's own header for the selection rationale), so every Table VIII number
+# comes from the same evaluated model identity as Tables V/VI/VII's shooting numbers.
+#
+# This file is DELIBERATELY LIGHT -- it covers only rows 2 and 4 of Table VIII:
+#   - Kick->Loco, random tick            -> kick_to_loco_flip's alive_rate
+#   - Loco->Kick, random in-motion state -> loco_to_kick_handoff's fall_rate/hit_rate
+#
+# Rows 1 and 3 need NO new config at all:
+#   - Loco->Kick, from v~=0 state   -> kick_survival's own fall_rate/hit_rate (the settle phase
+#     before [TRIGGER_KICK] already IS a v~=0 entry -- intentional reuse of the same number
+#     already reported for Tables V/VI/VII, confirmed with the operator 2026-09-09, not an
+#     independent measurement).
+#   - Kick->Loco, end of authored clip -> kick_survival's NEW handoff_reached_rate/
+#     post_handoff_alive_rate (added 2026-09-09, see mujoco_kick_survival_scan.py's own docstring
+#     on handoff_tick/post_handoff_fall_step). The auto-return already happens inside that scan's
+#     existing hold window (UnifiedLocoKickPolicy._return_to_loco() fires on its own at the clip's
+#     natural end); the code change that isolates it is fully additive, so RE-RUNNING
+#     sweep-unified-7.yaml UNCHANGED now also produces these two fields for free -- no reason to
+#     duplicate that (expensive) eval type's cost in this file too.
+#
+# num_trials=32/iterations=5 -> 160 attempts per checkpoint. NOT sweep-unified-7's 250: raised
+# from an initial 32 (iterations=1) after checking the actual statistics, not just cost --
+# 95% CI on a single checkpoint's own reading (worst-case p=0.5) is +/-17.3 points at n=32 vs
+# +/-6.2 points at n=250. That gap matters specifically because this table's protection against
+# checkpoint-lottery IS the median over these 16 checkpoints -- if any one checkpoint's own
+# reading is that noisy, two genuinely different checkpoints can swap rank order from sampling
+# noise alone, which is the same failure mode the sweep exists to catch, reintroduced one level
+# down. 160 (+/-7.7 points) trades most of that gap away without paying full parity with
+# sweep-unified-7's budget -- kick_to_loco_flip/loco_to_kick_handoff trials are each individually
+# more expensive (a settle + a multi-second random walk or in-progress kick before the flip) than
+# a kick_survival trial, so matching 250 outright was judged not worth the extra wall-clock here.
+# Raise further (add iterations, or num_trials) if the resulting spread still looks too coarse
+# once real numbers are in.
+wandb:
+  project: Policy_Evaluation
+  group: sim2sim-eval-sweep
+  run_name: sweep-handoff-unified-7
+  tags: [checkpoint-sweep, handoff]
+
+iterations: 5
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0387000.onnx
+    name: u7_387000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0389000.onnx
+    name: u7_389000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0390000.onnx
+    name: u7_390000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0392000.onnx
+    name: u7_392000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0398000.onnx
+    name: u7_398000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0406000.onnx
+    name: u7_406000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0414000.onnx
+    name: u7_414000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0422000.onnx
+    name: u7_422000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0430000.onnx
+    name: u7_430000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0434000.onnx
+    name: u7_434000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0436000.onnx
+    name: u7_436000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0438000.onnx
+    name: u7_438000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0440000.onnx
+    name: u7_440000   # <- previously reported in paper
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0441000.onnx
+    name: u7_441000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0442000.onnx
+    name: u7_442000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0444000.onnx
+    name: u7_444000   # <- operator pick
+    kick_aim_enabled: true
+
+evaluations:
+  # -> Table VIII row "Kick->Loco, random tick". Plain (unsplit) mode, matching the paper's own
+  # description ("triggered at an arbitrary tick, including inside the strike window") -- NOT
+  # split_by_strike_phase (that variant is Table XI's own strike-vs-nonstrike comparison, a
+  # different question). flip_delay_min/max_steps left at the worker's own defaults (10/60 ticks),
+  # mirroring training's own kick_abort_prob window -- see mujoco_kick_loco_flip_scan.py's own
+  # docstring for why that window, not an eval-invented one.
+  - type: kick_to_loco_flip
+    num_trials: 32
+    timeout_s: 300.0
+
+  # -> Table VIII row "Loco->Kick, from random in-motion state". Worker defaults for the walk
+  # window (2-3s) and post-flip hold (8s). ball_pos_randomization matches sweep-unified-7.yaml's
+  # own kick_survival value (the settled-state row's source) -- added 2026-09-09 after the first
+  # pass of this table showed a 100.0% in-motion hit rate against 91.5% settled-state: the two
+  # scans were placing the ball differently (settled = jittered fixed world spot; in-motion =
+  # EXACT robot-relative nominal, no jitter, by original design -- see
+  # mujoco_loco_to_kick_handoff_scan.py's own docstring on why the ball is parked away from a
+  # walking robot). That exact-placement choice is still correct for measuring whether the
+  # handoff ITSELF survives, but it made the two hit rates non-comparable for Table VIII's
+  # side-by-side reading. Matching the jitter here (applied in the robot's own frame -- see
+  # --ball-pos-randomization-x/-y's own help text) makes the comparison fair without touching what
+  # the settled-state row measures.
+  - type: loco_to_kick_handoff
+    num_trials: 32
+    timeout_s: 300.0
+    ball_pos_randomization: [0.1, 0.1]

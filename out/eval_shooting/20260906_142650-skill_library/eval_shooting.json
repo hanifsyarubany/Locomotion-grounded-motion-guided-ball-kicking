@@ -1,0 +1,700 @@
+{
+  "generated_at": "2026-09-06T14:32:07",
+  "config_path": "configs/eval_shooting/example.yaml",
+  "num_trials_per_target": 150,
+  "num_bins": 10,
+  "success_radius_m": 0.5,
+  "seed": 0,
+  "skills": [
+    {
+      "label": "skill_012",
+      "onnx_path": "logs/UnifiedBallKickingEnhanced/20260905_100147-distill-6skills-121617181920-distill/model_0600000.onnx",
+      "skill_id": 0,
+      "nominal_bearing_deg": -1.3200990136109745,
+      "kick_aim_theta_max_deg": 15.0,
+      "kick_aim_theta_max_deg_auto": 15.0,
+      "theta_max_overridden": false,
+      "kick_aim_nominal_distance_m": 5.0,
+      "ball_pos_randomization_m": [
+        0.1,
+        0.1
+      ],
+      "reachable_band_deg": [
+        -16.320099013610974,
+        13.679900986389026
+      ],
+      "angular_tolerance_deg": 5.739170477266787,
+      "success_radius_m": 0.5,
+      "num_trials": 150,
+      "fall_rate": 0.0,
+      "hit_rate": 1.0,
+      "bins": [
+        {
+          "theta_offset_lo_deg": -15.0,
+          "theta_offset_hi_deg": -12.0,
+          "theta_offset_center_deg": -13.5,
+          "n": 19,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.5985736842105256
+        },
+        {
+          "theta_offset_lo_deg": -12.0,
+          "theta_offset_hi_deg": -9.0,
+          "theta_offset_center_deg": -10.5,
+          "n": 17,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.5107588235294114
+        },
+        {
+          "theta_offset_lo_deg": -9.0,
+          "theta_offset_hi_deg": -6.0,
+          "theta_offset_center_deg": -7.5,
+          "n": 9,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.5395
+        },
+        {
+          "theta_offset_lo_deg": -6.0,
+          "theta_offset_hi_deg": -3.0,
+          "theta_offset_center_deg": -4.5,
+          "n": 16,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.3975687499999996
+        },
+        {
+          "theta_offset_lo_deg": -3.0,
+          "theta_offset_hi_deg": 0.0,
+          "theta_offset_center_deg": -1.5,
+          "n": 8,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.3375999999999997
+        },
+        {
+          "theta_offset_lo_deg": 0.0,
+          "theta_offset_hi_deg": 3.0,
+          "theta_offset_center_deg": 1.5,
+          "n": 13,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.366676923076923
+        },
+        {
+          "theta_offset_lo_deg": 3.0,
+          "theta_offset_hi_deg": 6.0,
+          "theta_offset_center_deg": 4.5,
+          "n": 16,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.46885625
+        },
+        {
+          "theta_offset_lo_deg": 6.0,
+          "theta_offset_hi_deg": 9.0,
+          "theta_offset_center_deg": 7.5,
+          "n": 21,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.483414285714286
+        },
+        {
+          "theta_offset_lo_deg": 9.0,
+          "theta_offset_hi_deg": 12.0,
+          "theta_offset_center_deg": 10.5,
+          "n": 11,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.324381818181818
+        },
+        {
+          "theta_offset_lo_deg": 12.0,
+          "theta_offset_hi_deg": 15.0,
+          "theta_offset_center_deg": 13.5,
+          "n": 20,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.4176300000000004
+        }
+      ]
+    },
+    {
+      "label": "skill_016",
+      "onnx_path": "logs/UnifiedBallKickingEnhanced/20260905_100147-distill-6skills-121617181920-distill/model_0600000.onnx",
+      "skill_id": 1,
+      "nominal_bearing_deg": 137.8021399129202,
+      "kick_aim_theta_max_deg": 15.0,
+      "kick_aim_theta_max_deg_auto": 15.0,
+      "theta_max_overridden": false,
+      "kick_aim_nominal_distance_m": 5.0,
+      "ball_pos_randomization_m": [
+        0.1,
+        0.1
+      ],
+      "reachable_band_deg": [
+        122.80213991292021,
+        152.8021399129202
+      ],
+      "angular_tolerance_deg": 5.739170477266787,
+      "success_radius_m": 0.5,
+      "num_trials": 150,
+      "fall_rate": 0.0,
+      "hit_rate": 0.7133,
+      "bins": [
+        {
+          "theta_offset_lo_deg": -15.0,
+          "theta_offset_hi_deg": -12.0,
+          "theta_offset_center_deg": -13.5,
+          "n": 19,
+          "success_rate": 0.0,
+          "hit_rate": 0.3684210526315789,
+          "mean_min_target_dist_m": 3.7947
+        },
+        {
+          "theta_offset_lo_deg": -12.0,
+          "theta_offset_hi_deg": -9.0,
+          "theta_offset_center_deg": -10.5,
+          "n": 17,
+          "success_rate": 0.0,
+          "hit_rate": 0.7058823529411765,
+          "mean_min_target_dist_m": 3.678358823529411
+        },
+        {
+          "theta_offset_lo_deg": -9.0,
+          "theta_offset_hi_deg": -6.0,
+          "theta_offset_center_deg": -7.5,
+          "n": 9,
+          "success_rate": 0.0,
+          "hit_rate": 0.7777777777777778,
+          "mean_min_target_dist_m": 3.391344444444444
+        },
+        {
+          "theta_offset_lo_deg": -6.0,
+          "theta_offset_hi_deg": -3.0,
+          "theta_offset_center_deg": -4.5,
+          "n": 16,
+          "success_rate": 0.0,
+          "hit_rate": 0.8125,
+          "mean_min_target_dist_m": 3.12714375
+        },
+        {
+          "theta_offset_lo_deg": -3.0,
+          "theta_offset_hi_deg": 0.0,
+          "theta_offset_center_deg": -1.5,
+          "n": 8,
+          "success_rate": 0.0,
+          "hit_rate": 0.625,
+          "mean_min_target_dist_m": 3.4398375
+        },
+        {
+          "theta_offset_lo_deg": 0.0,
+          "theta_offset_hi_deg": 3.0,
+          "theta_offset_center_deg": 1.5,
+          "n": 13,
+          "success_rate": 0.0,
+          "hit_rate": 0.6923076923076923,
+          "mean_min_target_dist_m": 3.3327999999999998
+        },
+        {
+          "theta_offset_lo_deg": 3.0,
+          "theta_offset_hi_deg": 6.0,
+          "theta_offset_center_deg": 4.5,
+          "n": 16,
+          "success_rate": 0.0,
+          "hit_rate": 0.75,
+          "mean_min_target_dist_m": 3.3544625
+        },
+        {
+          "theta_offset_lo_deg": 6.0,
+          "theta_offset_hi_deg": 9.0,
+          "theta_offset_center_deg": 7.5,
+          "n": 21,
+          "success_rate": 0.0,
+          "hit_rate": 0.8571428571428571,
+          "mean_min_target_dist_m": 3.398704761904761
+        },
+        {
+          "theta_offset_lo_deg": 9.0,
+          "theta_offset_hi_deg": 12.0,
+          "theta_offset_center_deg": 10.5,
+          "n": 11,
+          "success_rate": 0.0,
+          "hit_rate": 0.6363636363636364,
+          "mean_min_target_dist_m": 4.085454545454545
+        },
+        {
+          "theta_offset_lo_deg": 12.0,
+          "theta_offset_hi_deg": 15.0,
+          "theta_offset_center_deg": 13.5,
+          "n": 20,
+          "success_rate": 0.0,
+          "hit_rate": 0.85,
+          "mean_min_target_dist_m": 3.546065
+        }
+      ]
+    },
+    {
+      "label": "skill_017",
+      "onnx_path": "logs/UnifiedBallKickingEnhanced/20260905_100147-distill-6skills-121617181920-distill/model_0600000.onnx",
+      "skill_id": 2,
+      "nominal_bearing_deg": -121.73942330441363,
+      "kick_aim_theta_max_deg": 15.0,
+      "kick_aim_theta_max_deg_auto": 15.0,
+      "theta_max_overridden": false,
+      "kick_aim_nominal_distance_m": 5.0,
+      "ball_pos_randomization_m": [
+        0.1,
+        0.1
+      ],
+      "reachable_band_deg": [
+        -136.73942330441363,
+        -106.73942330441363
+      ],
+      "angular_tolerance_deg": 5.739170477266787,
+      "success_radius_m": 0.5,
+      "num_trials": 150,
+      "fall_rate": 0.16,
+      "hit_rate": 1.0,
+      "bins": [
+        {
+          "theta_offset_lo_deg": -15.0,
+          "theta_offset_hi_deg": -12.0,
+          "theta_offset_center_deg": -13.5,
+          "n": 19,
+          "success_rate": 0.10526315789473684,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.953294736842105
+        },
+        {
+          "theta_offset_lo_deg": -12.0,
+          "theta_offset_hi_deg": -9.0,
+          "theta_offset_center_deg": -10.5,
+          "n": 17,
+          "success_rate": 0.058823529411764705,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 3.449611764705882
+        },
+        {
+          "theta_offset_lo_deg": -9.0,
+          "theta_offset_hi_deg": -6.0,
+          "theta_offset_center_deg": -7.5,
+          "n": 9,
+          "success_rate": 0.1111111111111111,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.8219555555555558
+        },
+        {
+          "theta_offset_lo_deg": -6.0,
+          "theta_offset_hi_deg": -3.0,
+          "theta_offset_center_deg": -4.5,
+          "n": 16,
+          "success_rate": 0.0625,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.26056875
+        },
+        {
+          "theta_offset_lo_deg": -3.0,
+          "theta_offset_hi_deg": 0.0,
+          "theta_offset_center_deg": -1.5,
+          "n": 8,
+          "success_rate": 0.125,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.8287750000000003
+        },
+        {
+          "theta_offset_lo_deg": 0.0,
+          "theta_offset_hi_deg": 3.0,
+          "theta_offset_center_deg": 1.5,
+          "n": 13,
+          "success_rate": 0.15384615384615385,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.9945230769230768
+        },
+        {
+          "theta_offset_lo_deg": 3.0,
+          "theta_offset_hi_deg": 6.0,
+          "theta_offset_center_deg": 4.5,
+          "n": 16,
+          "success_rate": 0.25,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.7935125
+        },
+        {
+          "theta_offset_lo_deg": 6.0,
+          "theta_offset_hi_deg": 9.0,
+          "theta_offset_center_deg": 7.5,
+          "n": 21,
+          "success_rate": 0.14285714285714285,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.913814285714285
+        },
+        {
+          "theta_offset_lo_deg": 9.0,
+          "theta_offset_hi_deg": 12.0,
+          "theta_offset_center_deg": 10.5,
+          "n": 11,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.188181818181818
+        },
+        {
+          "theta_offset_lo_deg": 12.0,
+          "theta_offset_hi_deg": 15.0,
+          "theta_offset_center_deg": 13.5,
+          "n": 20,
+          "success_rate": 0.05,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.577485
+        }
+      ]
+    },
+    {
+      "label": "skill_018",
+      "onnx_path": "logs/UnifiedBallKickingEnhanced/20260905_100147-distill-6skills-121617181920-distill/model_0600000.onnx",
+      "skill_id": 3,
+      "nominal_bearing_deg": -56.938829692719175,
+      "kick_aim_theta_max_deg": 15.0,
+      "kick_aim_theta_max_deg_auto": 15.0,
+      "theta_max_overridden": false,
+      "kick_aim_nominal_distance_m": 5.0,
+      "ball_pos_randomization_m": [
+        0.1,
+        0.1
+      ],
+      "reachable_band_deg": [
+        -71.93882969271917,
+        -41.938829692719175
+      ],
+      "angular_tolerance_deg": 5.739170477266787,
+      "success_radius_m": 0.5,
+      "num_trials": 150,
+      "fall_rate": 0.0,
+      "hit_rate": 0.9867,
+      "bins": [
+        {
+          "theta_offset_lo_deg": -15.0,
+          "theta_offset_hi_deg": -12.0,
+          "theta_offset_center_deg": -13.5,
+          "n": 19,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.2110894736842104
+        },
+        {
+          "theta_offset_lo_deg": -12.0,
+          "theta_offset_hi_deg": -9.0,
+          "theta_offset_center_deg": -10.5,
+          "n": 17,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.4006529411764705
+        },
+        {
+          "theta_offset_lo_deg": -9.0,
+          "theta_offset_hi_deg": -6.0,
+          "theta_offset_center_deg": -7.5,
+          "n": 9,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.1978666666666666
+        },
+        {
+          "theta_offset_lo_deg": -6.0,
+          "theta_offset_hi_deg": -3.0,
+          "theta_offset_center_deg": -4.5,
+          "n": 16,
+          "success_rate": 0.0625,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.6874874999999998
+        },
+        {
+          "theta_offset_lo_deg": -3.0,
+          "theta_offset_hi_deg": 0.0,
+          "theta_offset_center_deg": -1.5,
+          "n": 8,
+          "success_rate": 0.125,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.4907124999999999
+        },
+        {
+          "theta_offset_lo_deg": 0.0,
+          "theta_offset_hi_deg": 3.0,
+          "theta_offset_center_deg": 1.5,
+          "n": 13,
+          "success_rate": 0.07692307692307693,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.5280153846153846
+        },
+        {
+          "theta_offset_lo_deg": 3.0,
+          "theta_offset_hi_deg": 6.0,
+          "theta_offset_center_deg": 4.5,
+          "n": 16,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.37690625
+        },
+        {
+          "theta_offset_lo_deg": 6.0,
+          "theta_offset_hi_deg": 9.0,
+          "theta_offset_center_deg": 7.5,
+          "n": 21,
+          "success_rate": 0.23809523809523808,
+          "hit_rate": 0.9047619047619048,
+          "mean_min_target_dist_m": 1.4189238095238095
+        },
+        {
+          "theta_offset_lo_deg": 9.0,
+          "theta_offset_hi_deg": 12.0,
+          "theta_offset_center_deg": 10.5,
+          "n": 11,
+          "success_rate": 0.09090909090909091,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.2751818181818182
+        },
+        {
+          "theta_offset_lo_deg": 12.0,
+          "theta_offset_hi_deg": 15.0,
+          "theta_offset_center_deg": 13.5,
+          "n": 20,
+          "success_rate": 0.35,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 0.796315
+        }
+      ]
+    },
+    {
+      "label": "skill_019",
+      "onnx_path": "logs/UnifiedBallKickingEnhanced/20260905_100147-distill-6skills-121617181920-distill/model_0600000.onnx",
+      "skill_id": 4,
+      "nominal_bearing_deg": 48.38582909915868,
+      "kick_aim_theta_max_deg": 15.0,
+      "kick_aim_theta_max_deg_auto": 15.0,
+      "theta_max_overridden": false,
+      "kick_aim_nominal_distance_m": 5.0,
+      "ball_pos_randomization_m": [
+        0.1,
+        0.1
+      ],
+      "reachable_band_deg": [
+        33.38582909915868,
+        63.38582909915868
+      ],
+      "angular_tolerance_deg": 5.739170477266787,
+      "success_radius_m": 0.5,
+      "num_trials": 150,
+      "fall_rate": 0.0,
+      "hit_rate": 1.0,
+      "bins": [
+        {
+          "theta_offset_lo_deg": -15.0,
+          "theta_offset_hi_deg": -12.0,
+          "theta_offset_center_deg": -13.5,
+          "n": 19,
+          "success_rate": 0.3157894736842105,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 0.7230052631578949
+        },
+        {
+          "theta_offset_lo_deg": -12.0,
+          "theta_offset_hi_deg": -9.0,
+          "theta_offset_center_deg": -10.5,
+          "n": 17,
+          "success_rate": 0.11764705882352941,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 0.9744705882352941
+        },
+        {
+          "theta_offset_lo_deg": -9.0,
+          "theta_offset_hi_deg": -6.0,
+          "theta_offset_center_deg": -7.5,
+          "n": 9,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.147488888888889
+        },
+        {
+          "theta_offset_lo_deg": -6.0,
+          "theta_offset_hi_deg": -3.0,
+          "theta_offset_center_deg": -4.5,
+          "n": 16,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.5893312499999999
+        },
+        {
+          "theta_offset_lo_deg": -3.0,
+          "theta_offset_hi_deg": 0.0,
+          "theta_offset_center_deg": -1.5,
+          "n": 8,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.6441249999999998
+        },
+        {
+          "theta_offset_lo_deg": 0.0,
+          "theta_offset_hi_deg": 3.0,
+          "theta_offset_center_deg": 1.5,
+          "n": 13,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.6948615384615384
+        },
+        {
+          "theta_offset_lo_deg": 3.0,
+          "theta_offset_hi_deg": 6.0,
+          "theta_offset_center_deg": 4.5,
+          "n": 16,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.973625
+        },
+        {
+          "theta_offset_lo_deg": 6.0,
+          "theta_offset_hi_deg": 9.0,
+          "theta_offset_center_deg": 7.5,
+          "n": 21,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.4055619047619046
+        },
+        {
+          "theta_offset_lo_deg": 9.0,
+          "theta_offset_hi_deg": 12.0,
+          "theta_offset_center_deg": 10.5,
+          "n": 11,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.5685545454545453
+        },
+        {
+          "theta_offset_lo_deg": 12.0,
+          "theta_offset_hi_deg": 15.0,
+          "theta_offset_center_deg": 13.5,
+          "n": 20,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.8361349999999996
+        }
+      ]
+    },
+    {
+      "label": "skill_020",
+      "onnx_path": "logs/UnifiedBallKickingEnhanced/20260905_100147-distill-6skills-121617181920-distill/model_0600000.onnx",
+      "skill_id": 5,
+      "nominal_bearing_deg": 0.0,
+      "kick_aim_theta_max_deg": 15.0,
+      "kick_aim_theta_max_deg_auto": 15.0,
+      "theta_max_overridden": false,
+      "kick_aim_nominal_distance_m": 5.0,
+      "ball_pos_randomization_m": [
+        0.1,
+        0.1
+      ],
+      "reachable_band_deg": [
+        -15.0,
+        15.0
+      ],
+      "angular_tolerance_deg": 5.739170477266787,
+      "success_radius_m": 0.5,
+      "num_trials": 150,
+      "fall_rate": 0.0,
+      "hit_rate": 0.9867,
+      "bins": [
+        {
+          "theta_offset_lo_deg": -15.0,
+          "theta_offset_hi_deg": -12.0,
+          "theta_offset_center_deg": -13.5,
+          "n": 19,
+          "success_rate": 0.15789473684210525,
+          "hit_rate": 0.9473684210526315,
+          "mean_min_target_dist_m": 1.530894736842105
+        },
+        {
+          "theta_offset_lo_deg": -12.0,
+          "theta_offset_hi_deg": -9.0,
+          "theta_offset_center_deg": -10.5,
+          "n": 17,
+          "success_rate": 0.058823529411764705,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.2026823529411765
+        },
+        {
+          "theta_offset_lo_deg": -9.0,
+          "theta_offset_hi_deg": -6.0,
+          "theta_offset_center_deg": -7.5,
+          "n": 9,
+          "success_rate": 0.1111111111111111,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.0994555555555556
+        },
+        {
+          "theta_offset_lo_deg": -6.0,
+          "theta_offset_hi_deg": -3.0,
+          "theta_offset_center_deg": -4.5,
+          "n": 16,
+          "success_rate": 0.0625,
+          "hit_rate": 0.9375,
+          "mean_min_target_dist_m": 1.9774625
+        },
+        {
+          "theta_offset_lo_deg": -3.0,
+          "theta_offset_hi_deg": 0.0,
+          "theta_offset_center_deg": -1.5,
+          "n": 8,
+          "success_rate": 0.25,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.661625
+        },
+        {
+          "theta_offset_lo_deg": 0.0,
+          "theta_offset_hi_deg": 3.0,
+          "theta_offset_center_deg": 1.5,
+          "n": 13,
+          "success_rate": 0.07692307692307693,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.6692846153846155
+        },
+        {
+          "theta_offset_lo_deg": 3.0,
+          "theta_offset_hi_deg": 6.0,
+          "theta_offset_center_deg": 4.5,
+          "n": 16,
+          "success_rate": 0.4375,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 0.9730687500000001
+        },
+        {
+          "theta_offset_lo_deg": 6.0,
+          "theta_offset_hi_deg": 9.0,
+          "theta_offset_center_deg": 7.5,
+          "n": 21,
+          "success_rate": 0.19047619047619047,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.0433571428571433
+        },
+        {
+          "theta_offset_lo_deg": 9.0,
+          "theta_offset_hi_deg": 12.0,
+          "theta_offset_center_deg": 10.5,
+          "n": 11,
+          "success_rate": 0.0,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 2.4314909090909094
+        },
+        {
+          "theta_offset_lo_deg": 12.0,
+          "theta_offset_hi_deg": 15.0,
+          "theta_offset_center_deg": 13.5,
+          "n": 20,
+          "success_rate": 0.25,
+          "hit_rate": 1.0,
+          "mean_min_target_dist_m": 1.8242150000000001
+        }
+      ]
+    }
+  ]
+}

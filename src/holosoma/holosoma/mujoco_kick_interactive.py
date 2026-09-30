@@ -208,7 +208,7 @@ def main() -> int:
     # this SAME window every tick (environment/mujoco_env.py) whenever the viewer is alive, with
     # native drag-to-move already wired (see this module's own docstring).
     inner = pl.policy.policy
-    inner._update_velocity_command = lambda cd: None
+    inner._update_velocity_command = lambda cd, ball_pos_b=None: None
 
     # 2026-08-20, root-caused after a recorded trajectory showed task_mode flipping to "kick"
     # while this script's own `phase` column stayed "idle" for all 267 rows: the g1_unified_
@@ -360,7 +360,7 @@ def main() -> int:
                 flush_trajectory()
                 mujoco.mj_resetDataKeyframe(env.model, env.data, 0)
                 inner.reset()
-                inner._update_velocity_command = lambda cd: None
+                inner._update_velocity_command = lambda cd, ball_pos_b=None: None
                 place_ball_at_nominal()
                 mujoco.mj_forward(env.model, env.data)
                 env.update()

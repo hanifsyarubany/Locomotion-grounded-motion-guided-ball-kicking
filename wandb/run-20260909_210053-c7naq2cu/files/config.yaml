@@ -1,0 +1,106 @@
+_wandb:
+    value:
+        cli_version: 0.28.0
+        e:
+            ldz858cnv5fi40xizd4zvnj5910vr7v6:
+                args:
+                    - --config
+                    - configs/sim2sim_eval/sweep-ablation-a-posture.yaml
+                codePath: src/holosoma/holosoma/sim2sim_eval.py
+                codePathLocal: src/holosoma/holosoma/sim2sim_eval.py
+                cpu_count: 64
+                cpu_count_logical: 128
+                cudaVersion: "12.8"
+                disk:
+                    /:
+                        total: "7937302376448"
+                        used: "3414286860288"
+                email: haniflitium@gmail.com
+                executable: /workspaces/isaaclab_arena/submodules/workspaces/conda_env/hssim/bin/python
+                git:
+                    commit: a0ab0a5ab02559c1d5527d68189f8bbb4e1821d1
+                    remote: https://github.com/hanifsyarubany/Locomotion-grounded-motion-guided-ball-kicking.git
+                gpu: NVIDIA GeForce RTX 5090
+                gpu_count: 4
+                gpu_nvidia:
+                    - architecture: Blackwell
+                      cudaCores: 21760
+                      memoryTotal: "34190917632"
+                      name: NVIDIA GeForce RTX 5090
+                      uuid: GPU-c38ca60a-e264-249d-1f74-b7d5cc2f33c2
+                    - architecture: Blackwell
+                      cudaCores: 21760
+                      memoryTotal: "34190917632"
+                      name: NVIDIA GeForce RTX 5090
+                      uuid: GPU-80a3d79a-8afb-3082-e9b6-580e1978d88f
+                    - architecture: Blackwell
+                      cudaCores: 21760
+                      memoryTotal: "34190917632"
+                      name: NVIDIA GeForce RTX 5090
+                      uuid: GPU-602a019a-31ff-47fe-3a96-8bcdfd788f70
+                    - architecture: Blackwell
+                      cudaCores: 21760
+                      memoryTotal: "34190917632"
+                      name: NVIDIA GeForce RTX 5090
+                      uuid: GPU-0c740030-e1f4-22db-da4f-4f0023619528
+                host: RL1
+                memory:
+                    total: "269496197120"
+                os: Linux-5.15.0-140-generic-x86_64-with-glibc2.39
+                program: /workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/sim2sim_eval.py
+                python: CPython 3.11.15
+                root: /workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced
+                startedAt: "2026-09-09T21:00:53.029134Z"
+                writerId: ldz858cnv5fi40xizd4zvnj5910vr7v6
+        m: []
+        python_version: 3.11.15
+        t:
+            "3":
+                - 2
+                - 13
+                - 15
+                - 16
+                - 61
+            "4": 3.11.15
+            "5": 0.28.0
+            "10":
+                - 21
+            "12": 0.28.0
+            "13": linux-x86_64
+evaluations:
+    value:
+        - ball_pos_randomization:
+            - 0.1
+            - 0.1
+          num_trials: 16
+          timeout_s: 900
+          track_posture_metrics: true
+          type: kick_survival
+iterations:
+    value: 10
+onnx_targets:
+    value:
+        - logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0250000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0257000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0264000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0271000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0279000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0286000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0293000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0300000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0250000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0257000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0264000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0271000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0279000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0286000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0293000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0300000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0250000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0257000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0264000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0271000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0279000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0286000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0293000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0300000.onnx

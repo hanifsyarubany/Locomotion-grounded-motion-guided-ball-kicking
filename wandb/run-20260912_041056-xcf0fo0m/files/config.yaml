@@ -1,0 +1,101 @@
+_wandb:
+    value:
+        cli_version: 0.28.0
+        e:
+            re4ygdpzoypx72l0xdoeo092vpa28mp0:
+                args:
+                    - --config
+                    - configs/sim2sim_eval/sweep-unified-7-reanchor.yaml
+                codePath: src/holosoma/holosoma/sim2sim_eval.py
+                codePathLocal: src/holosoma/holosoma/sim2sim_eval.py
+                cpu_count: 64
+                cpu_count_logical: 128
+                cudaVersion: "12.8"
+                disk:
+                    /:
+                        total: "7937302376448"
+                        used: "3685779492864"
+                email: haniflitium@gmail.com
+                executable: /workspaces/isaaclab_arena/submodules/workspaces/conda_env/hssim/bin/python
+                git:
+                    commit: a0ab0a5ab02559c1d5527d68189f8bbb4e1821d1
+                    remote: https://github.com/hanifsyarubany/Locomotion-grounded-motion-guided-ball-kicking.git
+                gpu: NVIDIA GeForce RTX 5090
+                gpu_count: 4
+                gpu_nvidia:
+                    - architecture: Blackwell
+                      cudaCores: 21760
+                      memoryTotal: "34190917632"
+                      name: NVIDIA GeForce RTX 5090
+                      uuid: GPU-c38ca60a-e264-249d-1f74-b7d5cc2f33c2
+                    - architecture: Blackwell
+                      cudaCores: 21760
+                      memoryTotal: "34190917632"
+                      name: NVIDIA GeForce RTX 5090
+                      uuid: GPU-80a3d79a-8afb-3082-e9b6-580e1978d88f
+                    - architecture: Blackwell
+                      cudaCores: 21760
+                      memoryTotal: "34190917632"
+                      name: NVIDIA GeForce RTX 5090
+                      uuid: GPU-602a019a-31ff-47fe-3a96-8bcdfd788f70
+                    - architecture: Blackwell
+                      cudaCores: 21760
+                      memoryTotal: "34190917632"
+                      name: NVIDIA GeForce RTX 5090
+                      uuid: GPU-0c740030-e1f4-22db-da4f-4f0023619528
+                host: RL1
+                memory:
+                    total: "269496197120"
+                os: Linux-5.15.0-140-generic-x86_64-with-glibc2.39
+                program: /workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/sim2sim_eval.py
+                python: CPython 3.11.15
+                root: /workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced
+                startedAt: "2026-09-12T04:10:56.667037Z"
+                writerId: re4ygdpzoypx72l0xdoeo092vpa28mp0
+        m: []
+        python_version: 3.11.15
+        t:
+            "3":
+                - 2
+                - 13
+                - 15
+                - 16
+                - 41
+                - 61
+            "4": 3.11.15
+            "5": 0.28.0
+            "10":
+                - 21
+            "12": 0.28.0
+            "13": linux-x86_64
+evaluations:
+    value:
+        - ball_pos_randomization:
+            - 0.1
+            - 0.1
+          num_trials: 10
+          reanchor_ball_at_trigger: true
+          success_sigma_m:
+            - 0.5
+            - 1
+          type: kick_survival
+iterations:
+    value: 25
+onnx_targets:
+    value:
+        - logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0387000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0389000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0390000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0392000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0398000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0406000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0414000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0422000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0430000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0434000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0436000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0438000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0440000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0441000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0442000.onnx
+        - logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0444000.onnx

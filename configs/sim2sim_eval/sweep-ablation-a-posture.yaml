@@ -1,0 +1,156 @@
+# Table XI(a) RESCOPED -- posture-quality sweep across all three stabilisation arms.
+#
+# WHY THIS FILE EXISTS. The original Table XI(a) scored these three arms on strike-window survival
+# (sweep-ablation-a1b1/a2/a3.yaml's kick_to_loco_flip) and the result did not support the design:
+# the arm with the posture reward REMOVED scored higher (100.0% vs 81.8%), and the arms separated
+# by less than one arm's own checkpoint-to-checkpoint spread. Two diagnosed reasons, both
+# measurement-side rather than training-side:
+#
+#   1. PHASE MISMATCH (the load-bearing one). The ablated reward family is gated by
+#      _kick_recovery_gate (managers/reward/terms/locomotion.py), which is ZERO during
+#      locomotion-approach and strike, and only fades in over 50 ticks once the clip is past its
+#      swinging content (in_kicking_phase False, at/after MotionCommand.stand_start_idx). A
+#      strike-window flip measurement therefore scores the arms in the exact phase where the
+#      ablated reward is switched off by its own definition -- both arms have identical shaping
+#      there, so of course they do not separate.
+#   2. METRIC MISMATCH. kick_recovery_posture_reward_scale 1.0 -> 0.0 disables six terms (stance
+#      asymmetry, yaw drift, stand height, orientation, feet width, knee width -- see
+#      task_config_stageB2-abl-a2-noposture.yaml's own header). Every one is a CONTINUOUS geometric
+#      property of the recovered stance. None is "did it stay upright". Survival cannot resolve
+#      what these terms optimise, and the Recovery(steps) column could not either: it is degenerate
+#      by construction (a trial either holds >=0.70m from the first post-flip tick or never
+#      recovers, so recovered_rate == alive_rate and every arm reads 0 steps).
+#
+# WHAT CHANGED. Nothing about the arms, and no retraining: the same three trained runs and the same
+# eight checkpoints. Only the outcome metric moves, to the six quantities the ablated reward
+# actually optimises, measured in the phase where its gate is actually active. kick_survival (clip
+# plays to completion) is the right scan for this; the flip scan aborts mid-strike and never
+# reaches the recovery tail at all.
+#
+# METRIC PRE-SPECIFICATION. The six terms are NOT chosen from these results. They are the exact
+# membership of the penalty_kick_recovery_* family that the a2 config switches off, and their
+# nominal/deadzone parameters are read from config_values/unified/g1/reward.py's own
+# _kick_recovery_standing_terms registration. Both are fixed by the training config before any
+# number here is read. Listing them here, in the config, is deliberate: changing an outcome metric
+# after seeing an unfavourable result is how p-hacking starts, and the defence has to be a record
+# that the replacement was derived from the reward definition rather than picked for its answer.
+# Reported as SIX RAW ERRORS PER WINDOW, never weighted into a single scalar -- the reward weights
+# are a training-time tradeoff, and one collapsed number would reintroduce exactly the "one number
+# that hides the mechanism" failure this rescope exists to fix.
+#
+# WINDOWS (mirroring the gate, not invented): EARLY = the 50-tick linear ramp-in starting at this
+# skill's own stand_start tick, LATE = settled, after the ramp. stand_start is resolved per target
+# from the checkpoint's OWN ONNX metadata by sim2sim_eval.py's get_strike_window_ticks (skill_011
+# reads 265 of a 382-tick clip), not hand-entered -- a mis-windowed arm would invent a difference.
+# Read early-vs-late as the signature: a smoke test on the 300k checkpoints showed "ours"
+# CONVERGING over the tail (stance asymmetry 0.058 -> 0.010) while a2 DIVERGED (0.115 -> 0.235),
+# with both arms at zero falls, which is the discrimination survival alone could not produce.
+#
+# BUDGET. iterations=10 x num_trials=16 = 160 trials/checkpoint, deliberately below the 25x32=800
+# the survival-rate sweeps use: these are continuous per-tick quantities averaged over ~50-117
+# ticks per trial, so they need far fewer trials than a binomial rate to resolve, and the effect
+# sizes seen in the smoke test are one to two orders of magnitude, not a few points. Raise if the
+# per-checkpoint spread turns out to swamp the between-arm difference.
+#
+# All three arms resume from the same model_0250000.pt and share the 250k-300k budget, so the
+# 8-checkpoint spacing is identical to sweep-ablation-a1b1/a2/a3.yaml's -- same checkpoint-lottery
+# protection, same protocol, one run so all three are measured under identical conditions.
+# Report the MEDIAN across each arm's 8 checkpoints, per this project's own house rule.
+wandb:
+  project: Policy_Evaluation
+  group: sim2sim-eval-sweep
+  run_name: sweep-ablation-a-posture
+  tags: [checkpoint-sweep, ablation, posture]
+
+iterations: 10
+max_concurrent_scans: 10
+
+onnx_targets:
+  # Table XI(a) row 1: posture + contact safety (unmodified baseline).
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0250000.onnx
+    name: post_ours_250000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0257000.onnx
+    name: post_ours_257000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0264000.onnx
+    name: post_ours_264000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0271000.onnx
+    name: post_ours_271000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0279000.onnx
+    name: post_ours_279000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0286000.onnx
+    name: post_ours_286000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0293000.onnx
+    name: post_ours_293000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0300000.onnx
+    name: post_ours_300000
+    kick_aim_enabled: true
+
+  # Table XI(a) row 2: contact safety only (kick_recovery_posture_reward_scale -> 0.0).
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0250000.onnx
+    name: post_a2_250000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0257000.onnx
+    name: post_a2_257000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0264000.onnx
+    name: post_a2_264000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0271000.onnx
+    name: post_a2_271000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0279000.onnx
+    name: post_a2_279000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0286000.onnx
+    name: post_a2_286000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0293000.onnx
+    name: post_a2_293000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0300000.onnx
+    name: post_a2_300000
+    kick_aim_enabled: true
+
+  # Table XI(a) row 3: no stabilisation.
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0250000.onnx
+    name: post_a3_250000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0257000.onnx
+    name: post_a3_257000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0264000.onnx
+    name: post_a3_264000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0271000.onnx
+    name: post_a3_271000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0279000.onnx
+    name: post_a3_279000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0286000.onnx
+    name: post_a3_286000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0293000.onnx
+    name: post_a3_293000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0300000.onnx
+    name: post_a3_300000
+    kick_aim_enabled: true
+
+evaluations:
+  # track_posture_metrics is the whole point of this file -- it adds the 12
+  # posture_{term}_{early,late} keys. fall_rate/hit_rate/handoff_* come back too at no extra cost
+  # (same rollout), which is useful as a cross-check that the arms really are matched on survival
+  # while differing on stance.
+  - type: kick_survival
+    num_trials: 16
+    track_posture_metrics: true
+    ball_pos_randomization: [0.1, 0.1]
+    timeout_s: 900.0

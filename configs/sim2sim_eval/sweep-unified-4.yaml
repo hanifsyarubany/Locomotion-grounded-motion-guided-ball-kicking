@@ -1,0 +1,43 @@
+# Checkpoint sweep: 8 checkpoints at 2000-step spacing, centred on the checkpoint
+# previously reported (474000), clamped to this run's available range.
+# Report the MEDIAN across these 8, not any single one -- see benchmark_plan.md sec 5.
+wandb:
+  project: Policy_Evaluation
+  group: sim2sim-eval-sweep
+  run_name: sweep-unified-4
+  tags: [checkpoint-sweep]
+
+iterations: 30
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260908_145201-distill-4skills-12161718-distill/model_0248000.onnx
+    name: u4_248000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_145201-distill-4skills-12161718-distill/model_0250000.onnx
+    name: u4_250000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_145201-distill-4skills-12161718-distill/model_0252000.onnx
+    name: u4_252000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_145201-distill-4skills-12161718-distill/model_0254000.onnx
+    name: u4_254000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_145201-distill-4skills-12161718-distill/model_0256000.onnx
+    name: u4_256000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_145201-distill-4skills-12161718-distill/model_0258000.onnx
+    name: u4_258000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_145201-distill-4skills-12161718-distill/model_0260000.onnx
+    name: u4_260000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_145201-distill-4skills-12161718-distill/model_0262000.onnx
+    name: u4_262000
+    kick_aim_enabled: true
+
+evaluations:
+  - type: kick_survival
+    num_trials: 10
+    success_sigma_m: [0.5, 1.0]
+    ball_pos_randomization: [0.1, 0.1]

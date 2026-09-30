@@ -1,0 +1,77 @@
+# Checkpoint sweep, unified N=7 distillation.
+#
+# 16 checkpoints spanning 387k-444k. Composition:
+#   * 8 operator-selected checkpoints (marked "operator pick") -- all retained.
+#   * 440000, the checkpoint every number currently in the paper came from,
+#     added so the reported figure can be located within the distribution.
+#   * neighbours around each selected cluster, and 8k-spaced bridge points
+#     across the 390k-430k gap, so the sample is not bimodal.
+#
+# Report the MEDIAN across all 16, not any single checkpoint (benchmark_plan.md sec 5).
+# NOTE ON BIAS: a median only removes selection bias if the checkpoints were not
+# chosen by looking at performance. If the operator picks were performance-informed,
+# report the bridge/neighbour subset separately as the unbiased estimate.
+wandb:
+  project: Policy_Evaluation
+  group: sim2sim-eval-sweep
+  run_name: sweep-unified-7
+  tags: [checkpoint-sweep]
+
+iterations: 25
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0387000.onnx
+    name: u7_387000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0389000.onnx
+    name: u7_389000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0390000.onnx
+    name: u7_390000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0392000.onnx
+    name: u7_392000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0398000.onnx
+    name: u7_398000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0406000.onnx
+    name: u7_406000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0414000.onnx
+    name: u7_414000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0422000.onnx
+    name: u7_422000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0430000.onnx
+    name: u7_430000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0434000.onnx
+    name: u7_434000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0436000.onnx
+    name: u7_436000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0438000.onnx
+    name: u7_438000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0440000.onnx
+    name: u7_440000   # <- previously reported in paper
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0441000.onnx
+    name: u7_441000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0442000.onnx
+    name: u7_442000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0444000.onnx
+    name: u7_444000   # <- operator pick
+    kick_aim_enabled: true
+
+evaluations:
+  - type: kick_survival
+    num_trials: 10
+    success_sigma_m: [0.5, 1.0]
+    ball_pos_randomization: [0.1, 0.1]

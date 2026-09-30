@@ -63,6 +63,9 @@ import traceback
 
 FFMPEG_FALLBACK = "/workspaces/isaaclab_arena/submodules/workspaces/conda_env/hssim_holosoma/bin/ffmpeg"
 ROBOJUDO_REPO = "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo"
+
+# Abort if the first this-many rendered frames are ALL solid black (see capture_frame's guard).
+_RENDER_BLACK_CHECK_FRAMES = 10
 SCENE_WITH_BALL = ROBOJUDO_REPO + "/assets/robots/g1/holosoma_model/scene_g1_29dof_with_ball.xml"
 
 # FALLBACK ball/target placement, relative to the robot's known, fixed keyframe spawn (world
@@ -157,6 +160,31 @@ def _parse_args() -> argparse.Namespace:
         "together without an extra flag in the common case. Ignored (nothing written) when "
         "--no-ball is set -- there is no ball to log.",
     )
+    parser.add_argument(
+        "--seed", type=int, default=0,
+        help="2026-09-06, added for calibrate_nominal_bearing.py's own multi-trial workflow: RNG "
+        "seed for --ball-pos-randomization-x. This rollout is otherwise fully deterministic "
+        "(single fixed initial state, deployed ONNX mean action, deterministic MuJoCo physics), "
+        "so repeated invocations at randomization 0.0 reproduce the identical trajectory bit-for-"
+        "bit regardless of --seed -- only meaningful together with a nonzero randomization below.",
+    )
+    parser.add_argument(
+        "--ball-pos-randomization-x", type=float, default=0.0,
+        help="2026-09-06: uniform +/- half-range (meters) added to `ball_x_shift` (see that "
+        "variable's own comment in run() -- already applied consistently to both the ball's "
+        "spawn and _install_ball_observation_patch's target computation, so reusing it here needs "
+        "no new plumbing). Purpose: get GENUINELY DIFFERENT trajectories across repeated calls at "
+        "the SAME --kick-aim-theta-deg, for calibrate_nominal_bearing.py's median+spread workflow "
+        "-- without this, N calls at the same theta produce N bit-identical trajectories (no "
+        "seed/stochasticity exists anywhere else in this deterministic single-rollout script). "
+        "0.0 (default) preserves every existing caller's exact behavior -- this flag is additive, "
+        "off by default. In --kick-aim-enabled mode the observed AIM COMMAND is unaffected by this "
+        "(kick_aim_theta_deg's own world-frame-independent encoding ignores ball_x_shift entirely "
+        "-- see _install_ball_observation_patch's own kick_aim_theta_deg docstring section); only "
+        "the ball's own physical spawn point moves, which is exactly what's wanted here: real "
+        "physical/dynamical trial-to-trial variation while the commanded aim direction stays "
+        "fixed, so the resulting departure bearings are legitimately poolable into one estimate.",
+    )
     return parser.parse_args()
 
 
@@ -247,7 +275,13 @@ def _install_ball_observation_patch(
     elif kick_aim_theta_deg_getter is None:
         aim_command = np.array([kick_aim_theta_deg / kick_aim_theta_ref_deg, 0.0], dtype=np.float32)
 
-    orig_get_observation = inner.get_observation
+    # Always re-wrap the PRISTINE get_observation, never whatever is currently installed: the
+    # *_scan.py callers re-install this patch every trial, and nesting one closure per trial
+    # blows the recursion limit around trial ~1000 (RecursionError inside the trial's first
+    # get_observation call -- hit 2026-09-10 by 74_eval_ball_placement_sweep.py at 1500 trials).
+    if not hasattr(inner, "_ball_obs_patch_pristine"):
+        inner._ball_obs_patch_pristine = inner.get_observation
+    orig_get_observation = inner._ball_obs_patch_pristine
 
     def patched_get_observation(env_data, ctrl_data):
         obs, extras = orig_get_observation(env_data, ctrl_data)
@@ -300,7 +334,7 @@ def run(args: argparse.Namespace) -> int:
     env = pl.env
     env.viewer.is_alive = False
     inner = pl.policy.policy
-    inner._update_velocity_command = lambda cd: None
+    inner._update_velocity_command = lambda cd, ball_pos_b=None: None
 
     # 2026-08-20, same latent bug found via mujoco_kick_interactive.py (see that script's own
     # comment at this same point for the full trace): CONTROLLER="both" (the default in
@@ -331,6 +365,13 @@ def run(args: argparse.Namespace) -> int:
         # this, a fixed-world ball sits closer and closer as the robot walks toward it and gets
         # physically run into mid-walk instead of being kicked (reported 2026-08-13).
         ball_x_shift = args.forward_speed * args.walk_s if args.walk_s > 0 else 0.0
+        # 2026-09-06: reuses ball_x_shift itself (see --ball-pos-randomization-x's own help) rather
+        # than adding a parallel jitter path -- already applied consistently everywhere ball_x_shift
+        # is, below and inside _install_ball_observation_patch.
+        if args.ball_pos_randomization_x > 0.0:
+            ball_x_shift += np.random.default_rng(args.seed).uniform(
+                -args.ball_pos_randomization_x, args.ball_pos_randomization_x
+            )
         if not args.no_ball:
             ball_jid = mujoco.mj_name2id(env.model, mujoco.mjtObj.mjOBJ_JOINT, "ball_freejoint")
             assert ball_jid != -1, "ball_freejoint not found in compiled model -- is SCENE_WITH_BALL correct?"
@@ -433,10 +474,30 @@ def run(args: argparse.Namespace) -> int:
                 stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=stderr_f,
             )
 
+            # Black-frame guard: a memory-pressured GPU can let mujoco.Renderer build its EGL
+            # context but then produce all-zero (solid black) frames with no exception -- so the
+            # worker would otherwise exit 0 and ship a silently-black video. Check the first few
+            # rendered frames; a real scene (checkerboard floor + sky) is nowhere near this dark
+            # anywhere, so max pixel 0 across every early frame means nothing rendered. Abort loud.
+            _render_check = {"n": 0, "max": 0}
+
             def capture_frame() -> None:
                 camera.lookat[:] = [env.data.qpos[0], env.data.qpos[1], 0.6]
                 renderer.update_scene(env.data, camera=camera)
-                proc.stdin.write(renderer.render().tobytes())
+                frame = renderer.render()
+                if _render_check["n"] < _RENDER_BLACK_CHECK_FRAMES:
+                    _render_check["n"] += 1
+                    _render_check["max"] = max(_render_check["max"], int(frame.max()))
+                    if _render_check["n"] == _RENDER_BLACK_CHECK_FRAMES and _render_check["max"] == 0:
+                        raise RuntimeError(
+                            f"RENDER_BLACK_FRAMES: mujoco.Renderer produced {_RENDER_BLACK_CHECK_FRAMES} "
+                            "consecutive all-black frames (max pixel 0). The EGL context/framebuffer "
+                            "almost certainly failed to allocate -- typically GPU memory pressure from "
+                            f"concurrent jobs. MUJOCO_GL={os.environ.get('MUJOCO_GL')!r} "
+                            f"MUJOCO_EGL_DEVICE_ID={os.environ.get('MUJOCO_EGL_DEVICE_ID')!r}. Aborting "
+                            "instead of writing a silently-black video."
+                        )
+                proc.stdin.write(frame.tobytes())
 
             def step_zero_vel() -> None:
                 inner.lin_vel_command = np.zeros(2)

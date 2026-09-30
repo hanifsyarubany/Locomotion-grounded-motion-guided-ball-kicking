@@ -1,0 +1,5133 @@
+{
+  "run_timestamp": "20260909_210052",
+  "generated_at": "2026-09-09T21:15:22",
+  "config_path": "configs/sim2sim_eval/sweep-ablation-a-posture.yaml",
+  "iterations": 10,
+  "max_concurrent_scans": 10,
+  "logged_count": 5940,
+  "wandb": {
+    "project": "Policy_Evaluation",
+    "entity": null,
+    "group": "sim2sim-eval-sweep",
+    "run_name": "20260909_210052-sweep-ablation-a-posture",
+    "mode": "online",
+    "run_id": "c7naq2cu",
+    "url": "https://wandb.ai/humanoid-research/Policy_Evaluation/runs/c7naq2cu"
+  },
+  "targets": [
+    {
+      "name": "post_ours_250000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0250000.onnx",
+      "base_step": 250000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_ours_257000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0257000.onnx",
+      "base_step": 257000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_ours_264000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0264000.onnx",
+      "base_step": 264000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_ours_271000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0271000.onnx",
+      "base_step": 271000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_ours_279000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0279000.onnx",
+      "base_step": 279000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_ours_286000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0286000.onnx",
+      "base_step": 286000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_ours_293000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0293000.onnx",
+      "base_step": 293000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_ours_300000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0300000.onnx",
+      "base_step": 300000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_a2_250000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0250000.onnx",
+      "base_step": 250000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_a2_257000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0257000.onnx",
+      "base_step": 257000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_a2_264000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0264000.onnx",
+      "base_step": 264000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_a2_271000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0271000.onnx",
+      "base_step": 271000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_a2_279000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0279000.onnx",
+      "base_step": 279000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_a2_286000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0286000.onnx",
+      "base_step": 286000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_a2_293000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0293000.onnx",
+      "base_step": 293000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_a2_300000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0300000.onnx",
+      "base_step": 300000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_a3_250000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0250000.onnx",
+      "base_step": 250000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_a3_257000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0257000.onnx",
+      "base_step": 257000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_a3_264000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0264000.onnx",
+      "base_step": 264000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_a3_271000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0271000.onnx",
+      "base_step": 271000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_a3_279000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0279000.onnx",
+      "base_step": 279000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_a3_286000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0286000.onnx",
+      "base_step": 286000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_a3_293000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0293000.onnx",
+      "base_step": 293000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "post_a3_300000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0300000.onnx",
+      "base_step": 300000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    }
+  ],
+  "results": {
+    "post_ours_250000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.2375,
+            "std": 0.11110243021644486,
+            "min": 0.0625,
+            "max": 0.375,
+            "last": 0.0625
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 0.68248,
+            "std": 0.1605940459668415,
+            "min": 0.3555,
+            "max": 0.9914,
+            "last": 0.6139
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 0.16333,
+            "std": 0.1137226630887617,
+            "min": 0.0,
+            "max": 0.3375,
+            "last": 0.0
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 3.8,
+            "std": 1.7776388834631178,
+            "min": 1,
+            "max": 6,
+            "last": 1
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 0.8973699999999999,
+            "std": 0.2239802538171613,
+            "min": 0.3555,
+            "max": 1.1287,
+            "last": 0.6139
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 3.58828,
+            "std": 0.47950502771086767,
+            "min": 2.7051,
+            "max": 4.5126,
+            "last": 4.0806
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 0.47429,
+            "std": 0.28438438933949944,
+            "min": 0.0,
+            "max": 0.8701,
+            "last": 0.0
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 3.8,
+            "std": 1.7776388834631178,
+            "min": 1,
+            "max": 6,
+            "last": 1
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.0272316,
+            "std": 0.001716460264614361,
+            "min": 0.025133,
+            "max": 0.03171,
+            "last": 0.027492
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.013805600000000001,
+            "std": 0.001864883170603456,
+            "min": 0.010222,
+            "max": 0.018243,
+            "last": 0.013611
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.3857088,
+            "std": 0.012526710715906228,
+            "min": 0.358996,
+            "max": 0.4009,
+            "last": 0.370522
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.0021357,
+            "std": 0.00017402531425054235,
+            "min": 0.001854,
+            "max": 0.002432,
+            "last": 0.002432
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0014104,
+            "std": 0.00014636679951409747,
+            "min": 0.001085,
+            "max": 0.001685,
+            "last": 0.001388
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 1e-07,
+            "std": 3e-07,
+            "min": 0.0,
+            "max": 1e-06,
+            "last": 0.0
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0039126000000000005,
+            "std": 0.00023832003692513982,
+            "min": 0.003511,
+            "max": 0.004233,
+            "last": 0.004038
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.0044123,
+            "std": 0.0009229913379875241,
+            "min": 0.00281,
+            "max": 0.006397,
+            "last": 0.004577
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0304643,
+            "std": 0.0030154660684544267,
+            "min": 0.02501,
+            "max": 0.036974,
+            "last": 0.032434
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0287221,
+            "std": 0.0028643504481819255,
+            "min": 0.023353,
+            "max": 0.034501,
+            "last": 0.031094
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0316081,
+            "std": 0.0019525402146946939,
+            "min": 0.02774,
+            "max": 0.035671,
+            "last": 0.032799
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0181753,
+            "std": 0.0017112168798840202,
+            "min": 0.014567,
+            "max": 0.021603,
+            "last": 0.019283
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "post_ours_257000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.75,
+            "std": 0.11858541225631422,
+            "min": 0.5625,
+            "max": 0.875,
+            "last": 0.6875
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.026229999999999996,
+            "std": 0.04059635574777618,
+            "min": 0.0,
+            "max": 0.1,
+            "last": 0.0909
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 2.53225,
+            "std": 0.2838976584968605,
+            "min": 2.1087,
+            "max": 3.0936,
+            "last": 3.0936
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.28365,
+            "std": 0.1565101226758193,
+            "min": 1.089,
+            "max": 1.6131,
+            "last": 1.089
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 12.0,
+            "std": 1.8973665961010275,
+            "min": 9,
+            "max": 14,
+            "last": 11
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 4.709899999999999,
+            "std": 0.3878201052034305,
+            "min": 3.9628,
+            "max": 5.167,
+            "last": 5.0032
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 3.4990099999999997,
+            "std": 0.22486331159173117,
+            "min": 2.9383,
+            "max": 3.7267,
+            "last": 2.9383
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 1.1652900000000002,
+            "std": 0.2077616540654218,
+            "min": 0.9002,
+            "max": 1.6893,
+            "last": 1.2472
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 12.0,
+            "std": 1.8973665961010275,
+            "min": 9,
+            "max": 14,
+            "last": 11
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.0769851,
+            "std": 0.001974386205887794,
+            "min": 0.073877,
+            "max": 0.081125,
+            "last": 0.076948
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.0125826,
+            "std": 0.0009756795785502534,
+            "min": 0.010995,
+            "max": 0.014561,
+            "last": 0.01287
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.1443173,
+            "std": 0.00997416920901185,
+            "min": 0.122806,
+            "max": 0.158386,
+            "last": 0.138323
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.006099,
+            "std": 0.0005134078300922182,
+            "min": 0.005343,
+            "max": 0.006789,
+            "last": 0.00639
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0093773,
+            "std": 0.00021778386074270987,
+            "min": 0.008967,
+            "max": 0.009736,
+            "last": 0.009323
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.0007679,
+            "std": 3.652245884384017e-05,
+            "min": 0.000706,
+            "max": 0.000823,
+            "last": 0.000819
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0281976,
+            "std": 0.0004150913634370148,
+            "min": 0.027522,
+            "max": 0.028836,
+            "last": 0.028388
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.0007714,
+            "std": 0.0002667392734488118,
+            "min": 0.000316,
+            "max": 0.001352,
+            "last": 0.000816
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0001001,
+            "std": 0.00025072153876362516,
+            "min": 0.0,
+            "max": 0.000838,
+            "last": 0.0
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0003929,
+            "std": 0.0005267742305770091,
+            "min": 0.0,
+            "max": 0.001655,
+            "last": 0.000768
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.0125,
+            "std": 0.025,
+            "min": 0.0,
+            "max": 0.0625,
+            "last": 0.0625
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.01875,
+            "std": 0.028641098093474,
+            "min": 0.0,
+            "max": 0.0625,
+            "last": 0.0625
+          }
+        }
+      }
+    },
+    "post_ours_264000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.95,
+            "std": 0.06123724356957945,
+            "min": 0.8125,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.06231,
+            "std": 0.06337015780318052,
+            "min": 0.0,
+            "max": 0.2308,
+            "last": 0.0625
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 2.81656,
+            "std": 0.3939024351282942,
+            "min": 2.0479,
+            "max": 3.4069,
+            "last": 3.0882
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.4880900000000001,
+            "std": 0.15267777474144684,
+            "min": 1.2976,
+            "max": 1.7711,
+            "last": 1.6228
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 15.2,
+            "std": 0.9797958971132712,
+            "min": 13,
+            "max": 16,
+            "last": 16
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 5.77758,
+            "std": 0.2623060952398934,
+            "min": 5.3967,
+            "max": 6.1485,
+            "last": 5.7362
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 3.7217100000000003,
+            "std": 0.2247729541114766,
+            "min": 3.4602,
+            "max": 4.2261,
+            "last": 3.5599
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 1.21116,
+            "std": 0.23192056916108153,
+            "min": 0.8654,
+            "max": 1.7155,
+            "last": 1.3078
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 15.2,
+            "std": 0.9797958971132712,
+            "min": 13,
+            "max": 16,
+            "last": 16
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.0654943,
+            "std": 0.005338262939383933,
+            "min": 0.057436,
+            "max": 0.073429,
+            "last": 0.063349
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.0105268,
+            "std": 0.0005429075059344823,
+            "min": 0.009643,
+            "max": 0.011708,
+            "last": 0.010091
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.1222882,
+            "std": 0.010724544827637211,
+            "min": 0.102074,
+            "max": 0.134921,
+            "last": 0.130667
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.012719,
+            "std": 0.0008377530662432696,
+            "min": 0.011585,
+            "max": 0.014062,
+            "last": 0.012123
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0089949,
+            "std": 0.00011056260669864829,
+            "min": 0.008847,
+            "max": 0.009176,
+            "last": 0.009042
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.0028486,
+            "std": 0.00024167631245117918,
+            "min": 0.002343,
+            "max": 0.00315,
+            "last": 0.002717
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0217592,
+            "std": 0.001880261620094395,
+            "min": 0.019349,
+            "max": 0.024616,
+            "last": 0.021037
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.0012327,
+            "std": 0.000421988400314511,
+            "min": 0.000599,
+            "max": 0.00196,
+            "last": 0.000824
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0002977,
+            "std": 0.0003448333075559842,
+            "min": 6e-06,
+            "max": 0.001119,
+            "last": 0.001119
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 6.35e-05,
+            "std": 0.0001255653216457474,
+            "min": 0.0,
+            "max": 0.000377,
+            "last": 0.000377
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0021874999999999998,
+            "std": 0.0005881539339322657,
+            "min": 0.001288,
+            "max": 0.002942,
+            "last": 0.002032
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0047083,
+            "std": 0.0009823150258445607,
+            "min": 0.003416,
+            "max": 0.006222,
+            "last": 0.004143
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.025,
+            "std": 0.030618621784789725,
+            "min": 0.0,
+            "max": 0.0625,
+            "last": 0.0
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.05625,
+            "std": 0.051916399143237965,
+            "min": 0.0,
+            "max": 0.1875,
+            "last": 0.0625
+          }
+        }
+      }
+    },
+    "post_ours_271000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.04375,
+            "std": 0.040019526483955306,
+            "min": 0.0,
+            "max": 0.125,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.88125,
+            "std": 0.085923294280422,
+            "min": 0.75,
+            "max": 1.0,
+            "last": 0.8125
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.12696000000000002,
+            "std": 0.080833411408897,
+            "min": 0.0,
+            "max": 0.3077,
+            "last": 0.3077
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 2.61834,
+            "std": 0.4251534198380627,
+            "min": 1.9483,
+            "max": 3.4914,
+            "last": 3.4914
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.34556,
+            "std": 0.2738878500408516,
+            "min": 0.7474,
+            "max": 1.6951,
+            "last": 1.6951
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 14.1,
+            "std": 1.374772708486752,
+            "min": 12,
+            "max": 16,
+            "last": 13
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 5.42178,
+            "std": 0.728066444495281,
+            "min": 3.3924,
+            "max": 6.137,
+            "last": 6.137
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 3.0161000000000002,
+            "std": 0.36074487383745313,
+            "min": 2.6252,
+            "max": 3.9043,
+            "last": 2.7559
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 1.4266999999999999,
+            "std": 0.2600292791206406,
+            "min": 0.9345,
+            "max": 1.9428,
+            "last": 1.9428
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 14.1,
+            "std": 1.374772708486752,
+            "min": 12,
+            "max": 16,
+            "last": 13
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.0998754,
+            "std": 0.008422797055610446,
+            "min": 0.082619,
+            "max": 0.113551,
+            "last": 0.113551
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.053700000000000005,
+            "std": 0.01742135026339807,
+            "min": 0.023097,
+            "max": 0.092349,
+            "last": 0.049424
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.1699238,
+            "std": 0.03120326845316048,
+            "min": 0.122253,
+            "max": 0.209455,
+            "last": 0.133121
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.06595480000000001,
+            "std": 0.02734130730890533,
+            "min": 0.03172,
+            "max": 0.106601,
+            "last": 0.03603
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0064628,
+            "std": 0.0005023589951419204,
+            "min": 0.005938,
+            "max": 0.00752,
+            "last": 0.005938
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.0027983,
+            "std": 0.0008633299543048416,
+            "min": 0.001884,
+            "max": 0.004702,
+            "last": 0.002359
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0258808,
+            "std": 0.0029690979370845957,
+            "min": 0.020589,
+            "max": 0.028995,
+            "last": 0.028995
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.0229789,
+            "std": 0.006859334245391458,
+            "min": 0.012048,
+            "max": 0.034399,
+            "last": 0.025548
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0086625,
+            "std": 0.0019155691712908725,
+            "min": 0.006351,
+            "max": 0.012848,
+            "last": 0.012848
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0065712999999999995,
+            "std": 0.0021836253822485213,
+            "min": 0.003338,
+            "max": 0.010484,
+            "last": 0.010484
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.012708,
+            "std": 0.0022424011683907057,
+            "min": 0.00892,
+            "max": 0.01699,
+            "last": 0.01699
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0099221,
+            "std": 0.00225583033271565,
+            "min": 0.007448,
+            "max": 0.014885,
+            "last": 0.014885
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.03125,
+            "std": 0.04192627457812106,
+            "min": 0.0,
+            "max": 0.125,
+            "last": 0.125
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.11875,
+            "std": 0.08125,
+            "min": 0.0,
+            "max": 0.3125,
+            "last": 0.3125
+          }
+        }
+      }
+    },
+    "post_ours_279000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0125,
+            "std": 0.025,
+            "min": 0.0,
+            "max": 0.0625,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.31875,
+            "std": 0.13820840242184987,
+            "min": 0.0625,
+            "max": 0.5,
+            "last": 0.375
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 4.23555,
+            "std": 0.2510450806130246,
+            "min": 3.5199,
+            "max": 4.391,
+            "last": 4.341
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.45119,
+            "std": 0.10095844144993522,
+            "min": 1.3093,
+            "max": 1.597,
+            "last": 1.5845
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 16.0,
+            "std": 0.0,
+            "min": 16,
+            "max": 16,
+            "last": 16
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 6.34133,
+            "std": 0.34605181707368626,
+            "min": 5.436,
+            "max": 6.6393,
+            "last": 6.4866
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 1.9112500000000001,
+            "std": 0.38557347224621147,
+            "min": 1.3015,
+            "max": 2.657,
+            "last": 1.7454
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 1.15025,
+            "std": 0.1306432336556318,
+            "min": 0.9351,
+            "max": 1.3338,
+            "last": 1.2498
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 16.0,
+            "std": 0.0,
+            "min": 16,
+            "max": 16,
+            "last": 16
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.0404963,
+            "std": 0.0019414927787658656,
+            "min": 0.037457,
+            "max": 0.043641,
+            "last": 0.043641
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.0059108,
+            "std": 0.0009065972424401035,
+            "min": 0.004439,
+            "max": 0.007994,
+            "last": 0.007994
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.4832306,
+            "std": 0.028190758986589914,
+            "min": 0.429986,
+            "max": 0.523415,
+            "last": 0.48822
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.0108372,
+            "std": 0.0014288475635980207,
+            "min": 0.009299,
+            "max": 0.014345,
+            "last": 0.010486
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0058934,
+            "std": 0.00022376380404346007,
+            "min": 0.005501,
+            "max": 0.006245,
+            "last": 0.005501
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.0004789,
+            "std": 0.00017195258067269592,
+            "min": 0.00017,
+            "max": 0.000771,
+            "last": 0.000771
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0233516,
+            "std": 0.0010024752565524996,
+            "min": 0.02127,
+            "max": 0.024524,
+            "last": 0.023993
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.0052249,
+            "std": 0.00047177525369607946,
+            "min": 0.004575,
+            "max": 0.006316,
+            "last": 0.006316
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0141735,
+            "std": 0.00125227562860578,
+            "min": 0.012165,
+            "max": 0.016001,
+            "last": 0.013738
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.008504000000000001,
+            "std": 0.001234805895677535,
+            "min": 0.006675,
+            "max": 0.01086,
+            "last": 0.009184
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.00036030000000000003,
+            "std": 0.00031636404662982806,
+            "min": 0.000108,
+            "max": 0.000943,
+            "last": 0.000108
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.18125,
+            "std": 0.11336473217010659,
+            "min": 0.0,
+            "max": 0.375,
+            "last": 0.25
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.31875,
+            "std": 0.13820840242184987,
+            "min": 0.0625,
+            "max": 0.5,
+            "last": 0.375
+          }
+        }
+      }
+    },
+    "post_ours_286000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.98125,
+            "std": 0.040019526483955306,
+            "min": 0.875,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.35470999999999997,
+            "std": 0.13093651476956303,
+            "min": 0.1429,
+            "max": 0.5625,
+            "last": 0.375
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 4.7686,
+            "std": 0.32606052198940005,
+            "min": 4.2517,
+            "max": 5.1925,
+            "last": 4.6858
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.3344099999999999,
+            "std": 0.14759039569023452,
+            "min": 1.0887,
+            "max": 1.5543,
+            "last": 1.5043
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 15.7,
+            "std": 0.6403124237432849,
+            "min": 14,
+            "max": 16,
+            "last": 16
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 6.4483999999999995,
+            "std": 0.15918408211878465,
+            "min": 6.1996,
+            "max": 6.7039,
+            "last": 6.442
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 1.7311799999999997,
+            "std": 0.3496639724077961,
+            "min": 1.2849,
+            "max": 2.3927,
+            "last": 1.7056
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 1.08917,
+            "std": 0.10465249208690637,
+            "min": 0.9667,
+            "max": 1.2897,
+            "last": 1.1286
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 15.7,
+            "std": 0.6403124237432849,
+            "min": 14,
+            "max": 16,
+            "last": 16
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.03332,
+            "std": 0.001847400119086279,
+            "min": 0.030314,
+            "max": 0.036696,
+            "last": 0.033217
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.0152416,
+            "std": 0.002555943903922776,
+            "min": 0.011471,
+            "max": 0.020496,
+            "last": 0.01671
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.5548272,
+            "std": 0.02628114391269907,
+            "min": 0.507391,
+            "max": 0.588223,
+            "last": 0.578145
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.0087396,
+            "std": 0.0005068860226914921,
+            "min": 0.007524,
+            "max": 0.009307,
+            "last": 0.009197
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0049543,
+            "std": 0.00020336127950030215,
+            "min": 0.004604,
+            "max": 0.005378,
+            "last": 0.005004
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 1.2899999999999998e-05,
+            "std": 1.7518276170902205e-05,
+            "min": 1e-06,
+            "max": 5.6e-05,
+            "last": 2e-06
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0121999,
+            "std": 0.0006673115389381485,
+            "min": 0.010704,
+            "max": 0.01297,
+            "last": 0.011698
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.0014611000000000001,
+            "std": 0.0005820507623910478,
+            "min": 0.000492,
+            "max": 0.002602,
+            "last": 0.002118
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0044180999999999995,
+            "std": 0.0004999276847705076,
+            "min": 0.003809,
+            "max": 0.005122,
+            "last": 0.004112
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0027978,
+            "std": 0.0014365556585110096,
+            "min": 0.00067,
+            "max": 0.006001,
+            "last": 0.00211
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0016036000000000002,
+            "std": 0.00035213440615764884,
+            "min": 0.000811,
+            "max": 0.002075,
+            "last": 0.001866
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0005892,
+            "std": 0.00024961482327778535,
+            "min": 0.000119,
+            "max": 0.000965,
+            "last": 0.000449
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.21875,
+            "std": 0.0894863816454772,
+            "min": 0.0625,
+            "max": 0.3125,
+            "last": 0.1875
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.35,
+            "std": 0.13169567191065923,
+            "min": 0.125,
+            "max": 0.5625,
+            "last": 0.375
+          }
+        }
+      }
+    },
+    "post_ours_293000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.53125,
+            "std": 0.14045128158902645,
+            "min": 0.25,
+            "max": 0.6875,
+            "last": 0.625
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.01,
+            "std": 0.030000000000000002,
+            "min": 0.0,
+            "max": 0.1,
+            "last": 0.1
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 3.45176,
+            "std": 0.5647645849378304,
+            "min": 2.4872,
+            "max": 4.4802,
+            "last": 3.3883
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.4189399999999999,
+            "std": 0.2606053460694926,
+            "min": 1.144,
+            "max": 2.0875,
+            "last": 1.3819
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 8.5,
+            "std": 2.247220505424423,
+            "min": 4,
+            "max": 11,
+            "last": 10
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 5.66608,
+            "std": 0.3578262505742137,
+            "min": 5.1191,
+            "max": 6.1527,
+            "last": 6.1527
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 2.90227,
+            "std": 0.22489204988171546,
+            "min": 2.3632,
+            "max": 3.2055,
+            "last": 2.7714
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 0.67869,
+            "std": 0.1870717961104773,
+            "min": 0.3755,
+            "max": 0.9438,
+            "last": 0.9075
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 8.5,
+            "std": 2.247220505424423,
+            "min": 4,
+            "max": 11,
+            "last": 10
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.0422433,
+            "std": 0.0007369731406231832,
+            "min": 0.040967,
+            "max": 0.043283,
+            "last": 0.041831
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.0085518,
+            "std": 0.0004298259647810959,
+            "min": 0.007841,
+            "max": 0.00941,
+            "last": 0.008599
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.37518989999999997,
+            "std": 0.016156032956453143,
+            "min": 0.347692,
+            "max": 0.399639,
+            "last": 0.355611
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.08765819999999999,
+            "std": 0.004051301070026763,
+            "min": 0.082163,
+            "max": 0.095179,
+            "last": 0.086544
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0028085,
+            "std": 0.00010060342936500722,
+            "min": 0.002656,
+            "max": 0.003012,
+            "last": 0.002715
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0246594,
+            "std": 0.0007849532724946119,
+            "min": 0.023316,
+            "max": 0.025787,
+            "last": 0.023926
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.008368,
+            "std": 0.0005845398190029486,
+            "min": 0.007148,
+            "max": 0.009349,
+            "last": 0.008222
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0074069999999999995,
+            "std": 0.002696801142094092,
+            "min": 0.003322,
+            "max": 0.012797,
+            "last": 0.009007
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0090801,
+            "std": 0.003498354111578758,
+            "min": 0.003798,
+            "max": 0.01598,
+            "last": 0.011647
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.000261,
+            "std": 0.00012543683669480828,
+            "min": 0.000117,
+            "max": 0.000557,
+            "last": 0.000323
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0008243,
+            "std": 0.00025235334354828745,
+            "min": 0.000424,
+            "max": 0.001449,
+            "last": 0.000858
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.00625,
+            "std": 0.01875,
+            "min": 0.0,
+            "max": 0.0625,
+            "last": 0.0625
+          }
+        }
+      }
+    },
+    "post_ours_300000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.5375,
+            "std": 0.1224744871391589,
+            "min": 0.375,
+            "max": 0.75,
+            "last": 0.6875
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 2.0162500000000003,
+            "std": 0.08003791913836843,
+            "min": 1.8645,
+            "max": 2.1292,
+            "last": 1.9797
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 0.20125,
+            "std": 0.1108537076511201,
+            "min": 0.0997,
+            "max": 0.4948,
+            "last": 0.1971
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 8.6,
+            "std": 1.9595917942265424,
+            "min": 6,
+            "max": 12,
+            "last": 11
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 2.24103,
+            "std": 0.029935833043361264,
+            "min": 2.1981,
+            "max": 2.2926,
+            "last": 2.228
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 3.05056,
+            "std": 0.27346410075181715,
+            "min": 2.6825,
+            "max": 3.5366,
+            "last": 2.8074
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 0.73106,
+            "std": 0.19199338113591313,
+            "min": 0.4165,
+            "max": 1.0117,
+            "last": 0.9513
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 8.6,
+            "std": 1.9595917942265424,
+            "min": 6,
+            "max": 12,
+            "last": 11
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.06762159999999999,
+            "std": 0.003084853617272626,
+            "min": 0.061193,
+            "max": 0.073074,
+            "last": 0.066397
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.0138799,
+            "std": 0.0013182031292634684,
+            "min": 0.011163,
+            "max": 0.016336,
+            "last": 0.012982
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.3573246,
+            "std": 0.016169586322475907,
+            "min": 0.335965,
+            "max": 0.382731,
+            "last": 0.362863
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.0292416,
+            "std": 0.00350157850690228,
+            "min": 0.023942,
+            "max": 0.034527,
+            "last": 0.031189
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0039570000000000004,
+            "std": 0.0001779792122692985,
+            "min": 0.003718,
+            "max": 0.004203,
+            "last": 0.004186
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.0011587,
+            "std": 8.880320940146252e-05,
+            "min": 0.001011,
+            "max": 0.001272,
+            "last": 0.001272
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.015696099999999998,
+            "std": 0.001371291905467249,
+            "min": 0.013507,
+            "max": 0.017854,
+            "last": 0.017854
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.0022065,
+            "std": 0.0005369369143577296,
+            "min": 0.001638,
+            "max": 0.003377,
+            "last": 0.001657
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0209945,
+            "std": 0.0023177131940773006,
+            "min": 0.018134,
+            "max": 0.024989,
+            "last": 0.019139
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0129068,
+            "std": 0.001872035886408164,
+            "min": 0.010849,
+            "max": 0.016135,
+            "last": 0.011402
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 8e-07,
+            "std": 2.4e-06,
+            "min": 0.0,
+            "max": 8e-06,
+            "last": 0.0
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 5.9e-06,
+            "std": 8.5492689745966e-06,
+            "min": 0.0,
+            "max": 2.5e-05,
+            "last": 0.0
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "post_a2_250000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.24375,
+            "std": 0.11675963557668377,
+            "min": 0.0625,
+            "max": 0.375,
+            "last": 0.0625
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 0.68647,
+            "std": 0.16288874761627947,
+            "min": 0.3574,
+            "max": 0.9974,
+            "last": 0.6179
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 0.15931,
+            "std": 0.11095767165906105,
+            "min": 0.0,
+            "max": 0.3351,
+            "last": 0.0
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 3.9,
+            "std": 1.8681541692269403,
+            "min": 1,
+            "max": 6,
+            "last": 1
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 0.8969400000000001,
+            "std": 0.22256712785135185,
+            "min": 0.3574,
+            "max": 1.1294,
+            "last": 0.6179
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 3.58114,
+            "std": 0.485610274191146,
+            "min": 2.6969,
+            "max": 4.5115,
+            "last": 4.0755
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 0.4627,
+            "std": 0.27440057580114513,
+            "min": 0.0,
+            "max": 0.8587,
+            "last": 0.0
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 3.9,
+            "std": 1.8681541692269403,
+            "min": 1,
+            "max": 6,
+            "last": 1
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.0270883,
+            "std": 0.001679002921379233,
+            "min": 0.025097,
+            "max": 0.031246,
+            "last": 0.02688
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.0138018,
+            "std": 0.0021142719219627354,
+            "min": 0.009919,
+            "max": 0.018833,
+            "last": 0.013993
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.38622290000000004,
+            "std": 0.014419440484637404,
+            "min": 0.352466,
+            "max": 0.406907,
+            "last": 0.386827
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.0021403999999999998,
+            "std": 0.00013777750179183826,
+            "min": 0.00193,
+            "max": 0.002369,
+            "last": 0.002369
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0014331,
+            "std": 0.00017366027179524968,
+            "min": 0.00102,
+            "max": 0.001723,
+            "last": 0.001482
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 1e-07,
+            "std": 3e-07,
+            "min": 0.0,
+            "max": 1e-06,
+            "last": 0.0
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0039333,
+            "std": 0.0002195071980596537,
+            "min": 0.003606,
+            "max": 0.004224,
+            "last": 0.004038
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.0045384,
+            "std": 0.0008990075861748887,
+            "min": 0.002982,
+            "max": 0.006338,
+            "last": 0.004809
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.029960599999999997,
+            "std": 0.003721737475964688,
+            "min": 0.023443,
+            "max": 0.038157,
+            "last": 0.03006
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0282694,
+            "std": 0.003691976197106369,
+            "min": 0.021386,
+            "max": 0.035992,
+            "last": 0.028403
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0313379,
+            "std": 0.0023931374156115656,
+            "min": 0.026702,
+            "max": 0.036248,
+            "last": 0.031472
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0179125,
+            "std": 0.0022010128236791353,
+            "min": 0.0134,
+            "max": 0.022325,
+            "last": 0.017978
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "post_a2_257000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.625,
+            "std": 0.13693063937629152,
+            "min": 0.3125,
+            "max": 0.8125,
+            "last": 0.625
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.030000000000000006,
+            "std": 0.06403124237432849,
+            "min": 0.0,
+            "max": 0.2,
+            "last": 0.0
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 3.16827,
+            "std": 0.33762905103086144,
+            "min": 2.3947,
+            "max": 3.7129,
+            "last": 3.2353
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.33706,
+            "std": 0.22788393624825773,
+            "min": 1.0961,
+            "max": 1.8845,
+            "last": 1.2299
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 10.0,
+            "std": 2.1908902300206643,
+            "min": 5,
+            "max": 13,
+            "last": 10
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 5.3307400000000005,
+            "std": 0.31435834711360866,
+            "min": 4.8462,
+            "max": 5.7592,
+            "last": 5.6378
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 3.65593,
+            "std": 0.32088327176716464,
+            "min": 2.811,
+            "max": 4.0781,
+            "last": 3.5833
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 0.9173500000000001,
+            "std": 0.29344105796565007,
+            "min": 0.6543,
+            "max": 1.6871,
+            "last": 0.7427
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 10.0,
+            "std": 2.1908902300206643,
+            "min": 5,
+            "max": 13,
+            "last": 10
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.1547411,
+            "std": 0.0023407390051007402,
+            "min": 0.151809,
+            "max": 0.159267,
+            "last": 0.152853
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.1224302,
+            "std": 0.014810019370682808,
+            "min": 0.098307,
+            "max": 0.145234,
+            "last": 0.138074
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.2997514,
+            "std": 0.007883033022891632,
+            "min": 0.290187,
+            "max": 0.316668,
+            "last": 0.293293
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.2877346,
+            "std": 0.06126953701995797,
+            "min": 0.237455,
+            "max": 0.462106,
+            "last": 0.297688
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0056571,
+            "std": 0.0001959961479213304,
+            "min": 0.005357,
+            "max": 0.005955,
+            "last": 0.005955
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.0031988000000000003,
+            "std": 0.0003530529138811915,
+            "min": 0.00255,
+            "max": 0.003886,
+            "last": 0.00313
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0648863,
+            "std": 0.0012129301752368108,
+            "min": 0.062948,
+            "max": 0.067081,
+            "last": 0.063613
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.0388364,
+            "std": 0.006968034158928902,
+            "min": 0.025536,
+            "max": 0.046681,
+            "last": 0.04527
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0003685,
+            "std": 0.00047837542788065524,
+            "min": 4e-06,
+            "max": 0.001518,
+            "last": 0.001065
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0061315,
+            "std": 0.002281872443849568,
+            "min": 0.002992,
+            "max": 0.009851,
+            "last": 0.006945
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.007092900000000001,
+            "std": 0.0004882854595418545,
+            "min": 0.006158,
+            "max": 0.007804,
+            "last": 0.007721
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0031294,
+            "std": 0.0003639772520364426,
+            "min": 0.002532,
+            "max": 0.003697,
+            "last": 0.003697
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.0125,
+            "std": 0.025,
+            "min": 0.0,
+            "max": 0.0625,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "post_a2_264000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.01875,
+            "std": 0.028641098093474,
+            "min": 0.0,
+            "max": 0.0625,
+            "last": 0.0625
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.99375,
+            "std": 0.01875,
+            "min": 0.9375,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.33292,
+            "std": 0.12416838405971144,
+            "min": 0.0625,
+            "max": 0.5,
+            "last": 0.4375
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 3.6245800000000004,
+            "std": 0.33319029337602274,
+            "min": 3.1298,
+            "max": 4.0864,
+            "last": 3.5163
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.3213599999999999,
+            "std": 0.17058321840087318,
+            "min": 0.918,
+            "max": 1.6404,
+            "last": 1.3036
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 15.9,
+            "std": 0.3,
+            "min": 15,
+            "max": 16,
+            "last": 16
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 5.37046,
+            "std": 0.24707723569766615,
+            "min": 4.9979,
+            "max": 5.7655,
+            "last": 5.2805
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 1.82363,
+            "std": 0.23113011941328634,
+            "min": 1.4797,
+            "max": 2.4089,
+            "last": 1.7022
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 1.3003500000000001,
+            "std": 0.18787622122024916,
+            "min": 0.9808,
+            "max": 1.5383,
+            "last": 1.4189
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 15.9,
+            "std": 0.3,
+            "min": 15,
+            "max": 16,
+            "last": 16
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.19960519999999998,
+            "std": 0.013013534307020519,
+            "min": 0.175905,
+            "max": 0.222248,
+            "last": 0.201293
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.1721143,
+            "std": 0.044559674929357376,
+            "min": 0.121369,
+            "max": 0.257143,
+            "last": 0.143978
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.638261,
+            "std": 0.02148380668782886,
+            "min": 0.599058,
+            "max": 0.664626,
+            "last": 0.657982
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.1289245,
+            "std": 0.07500691149920787,
+            "min": 0.054507,
+            "max": 0.268317,
+            "last": 0.057437
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0069323,
+            "std": 0.00023223051048473358,
+            "min": 0.006518,
+            "max": 0.007216,
+            "last": 0.006543
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.0032430000000000002,
+            "std": 0.0007115074138756392,
+            "min": 0.002369,
+            "max": 0.004326,
+            "last": 0.002547
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0167041,
+            "std": 0.001625783408083623,
+            "min": 0.013869,
+            "max": 0.01927,
+            "last": 0.016428
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.1379081,
+            "std": 0.02860873107095105,
+            "min": 0.102066,
+            "max": 0.187857,
+            "last": 0.102066
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0048429,
+            "std": 0.0020748487390650915,
+            "min": 0.002018,
+            "max": 0.008576,
+            "last": 0.006628
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0221504,
+            "std": 0.004765160882908362,
+            "min": 0.015357,
+            "max": 0.030424,
+            "last": 0.016404
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0005965,
+            "std": 0.0005989923622217565,
+            "min": 0.0,
+            "max": 0.001797,
+            "last": 0.001797
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0010429,
+            "std": 0.0007889273033683141,
+            "min": 0.0,
+            "max": 0.002487,
+            "last": 0.000402
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.2,
+            "std": 0.08291561975888499,
+            "min": 0.0625,
+            "max": 0.375,
+            "last": 0.1875
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.33125,
+            "std": 0.12515615246562992,
+            "min": 0.0625,
+            "max": 0.5,
+            "last": 0.4375
+          }
+        }
+      }
+    },
+    "post_a2_271000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.16875,
+            "std": 0.0793036096278095,
+            "min": 0.0625,
+            "max": 0.3125,
+            "last": 0.3125
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 2.11348,
+            "std": 0.44969977051361726,
+            "min": 1.2689,
+            "max": 2.9333,
+            "last": 2.3141
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 0.35255000000000003,
+            "std": 0.37660869413756237,
+            "min": 0.0,
+            "max": 1.0462,
+            "last": 0.9724
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 2.7,
+            "std": 1.268857754044952,
+            "min": 1,
+            "max": 5,
+            "last": 5
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 2.5764,
+            "std": 0.7720028134663759,
+            "min": 1.2689,
+            "max": 4.1324,
+            "last": 4.1324
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 3.52918,
+            "std": 0.5477505085346795,
+            "min": 2.6999,
+            "max": 4.6843,
+            "last": 3.1505
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 0.36597,
+            "std": 0.2753778061137099,
+            "min": 0.0,
+            "max": 0.8489,
+            "last": 0.8489
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 2.7,
+            "std": 1.268857754044952,
+            "min": 1,
+            "max": 5,
+            "last": 5
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.1146345,
+            "std": 0.0026211292699903207,
+            "min": 0.110725,
+            "max": 0.119491,
+            "last": 0.116169
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.45104439999999996,
+            "std": 0.00570488175512868,
+            "min": 0.438368,
+            "max": 0.460318,
+            "last": 0.449903
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 1.0989273,
+            "std": 0.049835161121541495,
+            "min": 1.014502,
+            "max": 1.186511,
+            "last": 1.084477
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.1467059,
+            "std": 0.04349819323477701,
+            "min": 0.087044,
+            "max": 0.243063,
+            "last": 0.243063
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0117599,
+            "std": 0.00016811451454291495,
+            "min": 0.011475,
+            "max": 0.01201,
+            "last": 0.01201
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.0006475,
+            "std": 3.6031236448392944e-05,
+            "min": 0.000604,
+            "max": 0.000715,
+            "last": 0.000679
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0377111,
+            "std": 0.0019798833526245927,
+            "min": 0.034541,
+            "max": 0.042052,
+            "last": 0.042052
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.1949299,
+            "std": 0.005510720632548884,
+            "min": 0.184176,
+            "max": 0.204921,
+            "last": 0.190853
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 5.7e-06,
+            "std": 8.989438247187641e-06,
+            "min": 0.0,
+            "max": 2.7e-05,
+            "last": 1.2e-05
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0006277,
+            "std": 0.0004863642770599009,
+            "min": 0.000166,
+            "max": 0.001699,
+            "last": 0.001699
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 7.87e-05,
+            "std": 8.715279685701429e-05,
+            "min": 0.0,
+            "max": 0.000268,
+            "last": 0.000268
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "post_a2_279000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.9625,
+            "std": 0.041457809879442496,
+            "min": 0.875,
+            "max": 1.0,
+            "last": 0.9375
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.25619000000000003,
+            "std": 0.14251104132662845,
+            "min": 0.0,
+            "max": 0.4667,
+            "last": 0.1333
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 3.7081600000000003,
+            "std": 0.3727777117800903,
+            "min": 2.9351,
+            "max": 4.1273,
+            "last": 3.7654
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.28363,
+            "std": 0.17738631316987227,
+            "min": 0.992,
+            "max": 1.5909,
+            "last": 0.992
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 15.4,
+            "std": 0.6633249580710799,
+            "min": 14,
+            "max": 16,
+            "last": 15
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 5.64351,
+            "std": 0.226014541346348,
+            "min": 5.2138,
+            "max": 5.9401,
+            "last": 5.3507
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 2.19635,
+            "std": 0.3784630926523748,
+            "min": 1.688,
+            "max": 2.9931,
+            "last": 2.4377
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 1.29122,
+            "std": 0.15039694677751939,
+            "min": 1.0526,
+            "max": 1.5367,
+            "last": 1.0526
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 15.4,
+            "std": 0.6633249580710799,
+            "min": 14,
+            "max": 16,
+            "last": 15
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.2734554,
+            "std": 0.006253796993827031,
+            "min": 0.265199,
+            "max": 0.285596,
+            "last": 0.26691
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.4386178,
+            "std": 0.03322102078142693,
+            "min": 0.39359,
+            "max": 0.491432,
+            "last": 0.419697
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 1.3918359,
+            "std": 0.033770630022106465,
+            "min": 1.345623,
+            "max": 1.4474,
+            "last": 1.370889
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.0955175,
+            "std": 0.03953798891003436,
+            "min": 0.0528,
+            "max": 0.194168,
+            "last": 0.073643
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0017896,
+            "std": 0.0002174314604651314,
+            "min": 0.001363,
+            "max": 0.002108,
+            "last": 0.002108
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.000142,
+            "std": 0.00013215369839698017,
+            "min": 0.0,
+            "max": 0.000356,
+            "last": 2e-05
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0391871,
+            "std": 0.0016532949797298721,
+            "min": 0.03682,
+            "max": 0.041816,
+            "last": 0.037248
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.18882179999999998,
+            "std": 0.0019416313141273722,
+            "min": 0.185291,
+            "max": 0.191557,
+            "last": 0.185291
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0120365,
+            "std": 0.002465023052630543,
+            "min": 0.007956,
+            "max": 0.01585,
+            "last": 0.01008
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.009114500000000001,
+            "std": 0.0036827273385359387,
+            "min": 0.002897,
+            "max": 0.015791,
+            "last": 0.007288
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0061987,
+            "std": 0.00101914346880113,
+            "min": 0.004614,
+            "max": 0.00765,
+            "last": 0.005308
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0034893,
+            "std": 0.0015763932916629656,
+            "min": 0.001135,
+            "max": 0.006125,
+            "last": 0.002836
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.10625,
+            "std": 0.10843344733060921,
+            "min": 0.0,
+            "max": 0.3125,
+            "last": 0.0
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.24375,
+            "std": 0.13243512562760681,
+            "min": 0.0,
+            "max": 0.4375,
+            "last": 0.125
+          }
+        }
+      }
+    },
+    "post_a2_286000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.2875,
+            "std": 0.1286953767623375,
+            "min": 0.0625,
+            "max": 0.5,
+            "last": 0.3125
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 1.99506,
+            "std": 0.17972469613272404,
+            "min": 1.6473,
+            "max": 2.2843,
+            "last": 2.2636
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 0.52154,
+            "std": 0.2721506648898731,
+            "min": 0.0,
+            "max": 0.81,
+            "last": 0.7618
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 4.6,
+            "std": 2.0591260281974,
+            "min": 1,
+            "max": 8,
+            "last": 5
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 2.75855,
+            "std": 0.5334724271225271,
+            "min": 1.8953,
+            "max": 3.6867,
+            "last": 3.6867
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 3.7319899999999997,
+            "std": 0.28559877958422714,
+            "min": 3.1709,
+            "max": 4.1071,
+            "last": 3.4977
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 0.55787,
+            "std": 0.2235308079437821,
+            "min": 0.0,
+            "max": 0.8252,
+            "last": 0.6299
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 4.6,
+            "std": 2.0591260281974,
+            "min": 1,
+            "max": 8,
+            "last": 5
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.3744559,
+            "std": 0.01073092198694967,
+            "min": 0.358554,
+            "max": 0.392808,
+            "last": 0.37375
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.3200592,
+            "std": 0.012151579352495714,
+            "min": 0.305895,
+            "max": 0.343444,
+            "last": 0.321919
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.795833,
+            "std": 0.025016585618345286,
+            "min": 0.760753,
+            "max": 0.861044,
+            "last": 0.775692
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.0515751,
+            "std": 0.004391696857707735,
+            "min": 0.044479,
+            "max": 0.057933,
+            "last": 0.05367
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0028807,
+            "std": 0.00042848828455396533,
+            "min": 0.00223,
+            "max": 0.003574,
+            "last": 0.002689
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.0011922,
+            "std": 0.0004181841221280406,
+            "min": 0.000567,
+            "max": 0.001854,
+            "last": 0.00178
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0585106,
+            "std": 0.002093350481883049,
+            "min": 0.055912,
+            "max": 0.063148,
+            "last": 0.057355
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.22027049999999998,
+            "std": 0.007632712142482515,
+            "min": 0.211866,
+            "max": 0.235183,
+            "last": 0.227752
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0093374,
+            "std": 0.0020389296800037023,
+            "min": 0.007383,
+            "max": 0.01398,
+            "last": 0.008006
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0050072,
+            "std": 0.002017576060524113,
+            "min": 0.002002,
+            "max": 0.009709,
+            "last": 0.006101
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0009652,
+            "std": 0.0001377568873051362,
+            "min": 0.000787,
+            "max": 0.001192,
+            "last": 0.001011
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0047465,
+            "std": 0.00035711965781793655,
+            "min": 0.004163,
+            "max": 0.005335,
+            "last": 0.005086
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "post_a2_293000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0125,
+            "std": 0.025,
+            "min": 0.0,
+            "max": 0.0625,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.98125,
+            "std": 0.040019526483955306,
+            "min": 0.875,
+            "max": 1.0,
+            "last": 0.9375
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.23601,
+            "std": 0.1019374460147006,
+            "min": 0.0,
+            "max": 0.3333,
+            "last": 0.3333
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 3.61734,
+            "std": 0.2381451036658113,
+            "min": 3.3061,
+            "max": 4.064,
+            "last": 3.3662
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.42407,
+            "std": 0.16836300098299511,
+            "min": 1.216,
+            "max": 1.7194,
+            "last": 1.6489
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 15.7,
+            "std": 0.6403124237432849,
+            "min": 14,
+            "max": 16,
+            "last": 15
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 5.87997,
+            "std": 0.34287433281014185,
+            "min": 5.3944,
+            "max": 6.4125,
+            "last": 6.4125
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 1.87088,
+            "std": 0.2722008809684495,
+            "min": 1.3952,
+            "max": 2.293,
+            "last": 1.9554
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 1.11875,
+            "std": 0.21702906372188957,
+            "min": 0.7383,
+            "max": 1.5891,
+            "last": 1.5891
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 15.7,
+            "std": 0.6403124237432849,
+            "min": 14,
+            "max": 16,
+            "last": 15
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.238,
+            "std": 0.011631723535228991,
+            "min": 0.212358,
+            "max": 0.251593,
+            "last": 0.249076
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.5602153000000001,
+            "std": 0.013162491428677155,
+            "min": 0.529908,
+            "max": 0.583264,
+            "last": 0.562834
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.6759488,
+            "std": 0.06081546981286915,
+            "min": 0.58211,
+            "max": 0.796666,
+            "last": 0.741593
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.027538200000000002,
+            "std": 0.009264829505177092,
+            "min": 0.021653,
+            "max": 0.054681,
+            "last": 0.027157
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0052972,
+            "std": 0.00024874999497487434,
+            "min": 0.004954,
+            "max": 0.00572,
+            "last": 0.005189
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 1.2e-05,
+            "std": 1.363084736911099e-05,
+            "min": 0.0,
+            "max": 4.6e-05,
+            "last": 0.0
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.056525000000000006,
+            "std": 0.002079594287355108,
+            "min": 0.052581,
+            "max": 0.060009,
+            "last": 0.060009
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.10549159999999999,
+            "std": 0.005471669054319716,
+            "min": 0.096424,
+            "max": 0.114542,
+            "last": 0.110479
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0148322,
+            "std": 0.0025239757843529323,
+            "min": 0.008872,
+            "max": 0.019392,
+            "last": 0.019392
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0035361000000000004,
+            "std": 0.002332686839247823,
+            "min": 7.1e-05,
+            "max": 0.006145,
+            "last": 0.000863
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0056064,
+            "std": 0.001280061889128803,
+            "min": 0.003078,
+            "max": 0.008536,
+            "last": 0.008536
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0005836,
+            "std": 0.0002816033380483974,
+            "min": 0.000154,
+            "max": 0.001223,
+            "last": 0.001223
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.10625,
+            "std": 0.05625,
+            "min": 0.0,
+            "max": 0.1875,
+            "last": 0.1875
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.23125,
+            "std": 0.10097184013377195,
+            "min": 0.0,
+            "max": 0.3125,
+            "last": 0.3125
+          }
+        }
+      }
+    },
+    "post_a2_300000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0,
+            "max": 0,
+            "last": 0
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0,
+            "max": 0,
+            "last": 0
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.12524359999999998,
+            "std": 0.005395129492421846,
+            "min": 0.116187,
+            "max": 0.133993,
+            "last": 0.118044
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.2321572,
+            "std": 0.014312352893916507,
+            "min": 0.20842,
+            "max": 0.257541,
+            "last": 0.226113
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.49830030000000003,
+            "std": 0.03338341691334187,
+            "min": 0.440016,
+            "max": 0.549701,
+            "last": 0.457785
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.04998229999999999,
+            "std": 0.003736592620289239,
+            "min": 0.045859,
+            "max": 0.05767,
+            "last": 0.05767
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.008915000000000001,
+            "std": 0.00032930350742134553,
+            "min": 0.008483,
+            "max": 0.00953,
+            "last": 0.009324
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 9.41e-05,
+            "std": 8.814193099768123e-06,
+            "min": 8.3e-05,
+            "max": 0.000109,
+            "last": 0.000106
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.1197745,
+            "std": 0.0020677740326254237,
+            "min": 0.11517,
+            "max": 0.122035,
+            "last": 0.117865
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.2230319,
+            "std": 0.0021475496012898026,
+            "min": 0.219971,
+            "max": 0.226409,
+            "last": 0.219971
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0255227,
+            "std": 0.0036706125660439836,
+            "min": 0.01991,
+            "max": 0.030449,
+            "last": 0.022686
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0066022,
+            "std": 0.0015563452573256358,
+            "min": 0.003017,
+            "max": 0.008817,
+            "last": 0.005268
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0069645,
+            "std": 0.0012874982135909938,
+            "min": 0.004755,
+            "max": 0.008649,
+            "last": 0.005677
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0103076,
+            "std": 0.001487951827177211,
+            "min": 0.007546,
+            "max": 0.012369,
+            "last": 0.00827
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "post_a3_250000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.225,
+            "std": 0.1015504800579495,
+            "min": 0.0625,
+            "max": 0.375,
+            "last": 0.0625
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 0.6843899999999999,
+            "std": 0.17269385310427238,
+            "min": 0.3253,
+            "max": 1.0013,
+            "last": 0.5865
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 0.15926,
+            "std": 0.11356758516407751,
+            "min": 0.0,
+            "max": 0.3422,
+            "last": 0.0
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 3.6,
+            "std": 1.624807680927192,
+            "min": 1,
+            "max": 6,
+            "last": 1
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 0.88773,
+            "std": 0.23326329779886076,
+            "min": 0.3253,
+            "max": 1.1224,
+            "last": 0.5865
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 3.5826300000000004,
+            "std": 0.4997218767474564,
+            "min": 2.696,
+            "max": 4.5534,
+            "last": 4.1222
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 0.46037,
+            "std": 0.27898508580209086,
+            "min": 0.0,
+            "max": 0.8186,
+            "last": 0.0
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 3.6,
+            "std": 1.624807680927192,
+            "min": 1,
+            "max": 6,
+            "last": 1
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.0268026,
+            "std": 0.0013593219780464083,
+            "min": 0.025059,
+            "max": 0.029716,
+            "last": 0.027023
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.013209499999999999,
+            "std": 0.001657896754927761,
+            "min": 0.010355,
+            "max": 0.016485,
+            "last": 0.013195
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.3794331,
+            "std": 0.01328444355214023,
+            "min": 0.354437,
+            "max": 0.396708,
+            "last": 0.365953
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.0021511000000000004,
+            "std": 0.00016258748414315298,
+            "min": 0.00199,
+            "max": 0.002419,
+            "last": 0.002419
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0013814,
+            "std": 0.0001602230944651863,
+            "min": 0.00104,
+            "max": 0.001652,
+            "last": 0.001324
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 1.4e-06,
+            "std": 4.2e-06,
+            "min": 0.0,
+            "max": 1.4e-05,
+            "last": 0.0
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0039822,
+            "std": 0.00023261117771938643,
+            "min": 0.003651,
+            "max": 0.004356,
+            "last": 0.004116
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.0046637,
+            "std": 0.0009952213874309575,
+            "min": 0.002877,
+            "max": 0.006271,
+            "last": 0.004618
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0311392,
+            "std": 0.003323772820154831,
+            "min": 0.026396,
+            "max": 0.038056,
+            "last": 0.03311
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0296194,
+            "std": 0.003235130297221428,
+            "min": 0.024893,
+            "max": 0.036032,
+            "last": 0.031724
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0320268,
+            "std": 0.0020657068427054216,
+            "min": 0.028715,
+            "max": 0.036185,
+            "last": 0.033117
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0186312,
+            "std": 0.0018504248593228534,
+            "min": 0.015508,
+            "max": 0.022294,
+            "last": 0.019679
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "post_a3_257000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.90625,
+            "std": 0.03125,
+            "min": 0.875,
+            "max": 0.9375,
+            "last": 0.875
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.01381,
+            "std": 0.027639987337189573,
+            "min": 0.0,
+            "max": 0.0714,
+            "last": 0.0
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 2.89907,
+            "std": 0.4467208010603491,
+            "min": 2.1672,
+            "max": 3.5297,
+            "last": 3.1003
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.43508,
+            "std": 0.1924027692108406,
+            "min": 1.1419,
+            "max": 1.8397,
+            "last": 1.1419
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 14.5,
+            "std": 0.5,
+            "min": 14,
+            "max": 15,
+            "last": 14
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 5.395770000000001,
+            "std": 0.3842324818387952,
+            "min": 4.6757,
+            "max": 5.8897,
+            "last": 4.6757
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 3.85874,
+            "std": 0.20830359670442558,
+            "min": 3.5644,
+            "max": 4.1732,
+            "last": 3.6575
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 1.03544,
+            "std": 0.18628329071604893,
+            "min": 0.7112,
+            "max": 1.4329,
+            "last": 1.0557
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 14.5,
+            "std": 0.5,
+            "min": 14,
+            "max": 15,
+            "last": 14
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.07491790000000001,
+            "std": 0.0009027784279655781,
+            "min": 0.073395,
+            "max": 0.076158,
+            "last": 0.076158
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.1161821,
+            "std": 0.002340700897167341,
+            "min": 0.110767,
+            "max": 0.119314,
+            "last": 0.115528
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.0853046,
+            "std": 0.004710709228980281,
+            "min": 0.07655,
+            "max": 0.091591,
+            "last": 0.087015
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.031749099999999995,
+            "std": 0.0030516908575411103,
+            "min": 0.02794,
+            "max": 0.037609,
+            "last": 0.037609
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0110068,
+            "std": 0.00010952698297679894,
+            "min": 0.010825,
+            "max": 0.011224,
+            "last": 0.011058
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.0020263,
+            "std": 0.0002040495283013416,
+            "min": 0.001596,
+            "max": 0.002314,
+            "last": 0.002024
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.1538024,
+            "std": 0.002030772079776553,
+            "min": 0.150552,
+            "max": 0.157768,
+            "last": 0.152705
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.0999988,
+            "std": 0.00521907249997545,
+            "min": 0.091741,
+            "max": 0.110098,
+            "last": 0.097605
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0076154,
+            "std": 0.0020119754571067713,
+            "min": 0.005056,
+            "max": 0.010302,
+            "last": 0.010302
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0133043,
+            "std": 0.0034212472009488,
+            "min": 0.009257,
+            "max": 0.018524,
+            "last": 0.018524
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0034691,
+            "std": 0.0007081357850017184,
+            "min": 0.0025,
+            "max": 0.004529,
+            "last": 0.004529
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0120049,
+            "std": 0.00114769677615649,
+            "min": 0.010437,
+            "max": 0.013888,
+            "last": 0.013888
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.0125,
+            "std": 0.025,
+            "min": 0.0,
+            "max": 0.0625,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "post_a3_264000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.975,
+            "std": 0.041457809879442496,
+            "min": 0.875,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.23196,
+            "std": 0.1293965780073028,
+            "min": 0.0,
+            "max": 0.4,
+            "last": 0.375
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 3.3252699999999997,
+            "std": 0.2632826695777752,
+            "min": 2.9264,
+            "max": 3.7337,
+            "last": 3.5029
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.4149699999999998,
+            "std": 0.10881079955592647,
+            "min": 1.2871,
+            "max": 1.6766,
+            "last": 1.6766
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 15.6,
+            "std": 0.6633249580710799,
+            "min": 14,
+            "max": 16,
+            "last": 16
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 5.47096,
+            "std": 0.4076181919394668,
+            "min": 5.0016,
+            "max": 6.1425,
+            "last": 6.1425
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 1.9917799999999999,
+            "std": 0.3502850747605441,
+            "min": 1.5347,
+            "max": 2.6933,
+            "last": 1.7559
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 1.1751099999999999,
+            "std": 0.14535483789678275,
+            "min": 0.9513,
+            "max": 1.4745,
+            "last": 1.2785
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 15.6,
+            "std": 0.6633249580710799,
+            "min": 14,
+            "max": 16,
+            "last": 16
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.19153130000000002,
+            "std": 0.010872948321867444,
+            "min": 0.180673,
+            "max": 0.221371,
+            "last": 0.186386
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.2215931,
+            "std": 0.05531982691666704,
+            "min": 0.170347,
+            "max": 0.313337,
+            "last": 0.181857
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.7079138,
+            "std": 0.10170322055746316,
+            "min": 0.547725,
+            "max": 0.903287,
+            "last": 0.781723
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.22708140000000002,
+            "std": 0.13569173118447564,
+            "min": 0.034548,
+            "max": 0.452895,
+            "last": 0.122417
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.009425300000000001,
+            "std": 0.00048071863912272,
+            "min": 0.008717,
+            "max": 0.010205,
+            "last": 0.009918
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.0053735,
+            "std": 0.00039050921884124573,
+            "min": 0.004792,
+            "max": 0.005859,
+            "last": 0.005061
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0333052,
+            "std": 0.004221312042481579,
+            "min": 0.028555,
+            "max": 0.042662,
+            "last": 0.031606
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.0359626,
+            "std": 0.009476572367686537,
+            "min": 0.018985,
+            "max": 0.048519,
+            "last": 0.030657
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.061318300000000006,
+            "std": 0.00694745629781145,
+            "min": 0.053797,
+            "max": 0.078701,
+            "last": 0.055039
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0500984,
+            "std": 0.007417222865736204,
+            "min": 0.040793,
+            "max": 0.065676,
+            "last": 0.042947
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.023035,
+            "std": 0.003039733672544356,
+            "min": 0.019442,
+            "max": 0.030063,
+            "last": 0.02064
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0201433,
+            "std": 0.003696820527155734,
+            "min": 0.015082,
+            "max": 0.028151,
+            "last": 0.01697
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.08125,
+            "std": 0.06281172263200556,
+            "min": 0.0,
+            "max": 0.1875,
+            "last": 0.1875
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.225,
+            "std": 0.1224744871391589,
+            "min": 0.0,
+            "max": 0.375,
+            "last": 0.375
+          }
+        }
+      }
+    },
+    "post_a3_271000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0125,
+            "std": 0.025,
+            "min": 0.0,
+            "max": 0.0625,
+            "last": 0.0625
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.98125,
+            "std": 0.028641098093474,
+            "min": 0.9375,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.26708,
+            "std": 0.12381868033540012,
+            "min": 0.125,
+            "max": 0.4667,
+            "last": 0.3125
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 2.73611,
+            "std": 0.4504630871669732,
+            "min": 2.1386,
+            "max": 3.482,
+            "last": 2.4891
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.45184,
+            "std": 0.1407081177473425,
+            "min": 1.214,
+            "max": 1.6308,
+            "last": 1.6158
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 15.7,
+            "std": 0.458257569495584,
+            "min": 15,
+            "max": 16,
+            "last": 16
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 5.13461,
+            "std": 0.18627871832284007,
+            "min": 4.772,
+            "max": 5.4135,
+            "last": 5.0907
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 2.16391,
+            "std": 0.4500099342236791,
+            "min": 1.296,
+            "max": 2.8262,
+            "last": 2.2721
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 1.4758200000000001,
+            "std": 0.20657053904175204,
+            "min": 1.1011,
+            "max": 1.8327,
+            "last": 1.5652
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 15.7,
+            "std": 0.458257569495584,
+            "min": 15,
+            "max": 16,
+            "last": 16
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.06603210000000001,
+            "std": 0.010065843625350039,
+            "min": 0.058391,
+            "max": 0.095307,
+            "last": 0.06242
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.0879587,
+            "std": 0.007324827152226869,
+            "min": 0.08031,
+            "max": 0.106906,
+            "last": 0.086806
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.47610600000000003,
+            "std": 0.040274357926601376,
+            "min": 0.424482,
+            "max": 0.541132,
+            "last": 0.519884
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.0172119,
+            "std": 0.0011910104491565136,
+            "min": 0.015222,
+            "max": 0.019323,
+            "last": 0.016084
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0072794,
+            "std": 0.0002067037493612536,
+            "min": 0.007042,
+            "max": 0.007651,
+            "last": 0.007552
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.0040307,
+            "std": 0.00014781816532483414,
+            "min": 0.003769,
+            "max": 0.004301,
+            "last": 0.004065
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0163167,
+            "std": 0.0027838605586487262,
+            "min": 0.012762,
+            "max": 0.02317,
+            "last": 0.016772
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.12889040000000002,
+            "std": 0.007941092647740613,
+            "min": 0.116546,
+            "max": 0.143678,
+            "last": 0.131805
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0194383,
+            "std": 0.0037413684140966395,
+            "min": 0.015663,
+            "max": 0.028926,
+            "last": 0.016589
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0293771,
+            "std": 0.0029209879647133087,
+            "min": 0.02502,
+            "max": 0.036362,
+            "last": 0.027997
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0052554,
+            "std": 0.0015496348085920117,
+            "min": 0.003466,
+            "max": 0.009298,
+            "last": 0.004212
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0037889,
+            "std": 0.0013657686077809814,
+            "min": 0.002303,
+            "max": 0.007398,
+            "last": 0.002959
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.08125,
+            "std": 0.06281172263200556,
+            "min": 0.0,
+            "max": 0.1875,
+            "last": 0.0625
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.2625,
+            "std": 0.12119199643540822,
+            "min": 0.125,
+            "max": 0.4375,
+            "last": 0.3125
+          }
+        }
+      }
+    },
+    "post_a3_279000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.90625,
+            "std": 0.0640434422872475,
+            "min": 0.8125,
+            "max": 1.0,
+            "last": 0.875
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.17435,
+            "std": 0.1158382600870714,
+            "min": 0.0,
+            "max": 0.375,
+            "last": 0.0714
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 3.18521,
+            "std": 0.5513336711103358,
+            "min": 2.2903,
+            "max": 4.0652,
+            "last": 3.5109
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.46816,
+            "std": 0.16719622723016211,
+            "min": 1.1695,
+            "max": 1.8288,
+            "last": 1.3895
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 14.5,
+            "std": 1.02469507659596,
+            "min": 13,
+            "max": 16,
+            "last": 14
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 5.51091,
+            "std": 0.3111950688876674,
+            "min": 4.7658,
+            "max": 5.7877,
+            "last": 5.5753
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 1.96417,
+            "std": 0.23590898689960924,
+            "min": 1.5221,
+            "max": 2.3403,
+            "last": 2.0491
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 1.06304,
+            "std": 0.20280365973029185,
+            "min": 0.6833,
+            "max": 1.3369,
+            "last": 0.6833
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 14.5,
+            "std": 1.02469507659596,
+            "min": 13,
+            "max": 16,
+            "last": 14
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.1921904,
+            "std": 0.0078022294788092465,
+            "min": 0.179747,
+            "max": 0.206793,
+            "last": 0.192517
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.2019439,
+            "std": 0.011893112144850905,
+            "min": 0.185454,
+            "max": 0.221413,
+            "last": 0.199549
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.9243152,
+            "std": 0.031880482003257105,
+            "min": 0.868895,
+            "max": 0.972992,
+            "last": 0.933609
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.0274602,
+            "std": 0.0032769129314035804,
+            "min": 0.022826,
+            "max": 0.033161,
+            "last": 0.02944
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0050656,
+            "std": 0.0003104922543317305,
+            "min": 0.004547,
+            "max": 0.005712,
+            "last": 0.005262
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.0025597000000000003,
+            "std": 0.0004148708353210671,
+            "min": 0.001946,
+            "max": 0.003405,
+            "last": 0.002748
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.037861099999999995,
+            "std": 0.0024761429865821564,
+            "min": 0.033352,
+            "max": 0.042541,
+            "last": 0.036243
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.0581192,
+            "std": 0.004164408836797848,
+            "min": 0.051475,
+            "max": 0.065038,
+            "last": 0.054746
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.0460415,
+            "std": 0.0065026437738815125,
+            "min": 0.03607,
+            "max": 0.057093,
+            "last": 0.042404
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.016894600000000003,
+            "std": 0.004983748874090668,
+            "min": 0.01209,
+            "max": 0.027442,
+            "last": 0.015029
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0196959,
+            "std": 0.0032985108291469956,
+            "min": 0.014892,
+            "max": 0.0253,
+            "last": 0.017832
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.005083,
+            "std": 0.0018827597828719414,
+            "min": 0.003303,
+            "max": 0.008788,
+            "last": 0.004095
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.0625,
+            "std": 0.06846531968814576,
+            "min": 0.0,
+            "max": 0.1875,
+            "last": 0.0
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.16875,
+            "std": 0.11197795541980574,
+            "min": 0.0,
+            "max": 0.375,
+            "last": 0.0625
+          }
+        }
+      }
+    },
+    "post_a3_286000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0125,
+            "std": 0.025,
+            "min": 0.0,
+            "max": 0.0625,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.98125,
+            "std": 0.028641098093474,
+            "min": 0.9375,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.23542000000000002,
+            "std": 0.09229538233302899,
+            "min": 0.125,
+            "max": 0.4375,
+            "last": 0.375
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 2.75954,
+            "std": 0.2767925873284904,
+            "min": 2.2235,
+            "max": 3.2607,
+            "last": 3.121
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.3348200000000001,
+            "std": 0.23958565399455786,
+            "min": 0.8462,
+            "max": 1.6708,
+            "last": 1.6708
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 15.7,
+            "std": 0.458257569495584,
+            "min": 15,
+            "max": 16,
+            "last": 16
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 5.21514,
+            "std": 0.47081523807115677,
+            "min": 3.9198,
+            "max": 5.748,
+            "last": 5.748
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 2.19573,
+            "std": 0.22156754297504863,
+            "min": 1.8949,
+            "max": 2.6175,
+            "last": 1.9292
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 1.40292,
+            "std": 0.18267982811465527,
+            "min": 0.9889,
+            "max": 1.652,
+            "last": 1.5076
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 15.7,
+            "std": 0.458257569495584,
+            "min": 15,
+            "max": 16,
+            "last": 16
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.4249517,
+            "std": 0.01977396005887541,
+            "min": 0.389814,
+            "max": 0.447905,
+            "last": 0.431053
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.4640992,
+            "std": 0.019377482539277388,
+            "min": 0.434576,
+            "max": 0.493829,
+            "last": 0.482661
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 1.2331473000000002,
+            "std": 0.11068425074241593,
+            "min": 1.040991,
+            "max": 1.39609,
+            "last": 1.218161
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.2338786,
+            "std": 0.02438901778752068,
+            "min": 0.199205,
+            "max": 0.281071,
+            "last": 0.245634
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.001988,
+            "std": 0.0005339971910038479,
+            "min": 0.001351,
+            "max": 0.003045,
+            "last": 0.002012
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.0008562999999999999,
+            "std": 0.00019248950620748135,
+            "min": 0.000495,
+            "max": 0.001085,
+            "last": 0.000885
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.1051827,
+            "std": 0.002733864702211871,
+            "min": 0.100984,
+            "max": 0.110741,
+            "last": 0.100984
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.058851999999999995,
+            "std": 0.0032561937288803906,
+            "min": 0.055215,
+            "max": 0.06606,
+            "last": 0.06316
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.125787,
+            "std": 0.008183246030763095,
+            "min": 0.109748,
+            "max": 0.136424,
+            "last": 0.119834
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.046549400000000005,
+            "std": 0.005980165385672875,
+            "min": 0.037874,
+            "max": 0.05745,
+            "last": 0.045288
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0555696,
+            "std": 0.004003253506836657,
+            "min": 0.047808,
+            "max": 0.060911,
+            "last": 0.052795
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0250664,
+            "std": 0.003015457185900672,
+            "min": 0.02047,
+            "max": 0.029903,
+            "last": 0.024122
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.1,
+            "std": 0.06959705453537528,
+            "min": 0.0,
+            "max": 0.25,
+            "last": 0.125
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.23125,
+            "std": 0.09291292967074066,
+            "min": 0.125,
+            "max": 0.4375,
+            "last": 0.375
+          }
+        }
+      }
+    },
+    "post_a3_293000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.8625,
+            "std": 0.07806247497997998,
+            "min": 0.6875,
+            "max": 0.9375,
+            "last": 0.875
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.197,
+            "std": 0.06474906949138343,
+            "min": 0.0667,
+            "max": 0.2857,
+            "last": 0.2857
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 4.098319999999999,
+            "std": 0.4743590871902845,
+            "min": 3.1917,
+            "max": 4.685,
+            "last": 4.4013
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.8014499999999998,
+            "std": 0.12593991622992293,
+            "min": 1.6086,
+            "max": 2.0198,
+            "last": 1.8891
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 13.8,
+            "std": 1.2489995996796797,
+            "min": 11,
+            "max": 15,
+            "last": 14
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 6.5816,
+            "std": 0.17037725200272497,
+            "min": 6.1899,
+            "max": 6.7575,
+            "last": 6.5407
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 2.07941,
+            "std": 0.22190638318894756,
+            "min": 1.6416,
+            "max": 2.4176,
+            "last": 2.0428
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 1.06155,
+            "std": 0.151069091809013,
+            "min": 0.818,
+            "max": 1.2771,
+            "last": 1.2152
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 13.8,
+            "std": 1.2489995996796797,
+            "min": 11,
+            "max": 15,
+            "last": 14
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.12787779999999999,
+            "std": 0.0036558819127537508,
+            "min": 0.119667,
+            "max": 0.131475,
+            "last": 0.127997
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.0806455,
+            "std": 0.0021043221355106258,
+            "min": 0.075555,
+            "max": 0.083381,
+            "last": 0.081744
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.6917120000000001,
+            "std": 0.015948742477073237,
+            "min": 0.665767,
+            "max": 0.727365,
+            "last": 0.727365
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.0873522,
+            "std": 0.004871906932608626,
+            "min": 0.082888,
+            "max": 0.099008,
+            "last": 0.086711
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0054525,
+            "std": 0.00012881478952356357,
+            "min": 0.00535,
+            "max": 0.005788,
+            "last": 0.005368
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 1.9e-06,
+            "std": 3.5902646142032484e-06,
+            "min": 0.0,
+            "max": 1e-05,
+            "last": 0.0
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0246472,
+            "std": 0.001118240385605886,
+            "min": 0.023094,
+            "max": 0.027111,
+            "last": 0.02405
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.086857,
+            "std": 0.002779366510555956,
+            "min": 0.082428,
+            "max": 0.090177,
+            "last": 0.083139
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.011215300000000001,
+            "std": 0.0020641302793186285,
+            "min": 0.008188,
+            "max": 0.014835,
+            "last": 0.014835
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0083884,
+            "std": 0.0017731949808185222,
+            "min": 0.006217,
+            "max": 0.011319,
+            "last": 0.010586
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0045574000000000005,
+            "std": 0.0008461560376195398,
+            "min": 0.003297,
+            "max": 0.006133,
+            "last": 0.006133
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0162132,
+            "std": 0.0017734479298812241,
+            "min": 0.01308,
+            "max": 0.01867,
+            "last": 0.01867
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.10625,
+            "std": 0.07421463804398698,
+            "min": 0.0,
+            "max": 0.25,
+            "last": 0.125
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.16875,
+            "std": 0.05625,
+            "min": 0.0625,
+            "max": 0.25,
+            "last": 0.25
+          }
+        }
+      }
+    },
+    "post_a3_300000": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 10,
+            "mean": 0.94375,
+            "std": 0.05896238207535377,
+            "min": 0.8125,
+            "max": 1.0,
+            "last": 0.9375
+          },
+          "direction_success_rate": {
+            "n": 10,
+            "mean": 0.2693,
+            "std": 0.10859705336702281,
+            "min": 0.1333,
+            "max": 0.5333,
+            "last": 0.3333
+          },
+          "ball_speed_mean": {
+            "n": 10,
+            "mean": 4.11143,
+            "std": 0.47566445326511414,
+            "min": 3.2287,
+            "max": 4.845,
+            "last": 4.1438
+          },
+          "ball_speed_std": {
+            "n": 10,
+            "mean": 1.5091,
+            "std": 0.2214481790397022,
+            "min": 1.0793,
+            "max": 1.9634,
+            "last": 1.6066
+          },
+          "ball_speed_n": {
+            "n": 10,
+            "mean": 15.1,
+            "std": 0.9433981132056604,
+            "min": 13,
+            "max": 16,
+            "last": 15
+          },
+          "ball_speed_max": {
+            "n": 10,
+            "mean": 6.20328,
+            "std": 0.5796718413033359,
+            "min": 4.9095,
+            "max": 6.9264,
+            "last": 6.4941
+          },
+          "shot_error_mean": {
+            "n": 10,
+            "mean": 2.32236,
+            "std": 0.34128067100262205,
+            "min": 1.8489,
+            "max": 2.889,
+            "last": 2.1103
+          },
+          "shot_error_std": {
+            "n": 10,
+            "mean": 1.3842,
+            "std": 0.1286455129415713,
+            "min": 1.1584,
+            "max": 1.5706,
+            "last": 1.4577
+          },
+          "shot_error_n": {
+            "n": 10,
+            "mean": 15.1,
+            "std": 0.9433981132056604,
+            "min": 13,
+            "max": 16,
+            "last": 15
+          },
+          "handoff_reached_rate": {
+            "n": 10,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "posture_stance_asymmetry_early": {
+            "n": 10,
+            "mean": 0.10411770000000001,
+            "std": 0.0033604153329610917,
+            "min": 0.098636,
+            "max": 0.110018,
+            "last": 0.10157
+          },
+          "posture_stance_asymmetry_late": {
+            "n": 10,
+            "mean": 0.1182962,
+            "std": 0.010646356135316911,
+            "min": 0.105695,
+            "max": 0.141025,
+            "last": 0.112738
+          },
+          "posture_yaw_drift_early": {
+            "n": 10,
+            "mean": 0.5382395,
+            "std": 0.01627219570463678,
+            "min": 0.514167,
+            "max": 0.558263,
+            "last": 0.557734
+          },
+          "posture_yaw_drift_late": {
+            "n": 10,
+            "mean": 0.055761099999999994,
+            "std": 0.0035600754893681664,
+            "min": 0.048002,
+            "max": 0.061929,
+            "last": 0.057065
+          },
+          "posture_stand_height_early": {
+            "n": 10,
+            "mean": 0.0069689,
+            "std": 9.172725876204971e-05,
+            "min": 0.006827,
+            "max": 0.007113,
+            "last": 0.006892
+          },
+          "posture_stand_height_late": {
+            "n": 10,
+            "mean": 0.003089,
+            "std": 0.00026610900022359257,
+            "min": 0.002563,
+            "max": 0.003475,
+            "last": 0.003118
+          },
+          "posture_stand_orientation_early": {
+            "n": 10,
+            "mean": 0.0223123,
+            "std": 0.0012443023788452712,
+            "min": 0.020429,
+            "max": 0.02432,
+            "last": 0.020429
+          },
+          "posture_stand_orientation_late": {
+            "n": 10,
+            "mean": 0.0902041,
+            "std": 0.008929366074363846,
+            "min": 0.078627,
+            "max": 0.111041,
+            "last": 0.08705
+          },
+          "posture_feet_width_early": {
+            "n": 10,
+            "mean": 0.030221599999999998,
+            "std": 0.0053131199158309985,
+            "min": 0.024093,
+            "max": 0.040556,
+            "last": 0.029203
+          },
+          "posture_feet_width_late": {
+            "n": 10,
+            "mean": 0.0547295,
+            "std": 0.0051637349709294745,
+            "min": 0.045917,
+            "max": 0.065171,
+            "last": 0.054555
+          },
+          "posture_knee_width_early": {
+            "n": 10,
+            "mean": 0.0094833,
+            "std": 0.0024671139434570104,
+            "min": 0.006547,
+            "max": 0.014387,
+            "last": 0.009225
+          },
+          "posture_knee_width_late": {
+            "n": 10,
+            "mean": 0.0156232,
+            "std": 0.0026066865864541526,
+            "min": 0.011985,
+            "max": 0.020594,
+            "last": 0.015617
+          },
+          "success_rate_0.5": {
+            "n": 10,
+            "mean": 0.14375,
+            "std": 0.0886090429922364,
+            "min": 0.0625,
+            "max": 0.3125,
+            "last": 0.125
+          },
+          "success_rate_1": {
+            "n": 10,
+            "mean": 0.25625,
+            "std": 0.10625,
+            "min": 0.125,
+            "max": 0.5,
+            "last": 0.3125
+          }
+        }
+      }
+    }
+  }
+}

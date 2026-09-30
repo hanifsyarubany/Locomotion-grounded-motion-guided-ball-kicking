@@ -1,0 +1,21 @@
+wandb:
+  project: Policy_Evaluation 
+  group: sim2sim-eval                   
+  run_name: skill011-comparison    
+  tags: []                           
+
+iterations: 100
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260827_044728-stageB-skill011-h076-locomotion/model_0250000.onnx
+    name: skill011-v1            
+    kick_aim_enabled: true     
+  - path: logs/UnifiedBallKickingEnhanced/20260901_054158-stageB-skill011-h076-locomotion/model_0300000.onnx
+    name: skill011-v2            
+    kick_aim_enabled: true            
+
+evaluations:
+  - type: kick_to_loco_flip
+    num_trials: 15
+    split_by_strike_phase: true     

@@ -28,10 +28,28 @@ wrong (both handled below, see the Teacher class):
      SKILL in the skills yaml this script consumes (see configs/skill/distill_skill1_skill2.yaml), not
      globally, so each teacher gets exactly what it was trained under.
 
-Locomotion-mode envs have no meaningful skill_id -- `UnifiedManager._build_task_mode_partition`
-already defaults `skill_id` to 0 for them (the draw==0 / locomotion case maps to
-`(draw-1).clamp_min(0) == 0`), so they route to skill_id 0's teacher automatically. Override via
-HOLOSOMA_DISTILL_LOCOMOTION_TEACHER_SKILL_ID if a different skill should own locomotion instead.
+Locomotion-mode ticks are, by default (2026-09-14), labeled by whichever teacher matches that
+SAME env's own current skill_id -- including for envs `UnifiedManager._build_task_mode_partition`
+permanently partitioned to a kick skill, which keep matching their own specialist during their
+pre-/post-kick walking too, and for purely locomotion-partitioned envs, whose skill_id that method
+now spreads across 0..N-1 rather than pinning at 0. This replaces an earlier fixed-single-teacher
+default (always skill_id 0) that quietly asked one specialist to label every OTHER specialist's
+post-kick recovery poses too -- states it never trained on, since UnifiedManager's kick-recovery
+flip does not reset qpos/qvel, so each specialist only ever practiced recovering from its OWN
+kick's specific ending pose. Set HOLOSOMA_DISTILL_LOCOMOTION_TEACHER_SKILL_ID to restore a single
+fixed locomotion teacher instead (e.g. to reproduce an older run, or to try a dedicated
+locomotion-only checkpoint declared as its own extra teacher id).
+
+A third option (2026-09-15), mutually exclusive with the fixed-teacher override above: set
+HOLOSOMA_DISTILL_LOCOMOTION_STAGE_A_CKPT to a pure-locomotion (never trained to kick) checkpoint
+and HOLOSOMA_DISTILL_LOCOMOTION_STAGE_A_MIX_PROB to a probability in (0, 1] to route that fraction
+of ALL locomotion-mode ticks to it instead of the env's own skill-matched teacher, kick ticks
+untouched. This is a blanket mix -- NOT gated on kick-recovery state -- so for whatever fraction of
+locomotion ticks happen to be mid post-kick recovery (post_flip_step >= 0 or
+kick_state_transplant_active), routing to the Stage-A checkpoint dilutes the skill-matched recovery
+supervision the default above exists to provide. Loaded as an extra teacher id past the dense
+kick-skill range, not folded into env.skill_id (which is a live index into skill-sized tables
+elsewhere in the unified env and cannot safely grow an extra "virtual" skill).
 
 CLI grammar is identical to train_agent.py (same exp:X/logger:Y/--training.X/--algo.config.X
 parsing). Teacher checkpoints go in the skills yaml itself, one `teacher_checkpoint:` field per
@@ -349,6 +367,11 @@ _LR_ENV_VAR = "HOLOSOMA_DISTILL_LR"
 _SAVE_INTERVAL_ENV_VAR = "HOLOSOMA_DISTILL_SAVE_INTERVAL"
 _LOG_INTERVAL_ENV_VAR = "HOLOSOMA_DISTILL_LOG_INTERVAL"
 _LOCOMOTION_TEACHER_ENV_VAR = "HOLOSOMA_DISTILL_LOCOMOTION_TEACHER_SKILL_ID"
+# 2026-09-15: blanket-mix a dedicated Stage-A (pure locomotion) checkpoint into locomotion-mode
+# routing at a fixed per-tick probability. See the module docstring's own paragraph on this and
+# _LOCOMOTION_TEACHER_ENV_VAR's neighboring one for how the two differ and why they're exclusive.
+_LOCOMOTION_STAGE_A_CKPT_ENV_VAR = "HOLOSOMA_DISTILL_LOCOMOTION_STAGE_A_CKPT"
+_LOCOMOTION_STAGE_A_MIX_PROB_ENV_VAR = "HOLOSOMA_DISTILL_LOCOMOTION_STAGE_A_MIX_PROB"
 # 2026-08-18, the train/deploy-mismatch fix. See the module docstring's own section and
 # expected_action()'s docstring inside distill().
 _MATCH_DEPLOYED_ENV_VAR = "HOLOSOMA_DISTILL_MATCH_DEPLOYED_ACTION"
@@ -772,12 +795,54 @@ def distill(tyro_config) -> None:
         lr = _log_env_float(_LR_ENV_VAR, _DEFAULT_LR)
         save_interval = _log_env_int(_SAVE_INTERVAL_ENV_VAR, _DEFAULT_SAVE_INTERVAL)
         log_interval = _log_env_int(_LOG_INTERVAL_ENV_VAR, _DEFAULT_LOG_INTERVAL)
-        locomotion_teacher_id = _log_env_int(_LOCOMOTION_TEACHER_ENV_VAR, 0)
-        if locomotion_teacher_id not in teacher_ckpts:
+        # None (default, 2026-09-14 -- was a fixed skill_id 0) means "match each env's OWN
+        # skill_id even during its locomotion ticks" instead of funneling every locomotion-mode
+        # env in the whole rollout through one single fixed teacher. Why the old fixed default was
+        # a real regression, not just a missed diversity nice-to-have: UnifiedManager's kick-
+        # recovery flip (_maybe_flip_kick_recovery_to_locomotion) does NOT reset qpos/qvel --
+        # physics continues straight from the kick's own ending pose -- so each specialist only
+        # ever practiced recovering from ITS OWN kick's specific ending pose/kick_foot/momentum.
+        # Routing skill_5's post-kick recovery through skill_1's teacher asks skill_1 to label
+        # actions for a pose distribution it never trained on -- a smaller-scale version of the
+        # same OOD problem that rules out substituting a pure-locomotion-only checkpoint here.
+        # Matching each env's own skill_id fixes this for kick-partitioned envs directly;
+        # UnifiedManager._build_task_mode_partition's own N-skill path now spreads PURELY
+        # locomotion-partitioned envs' skill_id across 0..N-1 too (was fixed at 0), so their
+        # walking supervision isn't funneled through one specialist either. Set
+        # HOLOSOMA_DISTILL_LOCOMOTION_TEACHER_SKILL_ID explicitly to restore the old fixed-teacher
+        # behavior (e.g. to reproduce a pre-2026-09-14 run, or to deliberately try a single
+        # dedicated locomotion checkpoint declared as its own extra teacher id).
+        _locomotion_teacher_raw = os.environ.get(_LOCOMOTION_TEACHER_ENV_VAR)
+        locomotion_teacher_id = int(_locomotion_teacher_raw) if _locomotion_teacher_raw is not None else None
+        if locomotion_teacher_id is not None and locomotion_teacher_id not in teacher_ckpts:
             raise ValueError(
                 f"{_LOCOMOTION_TEACHER_ENV_VAR}={locomotion_teacher_id} has no matching teacher in "
                 f"{_TEACHER_CKPTS_ENV_VAR} (declared skill ids: {sorted(teacher_ckpts)})."
             )
+        # See _LOCOMOTION_STAGE_A_CKPT_ENV_VAR's own comment and the module docstring's paragraph on
+        # this for the full rationale. Loaded as an extra teacher (id = the next one past the dense
+        # kick-skill range) rather than folded into env.skill_id -- see that same rationale for why.
+        _stage_a_ckpt = os.environ.get(_LOCOMOTION_STAGE_A_CKPT_ENV_VAR, "").strip()
+        stage_a_mix_prob = _log_env_float(_LOCOMOTION_STAGE_A_MIX_PROB_ENV_VAR, 0.0)
+        if not (0.0 <= stage_a_mix_prob <= 1.0):
+            raise ValueError(
+                f"{_LOCOMOTION_STAGE_A_MIX_PROB_ENV_VAR} must be within [0.0, 1.0], got {stage_a_mix_prob}."
+            )
+        if bool(_stage_a_ckpt) != (stage_a_mix_prob > 0.0):
+            raise ValueError(
+                f"{_LOCOMOTION_STAGE_A_CKPT_ENV_VAR} ({_stage_a_ckpt!r}) and "
+                f"{_LOCOMOTION_STAGE_A_MIX_PROB_ENV_VAR} ({stage_a_mix_prob}) must be set together -- "
+                "one is empty/zero while the other isn't."
+            )
+        if _stage_a_ckpt and locomotion_teacher_id is not None:
+            raise ValueError(
+                f"{_LOCOMOTION_STAGE_A_CKPT_ENV_VAR} and {_LOCOMOTION_TEACHER_ENV_VAR} are mutually "
+                "exclusive -- both decide what labels locomotion-mode ticks. Unset one."
+            )
+        stage_a_teacher_id: int | None = None
+        if _stage_a_ckpt:
+            stage_a_teacher_id = len(teacher_ckpts)
+            teacher_ckpts[stage_a_teacher_id] = _stage_a_ckpt
         # 2026-08-18 train/deploy-mismatch fix. Default TRUE when the agent config says the export
         # uses the expected action (which is FastSACConfig's own default and what every checkpoint
         # in this project ships with): matching tanh(mu) while deploying E[tanh(mu + sigma*Z)] is
@@ -823,9 +888,18 @@ def distill(tyro_config) -> None:
         logstd_loss_weight = _log_env_float(_LOGSTD_LOSS_WEIGHT_ENV_VAR, _default_logstd_weight)
         if logstd_loss_weight < 0.0:
             raise ValueError(f"{_LOGSTD_LOSS_WEIGHT_ENV_VAR} must be >= 0.0, got {logstd_loss_weight}")
+        if locomotion_teacher_id is not None:
+            _locomotion_desc = f"fixed skill_id {locomotion_teacher_id}"
+        elif stage_a_teacher_id is not None:
+            _locomotion_desc = (
+                f"own skill_id (per-env), {stage_a_mix_prob:.0%} blanket-mixed with Stage-A "
+                f"teacher id {stage_a_teacher_id}"
+            )
+        else:
+            _locomotion_desc = "own skill_id (per-env)"
         logger.info(
             f"[distill] {len(teacher_ckpts)} teacher(s): {teacher_ckpts} | steps={num_steps} lr={lr} "
-            f"save_interval={save_interval} locomotion->skill_id {locomotion_teacher_id}"
+            f"save_interval={save_interval} locomotion->{_locomotion_desc}"
         )
         logger.info(
             f"[distill] regression target = "
@@ -1054,8 +1128,31 @@ def distill(tyro_config) -> None:
                 rollout_action = predict_action(student_actor, normed_obs)
 
             raw_skill_id = env.skill_id
-            is_kick = env.task_mode_mask("kick").bool() if hasattr(env, "task_mode_mask") else torch.ones_like(raw_skill_id, dtype=torch.bool)
-            effective_skill_id = torch.where(is_kick, raw_skill_id, torch.full_like(raw_skill_id, locomotion_teacher_id))
+            if locomotion_teacher_id is None and stage_a_teacher_id is None:
+                # Default (2026-09-14): every env's own skill_id already selects the right teacher
+                # in BOTH modes -- kick-partitioned envs keep matching their own specialist during
+                # locomotion ticks too (see locomotion_teacher_id's own comment above), and
+                # UnifiedManager now spreads purely-locomotion-partitioned envs' skill_id across
+                # 0..N-1 rather than pinning it to 0 -- so no remap is needed here at all.
+                effective_skill_id = raw_skill_id
+            else:
+                is_kick = env.task_mode_mask("kick").bool() if hasattr(env, "task_mode_mask") else torch.ones_like(raw_skill_id, dtype=torch.bool)
+                if locomotion_teacher_id is not None:
+                    # Explicit fixed-teacher override path (HOLOSOMA_DISTILL_LOCOMOTION_TEACHER_SKILL_ID
+                    # set): unchanged from the original fixed-teacher behavior.
+                    effective_skill_id = torch.where(is_kick, raw_skill_id, torch.full_like(raw_skill_id, locomotion_teacher_id))
+                else:
+                    # Stage-A blanket-mix path (HOLOSOMA_DISTILL_LOCOMOTION_STAGE_A_CKPT set): a
+                    # stage_a_mix_prob fraction of locomotion ticks route to the dedicated Stage-A
+                    # teacher instead of this env's own skill-matched one; kick ticks are never
+                    # touched. Independently redrawn every step, not fixed per-env, so it's the
+                    # fraction of TICKS that lands on Stage-A, not a fixed subset of envs.
+                    use_stage_a = (~is_kick) & (
+                        torch.rand(raw_skill_id.shape, device=raw_skill_id.device) < stage_a_mix_prob
+                    )
+                    effective_skill_id = torch.where(
+                        use_stage_a, torch.full_like(raw_skill_id, stage_a_teacher_id), raw_skill_id
+                    )
 
             with torch.no_grad():
                 # zeros, not empty: if any_matched ever has a gap (should not happen -- see the
@@ -1314,6 +1411,17 @@ def distill(tyro_config) -> None:
                 student_agent._maybe_start_mujoco_kick_rollout(onnx_path)  # noqa: SLF001
                 student_agent._maybe_start_mujoco_walk_rollout(onnx_path)  # noqa: SLF001
                 student_agent._maybe_start_mujoco_kick_handoff_rollout(onnx_path)  # noqa: SLF001
+                # 2026-09-07: was missing entirely -- this is why sim2sim/kick_success_rate_*,
+                # kick_fall_rate, kick_ball_hit_rate, kick_direction_success_rate, kick_shot_error_*
+                # never appeared in wandb for a distillation run despite
+                # --algo.config.mujoco-survival-scan-every-n-saves being accepted as a valid CLI
+                # flag: it maps into the SAME shared FastSACConfig field the three rollout triggers
+                # above already read from, but nothing in this script's own save block ever called
+                # the method that consults it, unlike FastSACAgent.learn()'s own save block (every
+                # non-distillation training run). Same signature, same "reads its own config
+                # internally, background thread, never blocks this loop" contract as the three calls
+                # above -- see _maybe_start_mujoco_survival_scan's own docstring.
+                student_agent._maybe_start_mujoco_survival_scan(onnx_path)  # noqa: SLF001
 
             # Drain queues of any rollout(s) that finished since the last iteration, logging their
             # video(s) to wandb -- cheap no-op when nothing's pending, called every iteration
@@ -1322,6 +1430,11 @@ def distill(tyro_config) -> None:
             student_agent._drain_mujoco_kick_rollout_queue()  # noqa: SLF001
             student_agent._drain_mujoco_walk_rollout_queue()  # noqa: SLF001
             student_agent._drain_mujoco_kick_handoff_rollout_queue()  # noqa: SLF001
+            # 2026-09-07: pairs with the newly-added _maybe_start_mujoco_survival_scan trigger above
+            # -- a started scan's result only ever reaches wandb via this drain, same "cheap no-op
+            # when nothing's pending, called every iteration so a scan started several saves ago can
+            # still be picked up when it finishes" contract as the three drains above.
+            student_agent._drain_mujoco_survival_scan_queue()  # noqa: SLF001
 
         final_path = str(experiment_dir / f"model_{student_agent.global_step:07d}.pt")
         final_onnx_path = str(experiment_dir / f"model_{student_agent.global_step:07d}.onnx")

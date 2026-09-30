@@ -94,6 +94,16 @@ if _multi_skill_cfg is not None:
     # above. Same MultiSkillConfig-only scoping as the rest of this block.
     _pre_kick_obs_ramp_steps = _multi_skill_cfg.pre_kick_obs_ramp_steps
     _post_flip_obs_ramp_steps = _multi_skill_cfg.post_flip_obs_ramp_steps
+    # Kick-state locomotion init + transplant (2026-08-31) -- see MultiSkillConfig.
+    # kick_state_init_prob's own docstring. Same MultiSkillConfig-only scoping as kick_abort_prob
+    # above. 2026-09-07: these three were defined, parsed, and read (UnifiedManager.__init__ via
+    # getattr(self.command_manager.command_cfg, "kick_state_init_prob", 0.0)) but never threaded
+    # through THIS file into command_cfg.params -- unlike every sibling handoff field, so the
+    # getattr always saw its own fallback and both mechanisms were permanently a no-op in every
+    # real run regardless of what a task_config yaml declared. This closes that gap.
+    _kick_state_init_prob = _multi_skill_cfg.kick_state_init_prob
+    _kick_state_transplant_prob = _multi_skill_cfg.kick_state_transplant_prob
+    _kick_state_init_grace_steps = _multi_skill_cfg.kick_state_init_grace_steps
     # FIX 6 of the 2026-08-18 observation work -- the load-time blend, superseding the
     # normalizer-reset guard for whichever terms it covers. Same MultiSkillConfig-only scoping.
     _warm_start_obs_ramp_steps = _multi_skill_cfg.warm_start_obs_ramp_steps
@@ -128,6 +138,10 @@ else:
     _mid_episode_kick_entry_ball_fixed = False
     _pre_kick_obs_ramp_steps = 0.0
     _post_flip_obs_ramp_steps = 0.0
+    # No legacy counterpart -- see the MultiSkillConfig branch's own comment above.
+    _kick_state_init_prob = 0.0
+    _kick_state_transplant_prob = 0.0
+    _kick_state_init_grace_steps = 25.0
     _warm_start_obs_ramp_steps = 0.0
     _kick_aim_theta_ref_deg = _legacy_ball_cfg.kick_aim_theta_ref_deg
     _kick_aim_theta_max_deg = _legacy_ball_cfg.kick_aim_theta_max_deg
@@ -359,6 +373,14 @@ g1_29dof_unified_command = CommandManagerCfg(
         # steps) and consumed by FastSACAgent.load(), which configures the observation
         # manager's blend state directly. 0.0 default = exact no-op.
         "warm_start_obs_ramp_steps": _warm_start_obs_ramp_steps,
+        # Kick-state locomotion init + transplant (see the MultiSkillConfig-derivation block
+        # above for why these three were previously missing here). Read by UnifiedManager.__init__
+        # (self._kick_state_init_prob/_kick_state_transplant_prob/_kick_state_init_grace_steps)
+        # and consumed by _maybe_kick_state_init/_maybe_kick_state_transplant (see
+        # MultiSkillConfig.kick_state_init_prob's own docstring). 0.0 default = exact no-op.
+        "kick_state_init_prob": _kick_state_init_prob,
+        "kick_state_transplant_prob": _kick_state_transplant_prob,
+        "kick_state_init_grace_steps": _kick_state_init_grace_steps,
         # N-skill mode: each skill's motion_training_ratio, in the same yaml declaration order as
         # motion_files above -- UnifiedManager._build_task_mode_partition draws a per-env
         # categorical over [locomotion, skill_1, ..., skill_N] weighted by

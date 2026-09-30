@@ -1,0 +1,653 @@
+{
+  "run_timestamp": "20260909_122714",
+  "generated_at": "2026-09-09T13:31:50",
+  "config_path": "configs/sim2sim_eval/sweep-ablation-a3.yaml",
+  "iterations": 25,
+  "max_concurrent_scans": 10,
+  "logged_count": 1600,
+  "wandb": {
+    "project": "Policy_Evaluation",
+    "entity": null,
+    "group": "sim2sim-eval-sweep",
+    "run_name": "20260909_122714-sweep-ablation-a3",
+    "mode": "online",
+    "run_id": "xbkfh0hb",
+    "url": "https://wandb.ai/humanoid-research/Policy_Evaluation/runs/xbkfh0hb"
+  },
+  "targets": [
+    {
+      "name": "abl_a3_250000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0250000.onnx",
+      "base_step": 250000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "abl_a3_257000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0257000.onnx",
+      "base_step": 257000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "abl_a3_264000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0264000.onnx",
+      "base_step": 264000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "abl_a3_271000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0271000.onnx",
+      "base_step": 271000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "abl_a3_279000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0279000.onnx",
+      "base_step": 279000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "abl_a3_286000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0286000.onnx",
+      "base_step": 286000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "abl_a3_293000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0293000.onnx",
+      "base_step": 293000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "abl_a3_300000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260909_080716-stageB-skill011-h076-abl-a3-locomotion/model_0300000.onnx",
+      "base_step": 300000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    }
+  ],
+  "results": {
+    "abl_a3_250000": {
+      "0": {
+        "kick_to_loco": {
+          "strike/alive_rate": {
+            "n": 25,
+            "mean": 0.508744,
+            "std": 0.09251070891523856,
+            "min": 0.375,
+            "max": 0.75,
+            "last": 0.4375
+          },
+          "strike/pre_flip_fail_rate": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "strike/recovered_rate": {
+            "n": 25,
+            "mean": 0.508744,
+            "std": 0.09251070891523856,
+            "min": 0.375,
+            "max": 0.75,
+            "last": 0.4375
+          },
+          "strike/mean_recovery_steps": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/alive_rate": {
+            "n": 25,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "nonstrike/pre_flip_fail_rate": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/recovered_rate": {
+            "n": 25,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "nonstrike/mean_recovery_steps": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "abl_a3_257000": {
+      "0": {
+        "kick_to_loco": {
+          "strike/alive_rate": {
+            "n": 25,
+            "mean": 0.662496,
+            "std": 0.07395303634063986,
+            "min": 0.5,
+            "max": 0.8125,
+            "last": 0.6562
+          },
+          "strike/pre_flip_fail_rate": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "strike/recovered_rate": {
+            "n": 25,
+            "mean": 0.662496,
+            "std": 0.07395303634063986,
+            "min": 0.5,
+            "max": 0.8125,
+            "last": 0.6562
+          },
+          "strike/mean_recovery_steps": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/alive_rate": {
+            "n": 25,
+            "mean": 0.93875,
+            "std": 0.03477606935810889,
+            "min": 0.875,
+            "max": 1.0,
+            "last": 0.96875
+          },
+          "nonstrike/pre_flip_fail_rate": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/recovered_rate": {
+            "n": 25,
+            "mean": 0.93875,
+            "std": 0.03477606935810889,
+            "min": 0.875,
+            "max": 1.0,
+            "last": 0.96875
+          },
+          "nonstrike/mean_recovery_steps": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "abl_a3_264000": {
+      "0": {
+        "kick_to_loco": {
+          "strike/alive_rate": {
+            "n": 25,
+            "mean": 0.691248,
+            "std": 0.0894057676886676,
+            "min": 0.5,
+            "max": 0.8125,
+            "last": 0.7188
+          },
+          "strike/pre_flip_fail_rate": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "strike/recovered_rate": {
+            "n": 25,
+            "mean": 0.691248,
+            "std": 0.0894057676886676,
+            "min": 0.5,
+            "max": 0.8125,
+            "last": 0.7188
+          },
+          "strike/mean_recovery_steps": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/alive_rate": {
+            "n": 25,
+            "mean": 0.975,
+            "std": 0.01976423537605237,
+            "min": 0.9375,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "nonstrike/pre_flip_fail_rate": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/recovered_rate": {
+            "n": 25,
+            "mean": 0.975,
+            "std": 0.01976423537605237,
+            "min": 0.9375,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "nonstrike/mean_recovery_steps": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "abl_a3_271000": {
+      "0": {
+        "kick_to_loco": {
+          "strike/alive_rate": {
+            "n": 25,
+            "mean": 0.675,
+            "std": 0.07447903329125587,
+            "min": 0.5625,
+            "max": 0.8125,
+            "last": 0.6562
+          },
+          "strike/pre_flip_fail_rate": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "strike/recovered_rate": {
+            "n": 25,
+            "mean": 0.675,
+            "std": 0.07447903329125587,
+            "min": 0.5625,
+            "max": 0.8125,
+            "last": 0.6562
+          },
+          "strike/mean_recovery_steps": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/alive_rate": {
+            "n": 25,
+            "mean": 0.96875,
+            "std": 0.023385358667337135,
+            "min": 0.90625,
+            "max": 1.0,
+            "last": 0.96875
+          },
+          "nonstrike/pre_flip_fail_rate": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/recovered_rate": {
+            "n": 25,
+            "mean": 0.96875,
+            "std": 0.023385358667337135,
+            "min": 0.90625,
+            "max": 1.0,
+            "last": 0.96875
+          },
+          "nonstrike/mean_recovery_steps": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "abl_a3_279000": {
+      "0": {
+        "kick_to_loco": {
+          "strike/alive_rate": {
+            "n": 25,
+            "mean": 0.572504,
+            "std": 0.0864771437086124,
+            "min": 0.375,
+            "max": 0.7188,
+            "last": 0.625
+          },
+          "strike/pre_flip_fail_rate": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "strike/recovered_rate": {
+            "n": 25,
+            "mean": 0.572504,
+            "std": 0.0864771437086124,
+            "min": 0.375,
+            "max": 0.7188,
+            "last": 0.625
+          },
+          "strike/mean_recovery_steps": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/alive_rate": {
+            "n": 25,
+            "mean": 0.99,
+            "std": 0.01920286436967152,
+            "min": 0.9375,
+            "max": 1.0,
+            "last": 0.96875
+          },
+          "nonstrike/pre_flip_fail_rate": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/recovered_rate": {
+            "n": 25,
+            "mean": 0.99,
+            "std": 0.01920286436967152,
+            "min": 0.9375,
+            "max": 1.0,
+            "last": 0.96875
+          },
+          "nonstrike/mean_recovery_steps": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "abl_a3_286000": {
+      "0": {
+        "kick_to_loco": {
+          "strike/alive_rate": {
+            "n": 25,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "strike/pre_flip_fail_rate": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "strike/recovered_rate": {
+            "n": 25,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "strike/mean_recovery_steps": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/alive_rate": {
+            "n": 25,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "nonstrike/pre_flip_fail_rate": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/recovered_rate": {
+            "n": 25,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "nonstrike/mean_recovery_steps": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "abl_a3_293000": {
+      "0": {
+        "kick_to_loco": {
+          "strike/alive_rate": {
+            "n": 25,
+            "mean": 0.787496,
+            "std": 0.07704739569901115,
+            "min": 0.6562,
+            "max": 0.9062,
+            "last": 0.7812
+          },
+          "strike/pre_flip_fail_rate": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "strike/recovered_rate": {
+            "n": 25,
+            "mean": 0.787496,
+            "std": 0.07704739569901115,
+            "min": 0.6562,
+            "max": 0.9062,
+            "last": 0.7812
+          },
+          "strike/mean_recovery_steps": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/alive_rate": {
+            "n": 25,
+            "mean": 0.9925,
+            "std": 0.016007810593582122,
+            "min": 0.9375,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "nonstrike/pre_flip_fail_rate": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/recovered_rate": {
+            "n": 25,
+            "mean": 0.9925,
+            "std": 0.016007810593582122,
+            "min": 0.9375,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "nonstrike/mean_recovery_steps": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "abl_a3_300000": {
+      "0": {
+        "kick_to_loco": {
+          "strike/alive_rate": {
+            "n": 25,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "strike/pre_flip_fail_rate": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "strike/recovered_rate": {
+            "n": 25,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "strike/mean_recovery_steps": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/alive_rate": {
+            "n": 25,
+            "mean": 0.99125,
+            "std": 0.01403121520040228,
+            "min": 0.96875,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "nonstrike/pre_flip_fail_rate": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/recovered_rate": {
+            "n": 25,
+            "mean": 0.99125,
+            "std": 0.01403121520040228,
+            "min": 0.96875,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "nonstrike/mean_recovery_steps": {
+            "n": 25,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    }
+  }
+}

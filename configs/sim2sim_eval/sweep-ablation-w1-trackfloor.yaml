@@ -1,0 +1,93 @@
+# W1 ablation: does the task-mode gate have to be a HARD ZERO?
+#
+# Sec. III-A of the paper asserts: "The gate is a hard zero, not a reduced
+# weight ... tracking rewards left active at reduced weight would still shape
+# the reachable gait space, whereas g_tau == 0 optimises locomotion against its
+# own specification alone." That is a counterfactual about a system nobody had
+# trained. Table XI compares loco-only vs with-library WITHIN the proposed
+# design, which shows the library does not hurt this system's locomotion -- it
+# does NOT show that a tracking-shaped substrate would be hurt. This sweep is
+# that missing comparison.
+#
+# TWO onnx_targets groups, one mechanism apart:
+#   - "hardzero_*" -- the reference arm, locomotion_tracking_floor 0.0 (the
+#     paper's design). logs/.../20260908_122248-stageB-skill011-h076-locomotion
+#   - "floor01_*"  -- locomotion_tracking_floor 0.1: the 7 motion-tracking terms
+#     keep task_mode="kick" but LOCOMOTION-mode envs now receive 0.1x of them
+#     instead of exactly 0. Shooting and kick-safety terms stay hard-zeroed, so
+#     the arms differ in the tracking objective ONLY.
+#     logs/.../20260916_150736-stageB-skill011-h076-abl-w1-locomotion
+#
+# Both arms resumed from the SAME parent checkpoint
+# (20260827_044728-stageB-skill011-h076/model_0250000.pt), same 300k budget,
+# same 3300 envs, same mujoco rollout cadence -- verified by diffing the two
+# runs' frozen holosoma_config.yaml, which differ in exactly the one key.
+#
+# SAME 8 checkpoints, evenly spaced 250k-300k, as sweep-ablation-a1b1.yaml --
+# deliberately identical protocol, not merely a similar one: these rows are
+# compared against each other, so both need the same degree of
+# checkpoint-lottery protection (one skill ranged 3.6-45.2% across a sweep;
+# see the paper's Sec. V-B).
+#
+# locomotion_metrics is a PER-TARGET eval (sim2sim_eval.py's own
+# _PER_TARGET_EVAL_TYPES) -- one result per checkpoint, not per skill_id, so
+# skill_ids/kick_aim_enabled are irrelevant here and omitted, exactly as in
+# sweep-locomotion-generality.yaml.
+#
+# Report the MEDIAN across each arm's 8 checkpoints, same house rule as every
+# other sweep in this project. Report the result WHICHEVER WAY IT LANDS: a null
+# result still converts Sec. III-A's assertion into a measured statement, which
+# is the entire point of running this.
+#
+# SCOPE, to be stated wherever this is reported: Stage B, skill_7 (skill011),
+# one seed. It is a real controlled counterfactual for the gate mechanism; it
+# is NOT the deployed N=7 system.
+wandb:
+  project: Policy_Evaluation
+  group: sim2sim-eval-sweep
+  run_name: sweep-ablation-w1-trackfloor
+  tags: [checkpoint-sweep, ablation, w1-tracking-floor, locomotion-generality]
+
+iterations: 15
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0250000.onnx
+    name: hardzero_250000
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0257000.onnx
+    name: hardzero_257000
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0264000.onnx
+    name: hardzero_264000
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0271000.onnx
+    name: hardzero_271000
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0279000.onnx
+    name: hardzero_279000
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0286000.onnx
+    name: hardzero_286000
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0293000.onnx
+    name: hardzero_293000
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0300000.onnx
+    name: hardzero_300000
+
+  - path: logs/UnifiedBallKickingEnhanced/20260916_150736-stageB-skill011-h076-abl-w1-locomotion/model_0250000.onnx
+    name: floor01_250000
+  - path: logs/UnifiedBallKickingEnhanced/20260916_150736-stageB-skill011-h076-abl-w1-locomotion/model_0257000.onnx
+    name: floor01_257000
+  - path: logs/UnifiedBallKickingEnhanced/20260916_150736-stageB-skill011-h076-abl-w1-locomotion/model_0264000.onnx
+    name: floor01_264000
+  - path: logs/UnifiedBallKickingEnhanced/20260916_150736-stageB-skill011-h076-abl-w1-locomotion/model_0271000.onnx
+    name: floor01_271000
+  - path: logs/UnifiedBallKickingEnhanced/20260916_150736-stageB-skill011-h076-abl-w1-locomotion/model_0279000.onnx
+    name: floor01_279000
+  - path: logs/UnifiedBallKickingEnhanced/20260916_150736-stageB-skill011-h076-abl-w1-locomotion/model_0286000.onnx
+    name: floor01_286000
+  - path: logs/UnifiedBallKickingEnhanced/20260916_150736-stageB-skill011-h076-abl-w1-locomotion/model_0293000.onnx
+    name: floor01_293000
+  - path: logs/UnifiedBallKickingEnhanced/20260916_150736-stageB-skill011-h076-abl-w1-locomotion/model_0300000.onnx
+    name: floor01_300000
+
+evaluations:
+  # -> Table XI's own six metrics: v_x fwd/bwd MAE, v_y lateral MAE,
+  #    omega_z yaw MAE, terrain_traversal_success, push_recovery_rate.
+  - type: locomotion_metrics
+    num_episodes: 5

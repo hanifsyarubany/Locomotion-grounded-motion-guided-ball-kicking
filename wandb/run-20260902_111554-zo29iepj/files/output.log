@@ -1,0 +1,153 @@
+[32m2026-09-02 11:15:55.795[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m717[0m - [1m[sim2sim-eval] target='skill011' base_step=250000 skills=[0][0m
+[32m2026-09-02 11:15:55.801[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m717[0m - [1m[sim2sim-eval] target='skill015' base_step=250000 skills=[0][0m
+[32m2026-09-02 11:15:55.801[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m725[0m - [1m[sim2sim-eval] iteration=0/100[0m
+[32m2026-09-02 11:15:55.801[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill011' (turn within iteration 0)[0m
+[32m2026-09-02 11:15:55.801[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:16:06.345[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick/fall_rate': 0.0, 'skill011/0/kick/hit_rate': 0.0}[0m
+[32m2026-09-02 11:16:06.345[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m
+[32m2026-09-02 11:16:33.777[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick_to_loco/strike/alive_rate': 0.4, 'skill011/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-02 11:16:33.778[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   loco_to_kick_handoff skill_id=0 ...[0m
+[32m2026-09-02 11:16:46.195[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/loco_to_kick/fall_rate': 0.0, 'skill011/0/loco_to_kick/hit_rate': 0.0, 'skill011/0/loco_to_kick/pre_handoff_fail_rate': 0.0}[0m
+[32m2026-09-02 11:16:46.195[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill015' (turn within iteration 0)[0m
+[32m2026-09-02 11:16:46.196[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:16:56.677[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/kick/fall_rate': 0.0, 'skill015/0/kick/hit_rate': 0.8, 'skill015/0/kick/direction_success_rate': 0.5}[0m
+[32m2026-09-02 11:16:56.678[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m
+[32m2026-09-02 11:17:21.698[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/kick_to_loco/strike/alive_rate': 1.0, 'skill015/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill015/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill015/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-02 11:17:21.699[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   loco_to_kick_handoff skill_id=0 ...[0m
+[32m2026-09-02 11:17:34.076[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/loco_to_kick/fall_rate': 0.0, 'skill015/0/loco_to_kick/hit_rate': 1.0, 'skill015/0/loco_to_kick/pre_handoff_fail_rate': 0.0}[0m
+[32m2026-09-02 11:17:34.076[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m725[0m - [1m[sim2sim-eval] iteration=1/100[0m
+[32m2026-09-02 11:17:34.077[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill011' (turn within iteration 1)[0m
+[32m2026-09-02 11:17:34.077[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:17:44.686[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick/fall_rate': 0.0, 'skill011/0/kick/hit_rate': 0.0}[0m
+[32m2026-09-02 11:17:44.686[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m
+[32m2026-09-02 11:18:11.847[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick_to_loco/strike/alive_rate': 0.6, 'skill011/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-02 11:18:11.847[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   loco_to_kick_handoff skill_id=0 ...[0m
+[32m2026-09-02 11:18:24.421[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/loco_to_kick/fall_rate': 0.0, 'skill011/0/loco_to_kick/hit_rate': 0.0, 'skill011/0/loco_to_kick/pre_handoff_fail_rate': 0.0}[0m
+[32m2026-09-02 11:18:24.421[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill015' (turn within iteration 1)[0m
+[32m2026-09-02 11:18:24.421[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:18:24.422[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_survival_scan[0m:[36mrecord_survival_scan[0m:[36m124[0m - [33m[1m[sim2sim] Survival-scan rollout lock busy -- skipping scan for logs/UnifiedBallKickingEnhanced/20260828_000158-stageB-skill015-h074-locomotion/model_0250000.onnx.[0m
+[32m2026-09-02 11:18:24.422[0m | [33m[1mWARNING [0m | [36m__main__[0m:[36mrun_eval[0m:[36m759[0m - [33m[1m[sim2sim-eval]   kick_survival skill_id=0 produced no usable result (busy lock, timeout, or crash inside the scan -- see warnings above)[0m
+[32m2026-09-02 11:18:24.422[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m
+[32m2026-09-02 11:18:49.664[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/kick_to_loco/strike/alive_rate': 1.0, 'skill015/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill015/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill015/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-02 11:18:49.665[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   loco_to_kick_handoff skill_id=0 ...[0m
+[32m2026-09-02 11:19:02.522[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/loco_to_kick/fall_rate': 0.0, 'skill015/0/loco_to_kick/hit_rate': 1.0, 'skill015/0/loco_to_kick/pre_handoff_fail_rate': 0.0}[0m
+[32m2026-09-02 11:19:02.523[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m725[0m - [1m[sim2sim-eval] iteration=2/100[0m
+[32m2026-09-02 11:19:02.523[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill011' (turn within iteration 2)[0m
+[32m2026-09-02 11:19:02.523[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:19:13.225[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick/fall_rate': 0.0, 'skill011/0/kick/hit_rate': 0.0}[0m
+[32m2026-09-02 11:19:13.225[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m
+[32m2026-09-02 11:19:40.083[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick_to_loco/strike/alive_rate': 0.2, 'skill011/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-02 11:19:40.083[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   loco_to_kick_handoff skill_id=0 ...[0m
+[32m2026-09-02 11:19:52.520[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/loco_to_kick/fall_rate': 0.0, 'skill011/0/loco_to_kick/hit_rate': 0.0, 'skill011/0/loco_to_kick/pre_handoff_fail_rate': 0.0}[0m
+[32m2026-09-02 11:19:52.521[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill015' (turn within iteration 2)[0m
+[32m2026-09-02 11:19:52.521[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:20:03.063[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/kick/fall_rate': 0.0, 'skill015/0/kick/hit_rate': 0.8, 'skill015/0/kick/direction_success_rate': 0.25}[0m
+[32m2026-09-02 11:20:03.063[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m
+[32m2026-09-02 11:20:27.707[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/kick_to_loco/strike/alive_rate': 1.0, 'skill015/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill015/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill015/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-02 11:20:27.707[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   loco_to_kick_handoff skill_id=0 ...[0m
+[32m2026-09-02 11:20:39.943[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/loco_to_kick/fall_rate': 0.0, 'skill015/0/loco_to_kick/hit_rate': 1.0, 'skill015/0/loco_to_kick/pre_handoff_fail_rate': 0.0}[0m
+[32m2026-09-02 11:20:39.943[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m725[0m - [1m[sim2sim-eval] iteration=3/100[0m
+[32m2026-09-02 11:20:39.943[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill011' (turn within iteration 3)[0m
+[32m2026-09-02 11:20:39.943[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:20:50.429[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick/fall_rate': 0.0, 'skill011/0/kick/hit_rate': 0.0}[0m
+[32m2026-09-02 11:20:50.429[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m
+[32m2026-09-02 11:21:17.123[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick_to_loco/strike/alive_rate': 0.2, 'skill011/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-02 11:21:17.124[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   loco_to_kick_handoff skill_id=0 ...[0m
+[32m2026-09-02 11:21:29.525[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/loco_to_kick/fall_rate': 0.0, 'skill011/0/loco_to_kick/hit_rate': 0.0, 'skill011/0/loco_to_kick/pre_handoff_fail_rate': 0.0}[0m
+[32m2026-09-02 11:21:29.526[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill015' (turn within iteration 3)[0m
+[32m2026-09-02 11:21:29.526[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:21:40.028[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/kick/fall_rate': 0.0, 'skill015/0/kick/hit_rate': 0.8, 'skill015/0/kick/direction_success_rate': 0.25}[0m
+[32m2026-09-02 11:21:40.029[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m
+[32m2026-09-02 11:22:04.434[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/kick_to_loco/strike/alive_rate': 1.0, 'skill015/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill015/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill015/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-02 11:22:04.434[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   loco_to_kick_handoff skill_id=0 ...[0m
+[32m2026-09-02 11:22:17.027[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/loco_to_kick/fall_rate': 0.0, 'skill015/0/loco_to_kick/hit_rate': 1.0, 'skill015/0/loco_to_kick/pre_handoff_fail_rate': 0.0}[0m
+[32m2026-09-02 11:22:17.027[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m725[0m - [1m[sim2sim-eval] iteration=4/100[0m
+[32m2026-09-02 11:22:17.027[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill011' (turn within iteration 4)[0m
+[32m2026-09-02 11:22:17.027[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:22:27.587[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick/fall_rate': 0.0, 'skill011/0/kick/hit_rate': 0.0}[0m
+[32m2026-09-02 11:22:27.587[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m
+[32m2026-09-02 11:22:55.929[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick_to_loco/strike/alive_rate': 0.8, 'skill011/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-02 11:22:55.929[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   loco_to_kick_handoff skill_id=0 ...[0m
+[32m2026-09-02 11:23:08.453[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/loco_to_kick/fall_rate': 0.0, 'skill011/0/loco_to_kick/hit_rate': 0.0, 'skill011/0/loco_to_kick/pre_handoff_fail_rate': 0.0}[0m
+[32m2026-09-02 11:23:08.453[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill015' (turn within iteration 4)[0m
+[32m2026-09-02 11:23:08.454[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:23:19.058[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/kick/fall_rate': 0.0, 'skill015/0/kick/hit_rate': 1.0, 'skill015/0/kick/direction_success_rate': 0.2}[0m
+[32m2026-09-02 11:23:19.058[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m
+[32m2026-09-02 11:23:44.569[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/kick_to_loco/strike/alive_rate': 1.0, 'skill015/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill015/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill015/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-02 11:23:44.569[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   loco_to_kick_handoff skill_id=0 ...[0m
+[32m2026-09-02 11:23:56.880[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/loco_to_kick/fall_rate': 0.0, 'skill015/0/loco_to_kick/hit_rate': 1.0, 'skill015/0/loco_to_kick/pre_handoff_fail_rate': 0.0}[0m
+[32m2026-09-02 11:23:56.880[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m725[0m - [1m[sim2sim-eval] iteration=5/100[0m
+[32m2026-09-02 11:23:56.880[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill011' (turn within iteration 5)[0m
+[32m2026-09-02 11:23:56.880[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:24:07.470[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick/fall_rate': 0.0, 'skill011/0/kick/hit_rate': 0.0}[0m
+[32m2026-09-02 11:24:07.470[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m
+[32m2026-09-02 11:24:34.949[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick_to_loco/strike/alive_rate': 0.8, 'skill011/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-02 11:24:34.949[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   loco_to_kick_handoff skill_id=0 ...[0m
+[32m2026-09-02 11:24:47.334[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/loco_to_kick/fall_rate': 0.0, 'skill011/0/loco_to_kick/hit_rate': 0.0, 'skill011/0/loco_to_kick/pre_handoff_fail_rate': 0.0}[0m
+[32m2026-09-02 11:24:47.334[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill015' (turn within iteration 5)[0m
+[32m2026-09-02 11:24:47.335[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:24:58.094[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/kick/fall_rate': 0.0, 'skill015/0/kick/hit_rate': 1.0, 'skill015/0/kick/direction_success_rate': 0.2}[0m
+[32m2026-09-02 11:24:58.095[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m
+[32m2026-09-02 11:25:23.134[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/kick_to_loco/strike/alive_rate': 1.0, 'skill015/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill015/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill015/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-02 11:25:23.134[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   loco_to_kick_handoff skill_id=0 ...[0m
+[32m2026-09-02 11:25:35.555[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/loco_to_kick/fall_rate': 0.0, 'skill015/0/loco_to_kick/hit_rate': 1.0, 'skill015/0/loco_to_kick/pre_handoff_fail_rate': 0.0}[0m
+[32m2026-09-02 11:25:35.555[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m725[0m - [1m[sim2sim-eval] iteration=6/100[0m
+[32m2026-09-02 11:25:35.555[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill011' (turn within iteration 6)[0m
+[32m2026-09-02 11:25:35.555[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:25:46.154[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick/fall_rate': 0.0, 'skill011/0/kick/hit_rate': 0.0}[0m
+[32m2026-09-02 11:25:46.154[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m
+[32m2026-09-02 11:26:13.161[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick_to_loco/strike/alive_rate': 0.2, 'skill011/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-02 11:26:13.161[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   loco_to_kick_handoff skill_id=0 ...[0m
+[32m2026-09-02 11:26:25.731[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/loco_to_kick/fall_rate': 0.0, 'skill011/0/loco_to_kick/hit_rate': 0.0, 'skill011/0/loco_to_kick/pre_handoff_fail_rate': 0.0}[0m
+[32m2026-09-02 11:26:25.731[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill015' (turn within iteration 6)[0m
+[32m2026-09-02 11:26:25.731[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:26:36.518[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/kick/fall_rate': 0.0, 'skill015/0/kick/hit_rate': 0.6, 'skill015/0/kick/direction_success_rate': 0.3333}[0m
+[32m2026-09-02 11:26:36.519[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m
+[32m2026-09-02 11:27:01.780[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260828_000158-stageB-skill015-h074-locomotion/model_0250000.onnx
+stdout(tail): 327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-02 11:26:55.179 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-02 11:26:55.179 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-02 11:26:55.181 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-02 11:26:56.810 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+[32m09-02 11:26:57.060 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] kick triggered (skill_id=0)[0m
+[32m09-02 11:26:57.650 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] returned to locomotion[0m
+RESULT 250000/iter6/nonstrike_post 0 211 -1 -1 0.7228 0.7228
+[32m09-02 11:26:58.625 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] kick triggered (skill_id=0)[0m
+[32m09-02 11:26:59.264 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] returned to locomotion[0m
+RESULT 250000/iter6/nonstrike_post 1 221 -1 -1 0.7229 0.7229
+[32m09-02 11:27:00.246 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] kick triggered (skill_id=0)[0m
+[32m09-02 11:27:00.873 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] returned to locomotion[0m
+RESULT 250000/iter6/nonstrike_post 2 219 -1 -1 0.7233 0.7233
+SUMMARY_PREFLIPFAIL 250000/iter6/nonstrike_post 0/3 0.0000
+SUMMARY_LOCOFLIP 250000/iter6/nonstrike_post 3/3 1.0000
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+/workspaces/isaaclab_arena/submodules/workspaces/conda_env/robojudo/lib/python3.12/site-packages/glfw/__init__.py:917: GLFWError: (65544) b'GLX: Failed to clear current context'
+  warnings.warn(message, GLFWError)
+XIO:  fatal IO error 0 (Success) on X server ":1"
+      after 224 requests (221 known processed) with 41 events remaining.
+[0m
+[32m2026-09-02 11:27:01.781[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/kick_to_loco/strike/alive_rate': 1.0, 'skill015/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill015/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill015/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-02 11:27:01.781[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   loco_to_kick_handoff skill_id=0 ...[0m
+[32m2026-09-02 11:27:14.707[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/loco_to_kick/fall_rate': 0.0, 'skill015/0/loco_to_kick/hit_rate': 1.0, 'skill015/0/loco_to_kick/pre_handoff_fail_rate': 0.0}[0m
+[32m2026-09-02 11:27:14.707[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m725[0m - [1m[sim2sim-eval] iteration=7/100[0m
+[32m2026-09-02 11:27:14.707[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill011' (turn within iteration 7)[0m
+[32m2026-09-02 11:27:14.707[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:27:25.746[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick/fall_rate': 0.0, 'skill011/0/kick/hit_rate': 0.2, 'skill011/0/kick/direction_success_rate': 0.0}[0m
+[32m2026-09-02 11:27:25.746[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m
+[32m2026-09-02 11:27:54.920[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick_to_loco/strike/alive_rate': 0.8, 'skill011/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-02 11:27:54.920[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   loco_to_kick_handoff skill_id=0 ...[0m
+[32m2026-09-02 11:28:07.954[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/loco_to_kick/fall_rate': 0.0, 'skill011/0/loco_to_kick/hit_rate': 0.0, 'skill011/0/loco_to_kick/pre_handoff_fail_rate': 0.0}[0m
+[32m2026-09-02 11:28:07.955[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill015' (turn within iteration 7)[0m
+[32m2026-09-02 11:28:07.955[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:28:07.955[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_survival_scan[0m:[36mrecord_survival_scan[0m:[36m124[0m - [33m[1m[sim2sim] Survival-scan rollout lock busy -- skipping scan for logs/UnifiedBallKickingEnhanced/20260828_000158-stageB-skill015-h074-locomotion/model_0250000.onnx.[0m
+[32m2026-09-02 11:28:07.956[0m | [33m[1mWARNING [0m | [36m__main__[0m:[36mrun_eval[0m:[36m759[0m - [33m[1m[sim2sim-eval]   kick_survival skill_id=0 produced no usable result (busy lock, timeout, or crash inside the scan -- see warnings above)[0m
+[32m2026-09-02 11:28:07.956[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m
+[32m2026-09-02 11:28:34.423[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/kick_to_loco/strike/alive_rate': 1.0, 'skill015/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill015/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill015/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-02 11:28:34.423[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   loco_to_kick_handoff skill_id=0 ...[0m
+[32m2026-09-02 11:28:47.542[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill015/0/loco_to_kick/fall_rate': 0.0, 'skill015/0/loco_to_kick/hit_rate': 1.0, 'skill015/0/loco_to_kick/pre_handoff_fail_rate': 0.0}[0m
+[32m2026-09-02 11:28:47.542[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m725[0m - [1m[sim2sim-eval] iteration=8/100[0m
+[32m2026-09-02 11:28:47.542[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill011' (turn within iteration 8)[0m
+[32m2026-09-02 11:28:47.543[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:28:58.680[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick/fall_rate': 0.0, 'skill011/0/kick/hit_rate': 0.0}[0m
+[32m2026-09-02 11:28:58.680[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m

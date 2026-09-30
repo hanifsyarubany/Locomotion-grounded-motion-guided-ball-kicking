@@ -1,0 +1,7237 @@
+{
+  "run_timestamp": "20260909_144029",
+  "generated_at": "2026-09-09T16:24:58",
+  "config_path": "configs/sim2sim_eval/sweep-handoff-unified-7.yaml",
+  "iterations": 5,
+  "max_concurrent_scans": 10,
+  "logged_count": 3920,
+  "wandb": {
+    "project": "Policy_Evaluation",
+    "entity": null,
+    "group": "sim2sim-eval-sweep",
+    "run_name": "20260909_144029-sweep-handoff-unified-7",
+    "mode": "online",
+    "run_id": "c1o4u9sw",
+    "url": "https://wandb.ai/humanoid-research/Policy_Evaluation/runs/c1o4u9sw"
+  },
+  "targets": [
+    {
+      "name": "u7_387000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0387000.onnx",
+      "base_step": 387000,
+      "skill_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "u7_389000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0389000.onnx",
+      "base_step": 389000,
+      "skill_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "u7_390000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0390000.onnx",
+      "base_step": 390000,
+      "skill_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "u7_392000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0392000.onnx",
+      "base_step": 392000,
+      "skill_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "u7_398000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0398000.onnx",
+      "base_step": 398000,
+      "skill_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "u7_406000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0406000.onnx",
+      "base_step": 406000,
+      "skill_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "u7_414000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0414000.onnx",
+      "base_step": 414000,
+      "skill_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "u7_422000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0422000.onnx",
+      "base_step": 422000,
+      "skill_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "u7_430000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0430000.onnx",
+      "base_step": 430000,
+      "skill_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "u7_434000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0434000.onnx",
+      "base_step": 434000,
+      "skill_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "u7_436000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0436000.onnx",
+      "base_step": 436000,
+      "skill_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "u7_438000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0438000.onnx",
+      "base_step": 438000,
+      "skill_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "u7_440000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0440000.onnx",
+      "base_step": 440000,
+      "skill_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "u7_441000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0441000.onnx",
+      "base_step": 441000,
+      "skill_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "u7_442000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0442000.onnx",
+      "base_step": 442000,
+      "skill_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "u7_444000",
+      "path": "logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0444000.onnx",
+      "base_step": 444000,
+      "skill_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "kick_aim_enabled": true
+    }
+  ],
+  "results": {
+    "u7_387000": {
+      "0": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "1": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "2": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.7249800000000001,
+            "std": 0.04999001500299835,
+            "min": 0.6562,
+            "max": 0.7812,
+            "last": 0.7812
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "3": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "4": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "5": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "6": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "u7_389000": {
+      "0": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "1": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.98752,
+            "std": 0.015284815994967034,
+            "min": 0.9688,
+            "max": 1.0,
+            "last": 0.9688
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "2": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.66876,
+            "std": 0.057957970978977515,
+            "min": 0.5938,
+            "max": 0.75,
+            "last": 0.625
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.9312400000000001,
+            "std": 0.02342277524120487,
+            "min": 0.9062,
+            "max": 0.9688,
+            "last": 0.9062
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "3": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "4": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "5": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "6": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.10624,
+            "std": 0.04239252764344207,
+            "min": 0.0312,
+            "max": 0.1562,
+            "last": 0.1562
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.9000199999999999,
+            "std": 0.07235071250513017,
+            "min": 0.8125,
+            "max": 1.0,
+            "last": 0.8438
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "u7_390000": {
+      "0": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "1": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.9625199999999999,
+            "std": 0.030643132999091327,
+            "min": 0.9062,
+            "max": 1.0,
+            "last": 0.9688
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "2": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.8,
+            "std": 0.050787557531348164,
+            "min": 0.75,
+            "max": 0.875,
+            "last": 0.75
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "3": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "4": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "5": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "6": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.33126,
+            "std": 0.04677339414667274,
+            "min": 0.25,
+            "max": 0.375,
+            "last": 0.3438
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "u7_392000": {
+      "0": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "1": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "2": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.10626,
+            "std": 0.024995007501499175,
+            "min": 0.0625,
+            "max": 0.125,
+            "last": 0.125
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "3": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "4": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "5": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "6": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "u7_398000": {
+      "0": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "1": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "2": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.6250199999999999,
+            "std": 0.05227930374440731,
+            "min": 0.5625,
+            "max": 0.6875,
+            "last": 0.6875
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "3": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.00624,
+            "std": 0.01248,
+            "min": 0.0,
+            "max": 0.0312,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "4": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "5": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "6": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.60624,
+            "std": 0.05796228428900987,
+            "min": 0.5312,
+            "max": 0.6875,
+            "last": 0.5625
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "u7_406000": {
+      "0": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.95626,
+            "std": 0.04677339414667274,
+            "min": 0.875,
+            "max": 1.0,
+            "last": 0.9375
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "1": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "2": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "3": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "4": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.98126,
+            "std": 0.024995007501499175,
+            "min": 0.9375,
+            "max": 1.0,
+            "last": 0.9375
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "5": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.91252,
+            "std": 0.04592521747362771,
+            "min": 0.8438,
+            "max": 0.9688,
+            "last": 0.8438
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "6": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "u7_414000": {
+      "0": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "1": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "2": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.03748,
+            "std": 0.023390716107036996,
+            "min": 0.0,
+            "max": 0.0625,
+            "last": 0.0625
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.9812799999999999,
+            "std": 0.015284815994967034,
+            "min": 0.9688,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "3": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "4": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.84374,
+            "std": 0.06845619329176872,
+            "min": 0.75,
+            "max": 0.9375,
+            "last": 0.8125
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "5": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "6": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "u7_422000": {
+      "0": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.00624,
+            "std": 0.01248,
+            "min": 0.0,
+            "max": 0.0312,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "1": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "2": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.28752,
+            "std": 0.08245681051314076,
+            "min": 0.125,
+            "max": 0.3438,
+            "last": 0.3125
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "3": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "4": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "5": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "6": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.1125,
+            "std": 0.03184927000733298,
+            "min": 0.0625,
+            "max": 0.1562,
+            "last": 0.125
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.49376,
+            "std": 0.09761275736295948,
+            "min": 0.3438,
+            "max": 0.625,
+            "last": 0.3438
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "u7_430000": {
+      "0": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "1": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.7125,
+            "std": 0.09562623071103452,
+            "min": 0.5625,
+            "max": 0.8438,
+            "last": 0.6562
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "2": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.075,
+            "std": 0.037533345174657694,
+            "min": 0.0312,
+            "max": 0.125,
+            "last": 0.0938
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "3": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "4": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.95624,
+            "std": 0.042416110146971275,
+            "min": 0.9062,
+            "max": 1.0,
+            "last": 0.9062
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "5": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "6": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.2375,
+            "std": 0.06433798256084815,
+            "min": 0.125,
+            "max": 0.3125,
+            "last": 0.3125
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "u7_434000": {
+      "0": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.8937799999999999,
+            "std": 0.05077032203955378,
+            "min": 0.8438,
+            "max": 0.9688,
+            "last": 0.8438
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "1": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.6,
+            "std": 0.06373774391990981,
+            "min": 0.5,
+            "max": 0.6875,
+            "last": 0.5625
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "2": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.91874,
+            "std": 0.031892419161926235,
+            "min": 0.875,
+            "max": 0.9688,
+            "last": 0.875
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "3": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "4": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "5": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "6": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.05624,
+            "std": 0.01252,
+            "min": 0.0312,
+            "max": 0.0625,
+            "last": 0.0625
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.8937799999999999,
+            "std": 0.05077032203955378,
+            "min": 0.8438,
+            "max": 0.9688,
+            "last": 0.8438
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "u7_436000": {
+      "0": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "1": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.98752,
+            "std": 0.015284815994967034,
+            "min": 0.9688,
+            "max": 1.0,
+            "last": 0.9688
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "2": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.00624,
+            "std": 0.01248,
+            "min": 0.0,
+            "max": 0.0312,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.7375,
+            "std": 0.03184927000733298,
+            "min": 0.6875,
+            "max": 0.7812,
+            "last": 0.75
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "3": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "4": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "5": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "6": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.275,
+            "std": 0.03646060888136675,
+            "min": 0.25,
+            "max": 0.3438,
+            "last": 0.3438
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.98752,
+            "std": 0.015284815994967034,
+            "min": 0.9688,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "u7_438000": {
+      "0": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.00624,
+            "std": 0.01248,
+            "min": 0.0,
+            "max": 0.0312,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "1": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.90624,
+            "std": 0.08615756728227648,
+            "min": 0.7812,
+            "max": 1.0,
+            "last": 0.8438
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "2": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.025,
+            "std": 0.03646060888136675,
+            "min": 0.0,
+            "max": 0.0938,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.4125,
+            "std": 0.05,
+            "min": 0.3125,
+            "max": 0.4375,
+            "last": 0.4375
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "3": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "4": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "5": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "6": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "u7_440000": {
+      "0": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "1": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "2": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.62496,
+            "std": 0.04841229595877477,
+            "min": 0.5312,
+            "max": 0.6562,
+            "last": 0.6562
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "3": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "4": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.89376,
+            "std": 0.07019349257587913,
+            "min": 0.7812,
+            "max": 0.9688,
+            "last": 0.875
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "5": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "6": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.99376,
+            "std": 0.012480000000000002,
+            "min": 0.9688,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "u7_441000": {
+      "0": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.9187799999999999,
+            "std": 0.06433215059361844,
+            "min": 0.8438,
+            "max": 1.0,
+            "last": 0.8438
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "1": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.9312400000000001,
+            "std": 0.02342277524120487,
+            "min": 0.9062,
+            "max": 0.9688,
+            "last": 0.9062
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "2": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.09374,
+            "std": 0.04419418966334828,
+            "min": 0.0312,
+            "max": 0.1562,
+            "last": 0.1562
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "3": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "4": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "5": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "6": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.08126,
+            "std": 0.03189241916192624,
+            "min": 0.0312,
+            "max": 0.125,
+            "last": 0.0938
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.9312799999999999,
+            "std": 0.04592521747362771,
+            "min": 0.8438,
+            "max": 0.9688,
+            "last": 0.9375
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "u7_442000": {
+      "0": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "1": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "2": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "3": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "4": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "5": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "6": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.13126,
+            "std": 0.05376919564211464,
+            "min": 0.0625,
+            "max": 0.2188,
+            "last": 0.0938
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    },
+    "u7_444000": {
+      "0": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.01248,
+            "std": 0.01528481599496703,
+            "min": 0.0,
+            "max": 0.0312,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "1": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.9375,
+            "std": 0.027995571078297362,
+            "min": 0.9062,
+            "max": 0.9688,
+            "last": 0.9062
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "2": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.9375,
+            "std": 0.027995571078297362,
+            "min": 0.9062,
+            "max": 0.9688,
+            "last": 0.9062
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "3": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "4": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "5": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 0.975,
+            "std": 0.03646060888136675,
+            "min": 0.9062,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      },
+      "6": {
+        "kick_to_loco": {
+          "alive_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_flip_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "recovered_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "mean_recovery_steps": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 5,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 5,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        }
+      }
+    }
+  }
+}

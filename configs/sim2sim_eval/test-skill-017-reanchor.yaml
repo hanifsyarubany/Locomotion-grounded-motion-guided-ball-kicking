@@ -1,0 +1,25 @@
+wandb:
+  project: Policy_Evaluation 
+  group: sim2sim-eval                   
+  run_name: test-skill-017-reanchor
+  tags: []                           
+
+iterations: 100
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260901_141539-stageC-skill017-h074-locomotion/model_0396000.onnx
+    name: test-skill-017
+    kick_aim_enabled: true              
+
+evaluations:
+  - type: kick_survival
+    num_trials: 10
+    success_sigma_m: [0.5, 1.0]          
+    ball_pos_randomization: [0.1, 0.1]   
+    # 2026-09-12: re-anchor the ball to the robot's ACTUAL pose at the kick trigger instead of
+    # leaving it at the world point it was spawned at before the 1.5s settle (during which the
+    # robot drifts ~4.2cm backward, measured). Required for Table VII: its teacher, N=2, N=4,
+    # N=6 and N=7 columns must all be measured under the SAME placement protocol or the
+    # specialist-vs-unified deltas mix two conventions. See sweep-unified-7-reanchor.yaml.
+    reanchor_ball_at_trigger: true

@@ -1,0 +1,53 @@
+[32m2026-09-06 07:28:26.654[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m945[0m - [1m[sim2sim-eval] target='skill011' base_step=250000 skills=[0][0m
+[32m2026-09-06 07:28:26.658[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m945[0m - [1m[sim2sim-eval] target='skill015' base_step=250000 skills=[0][0m
+[32m2026-09-06 07:28:26.659[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m963[0m - [1m[sim2sim-eval] iteration=0/100[0m
+[32m2026-09-06 07:28:26.659[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m979[0m - [1m[sim2sim-eval]   submitting kick_survival skill_id=0 (target='skill011') ...[0m
+[32m2026-09-06 07:28:26.659[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m979[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011') ...[0m
+[32m2026-09-06 07:28:26.668[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m979[0m - [1m[sim2sim-eval]   submitting loco_to_kick_handoff skill_id=0 (target='skill011') ...[0m
+[32m2026-09-06 07:28:26.676[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m979[0m - [1m[sim2sim-eval]   submitting kick_survival skill_id=0 (target='skill015') ...[0m
+[32m2026-09-06 07:28:26.677[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m979[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill015') ...[0m
+[32m2026-09-06 07:28:26.690[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m979[0m - [1m[sim2sim-eval]   submitting loco_to_kick_handoff skill_id=0 (target='skill015') ...[0m
+[32m2026-09-06 07:29:00.826[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited -2 for logs/UnifiedBallKickingEnhanced/20260827_044728-stageB-skill011-h076-locomotion/model_0250000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[36m09-06 07:28:58.740 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-06 07:28:58.740 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-06 07:28:58.741 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-06 07:28:58.741 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-06 07:28:58.742 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-06 07:29:00.379 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+
+stderr(tail): _scan.py", line 286, in <module>
+ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 146, in run
+    pl = getattr(robojudo.pipeline, cfg.pipeline_type)(cfg=cfg)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/pipeline/rl_pipeline.py", line 94, in __init__
+    self.self_check()
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/pipeline/rl_pipeline.py", line 100, in self_check
+    self.step(dry_run=True)
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/pipeline/rl_pipeline.py", line 284, in step
+    pd_target = self.policy.get_pd_target(obs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/pipeline/rl_pipeline.py", line 52, in get_pd_target
+    action = self.policy.get_action(obs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1004, in get_action
+    outs = self.session.run(
+           ^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/conda_env/robojudo/lib/python3.12/site-packages/onnxruntime/capi/onnxruntime_inference_collection.py", line 320, in run
+    return self._sess.run(output_names, input_feed, run_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+[0m
+[34m[1mwandb[0m: [33mWARNING[0m The get_url method is deprecated and will be removed in a future release. Please use `run.url` instead.

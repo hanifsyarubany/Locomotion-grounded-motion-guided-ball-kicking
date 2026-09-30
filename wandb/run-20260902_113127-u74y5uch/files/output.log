@@ -1,0 +1,7 @@
+[32m2026-09-02 11:31:28.740[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m717[0m - [1m[sim2sim-eval] target='skill011' base_step=250000 skills=[0][0m
+[32m2026-09-02 11:31:28.746[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m717[0m - [1m[sim2sim-eval] target='skill015' base_step=250000 skills=[0][0m
+[32m2026-09-02 11:31:28.746[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m725[0m - [1m[sim2sim-eval] iteration=0/100[0m
+[32m2026-09-02 11:31:28.746[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m733[0m - [1m[sim2sim-eval]  target='skill011' (turn within iteration 0)[0m
+[32m2026-09-02 11:31:28.746[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m
+[32m2026-09-02 11:31:39.687[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m757[0m - [1m[sim2sim-eval]   -> {'skill011/0/kick/fall_rate': 0.0, 'skill011/0/kick/hit_rate': 0.0}[0m
+[32m2026-09-02 11:31:39.687[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m738[0m - [1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 ...[0m

@@ -1,0 +1,119 @@
+# Table IX (locomotion generality) checkpoint sweep.
+#
+# All 6 of Table IX's rows are now covered by the locomotion_metrics eval type
+# (mujoco_locomotion_metrics_worker.py): v_x forward/backward MAE, v_y lateral
+# MAE, omega_z yaw MAE (each with its own fall_rate), push_recovery_rate, and
+# (added 2026-09-09) terrain_traversal_success.
+#
+# TERRAIN TRAVERSAL -- faithful port, not an approximation: each episode samples
+# a real terrain patch using this project's OWN generation formulas
+# (simulator/shared/terrain.py's _rough_terrain_func/_low_obstacles_terrain_func,
+# reproduced inline in the worker since that module's own trimesh import isn't
+# available in the robojudo conda env -- see the worker's own citations), mixed
+# at {flat: 0.4, rough: 0.45, low_obstacles: 0.15}, the REAL proportions read
+# directly from this run's own resolved holosoma_config.yaml (not a generic
+# default). Written into a new scene, scene_g1_29dof_terrain.xml (RoboJuDo
+# assets), via MjModel.hfield_data at runtime -- no recompile, no new asset file
+# per episode. Overall rate is what's surfaced through sim2sim_eval.py
+# (terrain_traversal_success); a per-tier breakdown lives in the worker's own
+# raw JSON (terrain_traversal_detail) for diagnostics, not swept here.
+#
+# FALL DEFINITION FIXED 2026-09-09 (this is why this run supersedes the earlier
+# 20260909_141451 attempt): the first version scored a fall as a single-tick
+# `min(z) < 0.70`, and reported rough-terrain traversal at ~6% against ~88% for
+# the sparser low_obstacles tier -- backwards from any reasonable difficulty
+# ordering. Instrumented directly (per-tick z + tilt magnitude): every one of
+# those "failures" was an ordinary single-support gait-cycle height dip on a
+# tile already ~3-5cm lower than flat ground -- tilt stayed 1-3 degrees, z
+# recovered within 2-10 ticks, gait continued normally afterward. None was a
+# topple. Fixed by switching to the SAME sustained-10-consecutive-tick check
+# training's own locomotion-mode fall termination uses
+# (base_height_below_threshold_sustained_post_flip_graced, min_height=0.70,
+# consecutive_steps=10 -- config_values/unified/g1/termination.py's
+# _low_height_term) -- see mujoco_locomotion_metrics_worker.py's own
+# FALL_SUSTAINED_STEPS/_SustainedFallTracker for the fix and its own citation of
+# the root-cause instrumentation. Re-verified after the fix: a 40-episode direct
+# probe on a fully-trained checkpoint now reads rough=17/17, and the SAME probe
+# on the early loco-only 15k checkpoint reads rough=14/17 -- the metric still
+# discriminates a less-capable checkpoint, it just no longer manufactures a
+# catastrophic failure out of normal gait oscillation. The earlier "MuJoCo vs
+# IsaacGym terrain-mesh fidelity" hypothesis this project's own paper draft had
+# flagged as an open question was a red herring -- the terrain generation was
+# independently confirmed byte-faithful before this fix, and the actual defect
+# was the success criterion, not the terrain.
+#
+# TWO onnx_targets groups, matching Table IX's paired comparison:
+#   - "loco_only_015000" -- Stage-A substrate, BEFORE any skill layer (the
+#     paper's own "same locomotion substrate trained without any skill layer"
+#     baseline). logs/LocomotionAndBallKicking/20260823_035011-unified-stageA-
+#     locomotion-height-074-locomotion, single checkpoint (15k of 20 available,
+#     1k-20k at 1000-step spacing) -- operator choice, 2026-09-09, NOT the
+#     median-over-8 house rule the rest of this project follows. Makes this
+#     side of the comparison a single-checkpoint reading against the
+#     with-library side's median-of-16 -- an intentional asymmetry, not an
+#     oversight; widen back to a spread across the 20 available checkpoints if
+#     that turns out to matter. VERIFIED 261-dim obs + time_step input,
+#     byte-identical ONNX interface to the unified checkpoints below --
+#     loadable through the SAME g1_unified_loco_kick/UnifiedLocoKickPolicy
+#     pipeline this worker already builds, no new pipeline code needed.
+#   - "u7_*" -- the SAME 16 checkpoints already used throughout the paper
+#     (sweep-unified-7.yaml's own list, 387k-444k) -- reused here rather than a
+#     fresh subset so every Table IX number traces to the identical model
+#     identity as Tables V/VI/VII, not a different sample of the same run.
+#
+# locomotion_metrics is a PER-TARGET eval (see sim2sim_eval.py's own
+# _PER_TARGET_EVAL_TYPES) -- one result per checkpoint, not per skill_id, so
+# skill_ids/kick_aim_enabled are irrelevant here and omitted.
+#
+# Report the MEDIAN across the u7 group's 16 checkpoints, same house rule as
+# every other sweep in this project; the loco_only side is the single
+# 15k reading described above, not a median.
+wandb:
+  project: Policy_Evaluation
+  group: sim2sim-eval-sweep
+  run_name: sweep-locomotion-generality
+  tags: [checkpoint-sweep, locomotion-generality]
+
+iterations: 15
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/LocomotionAndBallKicking/20260823_035011-unified-stageA-locomotion-height-074-locomotion/model_0015000.onnx
+    name: loco_only_015000
+
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0387000.onnx
+    name: u7_387000
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0389000.onnx
+    name: u7_389000
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0390000.onnx
+    name: u7_390000
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0392000.onnx
+    name: u7_392000
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0398000.onnx
+    name: u7_398000
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0406000.onnx
+    name: u7_406000
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0414000.onnx
+    name: u7_414000
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0422000.onnx
+    name: u7_422000
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0430000.onnx
+    name: u7_430000
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0434000.onnx
+    name: u7_434000
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0436000.onnx
+    name: u7_436000
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0438000.onnx
+    name: u7_438000
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0440000.onnx
+    name: u7_440000
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0441000.onnx
+    name: u7_441000
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0442000.onnx
+    name: u7_442000
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0444000.onnx
+    name: u7_444000
+
+evaluations:
+  - type: locomotion_metrics
+    num_episodes: 5

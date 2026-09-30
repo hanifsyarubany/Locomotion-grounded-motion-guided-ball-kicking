@@ -1,0 +1,5 @@
+[32m2026-09-01 13:13:29.862[0m | [31m[1mERROR   [0m | [36m__main__[0m:[36mrun_eval[0m:[36m398[0m - [31m[1m[sim2sim-eval] onnx path does not exist, skipping target: logs/UnifiedBallKickingEnhanced/220260827_044728-stageB-skill011-h076-locomotion/model_0250000.onnx[0m
+[32m2026-09-01 13:13:29.890[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m418[0m - [1m[sim2sim-eval] target='skill015' base_step=250000 skills=[0][0m
+[32m2026-09-01 13:13:29.890[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m426[0m - [1m[sim2sim-eval] iteration=0/100[0m
+[32m2026-09-01 13:13:29.891[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m434[0m - [1m[sim2sim-eval]  target='skill015' (turn within iteration 0)[0m
+[32m2026-09-01 13:13:29.891[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m439[0m - [1m[sim2sim-eval]   kick_survival skill_id=0 ...[0m

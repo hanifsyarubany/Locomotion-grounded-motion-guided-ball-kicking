@@ -211,6 +211,15 @@ class SkillConfig:
     ships at 1.0, matching this project's convention of landing new mechanisms as a verified
     no-op and letting the value change be a deliberate, separate decision."""
 
+    locomotion_tracking_floor: float = 0.0
+    """2026-09-16, W1 ablation arm. Softens the task-mode gate on the 7 motion-tracking terms from
+    a hard zero into a discount: LOCOMOTION-mode envs keep this fraction of the tracking reward
+    instead of exactly none. 0.0 (default) = today's hard zero, an exact no-op -- the floor is
+    never stamped onto any term at that value (see config_values/unified/g1/reward.py's
+    _apply_locomotion_tracking_floor). Set to 0.1 ONLY by
+    task_config_stageB2-abl-w1-trackfloor.yaml, to build the counterfactual Sec. III-A asserts
+    but never measured."""
+
     kick_recovery_posture_reward_scale: float = 1.0
     """Multiplier on this skill's 6 kick-recovery standing-posture penalty terms
     (penalty_kick_recovery_stand_height/orientation/feet_width/knee_width/stance_asymmetry/
@@ -2124,6 +2133,7 @@ _SHARED_SKILL_DEFAULT_FIELDS: tuple[tuple[str, float, type], ...] = (
     ("root_tracking_reward_scale", 1.0, float),
     ("recovery_tracking_scale", 1.0, float),
     ("kick_recovery_posture_reward_scale", 1.0, float),
+    ("locomotion_tracking_floor", 0.0, float),
     ("kick_safety_reward_scale", 1.0, float),
     ("kick_alive_reward_scale", 1.0, float),
     ("kick_alive_pre_kick_ratio", 1.0, float),
@@ -2749,6 +2759,9 @@ def _parse_skill_blocks(raw: dict, yaml_path: Path, shared_defaults: dict | None
                     block.get(
                         "kick_recovery_posture_reward_scale", defaults.get("kick_recovery_posture_reward_scale", 1.0)
                     )
+                ),
+                locomotion_tracking_floor=float(
+                    block.get("locomotion_tracking_floor", defaults.get("locomotion_tracking_floor", 0.0))
                 ),
                 kick_safety_reward_scale=float(
                     block.get("kick_safety_reward_scale", defaults.get("kick_safety_reward_scale", 1.0))

@@ -1,0 +1,94 @@
+# Checkpoint sweep, unified N=7 distillation -- RE-ANCHORED BALL PLACEMENT (2026-09-12).
+#
+# Identical to sweep-unified-7.yaml in every respect except ONE: reanchor_ball_at_trigger.
+# Same 16 checkpoints, same 25 iterations, same 10 trials, same jitter, same success radii,
+# so the two runs are directly comparable and the delta is attributable to the one change.
+#
+# WHAT THE ONE CHANGE FIXES. mujoco_kick_survival_scan.py spawns the ball at a fixed WORLD
+# point and then holds a zero velocity command for 1.5s before triggering the kick. The robot
+# does not hold still during that settle: measured across three checkpoints it walks BACKWARD
+# 4.26-4.60 cm and yaws about -1.5 deg, deterministically, every trial. The ball therefore sits
+# ~4.3 cm further out in the robot's own frame than the skill was trained to expect -- a
+# systematic offset, always in the same direction, against a +/-10 cm jitter.
+#
+# Training never has that offset. Both of training's ball-placement paths anchor the ball to the
+# robot's live pose (place_ball_at_entry reads the pose straight from the simulator; reset()
+# anchors to the actual post-noise target_root_pos/target_root_rot), and
+# mujoco_loco_to_kick_handoff_scan.py already re-anchors at its own flip instant -- which is why
+# that scan's hit rate is not depressed the way this one's is. Table VIII's settled-vs-in-motion
+# gap (91.5 vs 96.3) was this artifact, not a capability difference.
+#
+# EXPECTED DIRECTION: numbers should go UP, not down. The old protocol handicapped the policy,
+# so the previously reported Table V/VI figures are UNDERSTATED, not flattered. A 2x2 on two
+# checkpoints with headroom measured +16.7/+13.3 pts (skill_1 @441k) and +6.7/+5.0 (skill_2
+# @392k). Checkpoints already at ceiling will not move -- that is expected, not a null result.
+#
+# Report the MEDIAN across all 16, not any single checkpoint (benchmark_plan.md sec 5), and read
+# sweep-unified-7.yaml's own NOTE ON BIAS about the operator-picked subset -- it applies here
+# unchanged, since the checkpoint list is identical.
+wandb:
+  project: Policy_Evaluation
+  group: sim2sim-eval-sweep
+  run_name: sweep-unified-7-reanchor
+  tags: [checkpoint-sweep, reanchor-ball]
+
+iterations: 25
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0387000.onnx
+    name: u7_387000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0389000.onnx
+    name: u7_389000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0390000.onnx
+    name: u7_390000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0392000.onnx
+    name: u7_392000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0398000.onnx
+    name: u7_398000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0406000.onnx
+    name: u7_406000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0414000.onnx
+    name: u7_414000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0422000.onnx
+    name: u7_422000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0430000.onnx
+    name: u7_430000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0434000.onnx
+    name: u7_434000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0436000.onnx
+    name: u7_436000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0438000.onnx
+    name: u7_438000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0440000.onnx
+    name: u7_440000   # <- previously reported in paper
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0441000.onnx
+    name: u7_441000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0442000.onnx
+    name: u7_442000   # <- operator pick
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_100900-distill-7skills-12161718192011-distill/model_0444000.onnx
+    name: u7_444000   # <- operator pick
+    kick_aim_enabled: true
+
+evaluations:
+  - type: kick_survival
+    num_trials: 10
+    success_sigma_m: [0.5, 1.0]
+    ball_pos_randomization: [0.1, 0.1]
+    # The one and only difference from sweep-unified-7.yaml.
+    reanchor_ball_at_trigger: true

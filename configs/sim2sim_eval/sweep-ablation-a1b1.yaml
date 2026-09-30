@@ -1,0 +1,122 @@
+# Checkpoint sweep for Table XI's "ours" row -- shared by (a1) "Posture + contact
+# safety (ours)" and (b1) "Kick-state transplant (ours)", since both sub-tables'
+# top row is the same unmodified run: 20260908_122248-stageB-skill011-h076.
+#
+# skill_7 (skill011), target_height 0.76 chosen ON PURPOSE (not the 0.74 every
+# other skill uses): skill_7 is the one that easily topples during a kick-to-loco
+# flip triggered at a random tick mid-strike, so this checkpoint is the one that
+# actually exercises the mechanisms Table XI is testing. Do not "fix" this to
+# 0.74 to match other skills -- confirmed intentional by the operator, 2026-09-09.
+#
+# 8 checkpoints evenly spaced across the run's full 250k-300k range (widened back
+# 2026-09-09 from an intermediate 279k-300k-clustered version whose own results
+# had already shown the narrower window is a weaker checkpoint-lottery guard --
+# see git history on this file for that run's actual numbers before this revert).
+# Widened for a SECOND reason beyond that one run's own statistics: a2/a3 (the
+# other two arms of Table XI(a), configs/task/task_config_stageB2-abl-a2/a3-*)
+# resume from the SAME model_0250000.pt and share this run's 250k-300k budget, so
+# this range is also what keeps all three arms on an IDENTICAL evaluation
+# protocol -- an ablation whose "ours" row was measured with a different degree
+# of checkpoint-lottery protection than its comparison arms would be measuring a
+# protocol difference, not a reward-term difference.
+# Report the MEDIAN across these 8, not any single one -- see benchmark_plan.md
+# sec 5, and this project's own house rule (medians over 6-8+ checkpoints).
+#
+# TWO evaluations, ONE run, because they answer three different columns off the
+# SAME 8 checkpoints (no reason to split into separate sweeps and pay for the
+# checkpoints twice):
+#
+#   1. kick_to_loco_flip (split_by_strike_phase: true) -- forces a flip to
+#      locomotion at a random tick during a REAL, physically-simulated kick.
+#      auto-derives the strike-window tick per checkpoint from the ONNX itself
+#      (strike_start_tick), so no hand-tuned flip_delay_min/max_steps here -- see
+#      _run_kick_to_loco_flip_split_by_strike_phase's own docstring. This single
+#      scan answers TWO different table cells:
+#        - Table XI(a) "Alive (%)" / "Topple (%)": read directly off
+#          strike/alive_rate (Topple = 1 - alive_rate over the same
+#          reached-the-flip population -- no separate metric needed, it's the
+#          same number's complement).
+#        - Table XI(b) "Alive, live donor (%)": the SAME strike/alive_rate.
+#          "Live donor" in training (_maybe_kick_state_transplant) means a pose
+#          the policy's own dynamics produced mid-clip -- exactly what a random
+#          in-rollout flip tick already is. No separate mechanism needed; this
+#          is why no new code was required for that column (2026-09-09).
+#
+#   2. ref_clip_recovery (new eval type, 2026-09-09) -- teleports the robot
+#      directly into a pose sampled from the AUTHORED CLIP's own kinematics (no
+#      physics ever run to reach it), starts it in ordinary locomotion mode (no
+#      kick attempted at all), and measures the same alive/fall outcome. Fills
+#      Table XI(b) "Alive, ref.-clip (%)". See mujoco_ref_clip_recovery_scan.py's
+#      own module docstring for the DOF-ordering/frame-window details.
+#      frame_max=215 is skill_011.yaml's own stand_start_frame, the best
+#      available proxy for training's pre_recovery_motion_end_idx -- not
+#      independently confirmed to be the exact value training uses.
+#
+# Table XI(a) "Recovery (steps)" -- ADDED 2026-09-09 (was previously missing from
+# this file entirely). Both eval types above now also report "recovered_rate" and
+# "mean_recovery_steps": "recovered" mirrors training's own
+# base_height_below_threshold_sustained_post_flip_graced (min_height=0.70,
+# consecutive_steps=10 -- see RECOVERY_MIN_HEIGHT/RECOVERY_CONSECUTIVE_STEPS in
+# both mujoco_kick_loco_flip_scan.py and mujoco_ref_clip_recovery_scan.py), and a
+# trial that falls at ANY point in its window is never counted as recovered
+# regardless of an earlier stable streak (caught empirically before shipping: an
+# early version reported "recovered in 0 steps" for trials that stood fine for 10
+# ticks and then toppled 40+ ticks later). mean_recovery_steps is only over
+# trials that DID recover -- read recovered_rate alongside it, same reason
+# alive_rate is read alongside pre_flip_fail_rate.
+#
+# Keys this file now produces (in addition to the alive/fall-rate keys already
+# described above): kick_to_loco's strike/recovered_rate,
+# strike/mean_recovery_steps, nonstrike/recovered_rate,
+# nonstrike/mean_recovery_steps (nonstrike pooled across its own sub-calls via
+# sim2sim_eval.py's _pool_recovery_metrics); ref_clip_recovery's recovered_rate,
+# mean_recovery_steps.
+wandb:
+  project: Policy_Evaluation
+  group: sim2sim-eval-sweep
+  run_name: sweep-ablation-a1b1
+  tags: [checkpoint-sweep, ablation]
+
+iterations: 25
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0250000.onnx
+    name: abl_ours_250000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0257000.onnx
+    name: abl_ours_257000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0264000.onnx
+    name: abl_ours_264000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0271000.onnx
+    name: abl_ours_271000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0279000.onnx
+    name: abl_ours_279000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0286000.onnx
+    name: abl_ours_286000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0293000.onnx
+    name: abl_ours_293000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0300000.onnx
+    name: abl_ours_300000   # <- the checkpoint you originally asked about
+    kick_aim_enabled: true
+
+evaluations:
+  # -> Table XI(a) Alive/Topple, and Table XI(b) "Alive, live donor (%)".
+  - type: kick_to_loco_flip
+    split_by_strike_phase: true
+    num_trials: 32
+    timeout_s: 300.0
+
+  # -> Table XI(b) "Alive, ref.-clip (%)".
+  - type: ref_clip_recovery
+    motion_npz: /workspaces/isaaclab_arena/submodules/workspaces/locomotion_and_motion_tracking/video2robot/data/video_011/npz_holosoma/robot_motion_track_1.npz
+    frame_min: 0
+    frame_max: 215
+    num_trials: 32
+    hold_s: 5.0

@@ -1,0 +1,64 @@
+# Checkpoint sweep for Table XI(a)'s "Contact safety only" row -- the arm trained
+# from task_config_stageB2-abl-a2-noposture.yaml (posture-shaping reward off,
+# in-strike contact-safety terms on -- see that config's own header for exactly
+# which keys differ from the unmodified baseline).
+#
+# Run: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion
+# Resumed from the SAME model_0250000.pt as the "ours" run
+# (20260908_122248-stageB-skill011-h076), same --num-learning-iterations 300000
+# budget -- so it shares the exact 250k-300k range sweep-ablation-a1b1.yaml uses.
+#
+# SAME 8 checkpoints, evenly spaced 250k-300k, as sweep-ablation-a1b1.yaml --
+# deliberately identical protocol, not just a similar one: this row is being
+# compared against "ours" in the same table, so both need the same degree of
+# checkpoint-lottery protection (see sweep-ablation-a1b1.yaml's own header for
+# the full reasoning -- this file exists specifically so that reasoning holds).
+#
+# model_0300000.onnx did NOT exist yet when this file was written (training was
+# live at 299k) -- confirm it has landed before running this config; the other
+# seven checkpoints (250k-293k) were already saved.
+#
+# Only kick_to_loco_flip -- a2 has no role in Table XI(b) (that table's rows are
+# b1/b2/b3, a SEPARATE set of training runs from a2/a3), so ref_clip_recovery
+# is not needed here.
+wandb:
+  project: Policy_Evaluation
+  group: sim2sim-eval-sweep
+  run_name: sweep-ablation-a2
+  tags: [checkpoint-sweep, ablation]
+
+iterations: 25
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0250000.onnx
+    name: abl_a2_250000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0257000.onnx
+    name: abl_a2_257000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0264000.onnx
+    name: abl_a2_264000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0271000.onnx
+    name: abl_a2_271000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0279000.onnx
+    name: abl_a2_279000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0286000.onnx
+    name: abl_a2_286000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0293000.onnx
+    name: abl_a2_293000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_080638-stageB-skill011-h076-abl-a2-locomotion/model_0300000.onnx
+    name: abl_a2_300000
+    kick_aim_enabled: true
+
+evaluations:
+  # -> Table XI(a) "Contact safety only" row: Alive/Topple/Recovery(steps).
+  - type: kick_to_loco_flip
+    split_by_strike_phase: true
+    num_trials: 32
+    timeout_s: 300.0

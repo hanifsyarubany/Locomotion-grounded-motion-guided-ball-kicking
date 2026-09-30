@@ -34,6 +34,7 @@ Usage (manual test):
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -42,6 +43,9 @@ import traceback
 FFMPEG_FALLBACK = "/workspaces/isaaclab_arena/submodules/workspaces/conda_env/hssim_holosoma/bin/ffmpeg"
 ROBOJUDO_REPO = "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo"
 SCENE_WITH_BALL = ROBOJUDO_REPO + "/assets/robots/g1/holosoma_model/scene_g1_29dof_with_ball.xml"
+
+# Abort if the first this-many rendered frames are ALL solid black (see capture_frame's guard).
+_RENDER_BLACK_CHECK_FRAMES = 10
 
 # Same placement as mujoco_kick_rollout_worker.py's BALL_WORLD_POS -- not imported from there since
 # these are two independently-invoked standalone subprocess scripts by design (see module
@@ -87,7 +91,7 @@ def run(args: argparse.Namespace) -> int:
     env = pl.env
     env.viewer.is_alive = False
     inner = pl.policy.policy
-    inner._update_velocity_command = lambda cd: None
+    inner._update_velocity_command = lambda cd, ball_pos_b=None: None
 
     try:
         renderer = mujoco.Renderer(env.model, height=args.height, width=args.width)
@@ -112,10 +116,28 @@ def run(args: argparse.Namespace) -> int:
                 stdin=subprocess.PIPE, stdout=subprocess.DEVNULL, stderr=stderr_f,
             )
 
+            # Black-frame guard -- see mujoco_kick_rollout_worker.py's capture_frame for the full
+            # rationale (a memory-pressured GPU renders solid black with no exception; without this
+            # the worker exits 0 and ships a silently-black video).
+            _render_check = {"n": 0, "max": 0}
+
             def capture_frame() -> None:
                 camera.lookat[:] = [env.data.qpos[0], env.data.qpos[1], 0.6]
                 renderer.update_scene(env.data, camera=camera)
-                proc.stdin.write(renderer.render().tobytes())
+                frame = renderer.render()
+                if _render_check["n"] < _RENDER_BLACK_CHECK_FRAMES:
+                    _render_check["n"] += 1
+                    _render_check["max"] = max(_render_check["max"], int(frame.max()))
+                    if _render_check["n"] == _RENDER_BLACK_CHECK_FRAMES and _render_check["max"] == 0:
+                        raise RuntimeError(
+                            f"RENDER_BLACK_FRAMES: mujoco.Renderer produced {_RENDER_BLACK_CHECK_FRAMES} "
+                            "consecutive all-black frames (max pixel 0). The EGL context/framebuffer "
+                            "almost certainly failed to allocate -- typically GPU memory pressure from "
+                            f"concurrent jobs. MUJOCO_GL={os.environ.get('MUJOCO_GL')!r} "
+                            f"MUJOCO_EGL_DEVICE_ID={os.environ.get('MUJOCO_EGL_DEVICE_ID')!r}. Aborting "
+                            "instead of writing a silently-black video."
+                        )
+                proc.stdin.write(frame.tobytes())
 
             def step_vel(vx: float) -> None:
                 inner.lin_vel_command = np.array([vx, 0.0])

@@ -280,10 +280,34 @@ class RewardManager:
             # happens to zero it out here but won't always (task_mode changes across an episode).
             self._reward_nan_probe(term_name, rew_raw)
 
+            # 2026-09-07: neutralize AFTER the probe has already logged the true raw value (so the
+            # diagnostic above is unaffected) but BEFORE task-mode masking or weight scaling below --
+            # both of those are plain multiplication, and NaN/inf survive multiplication by zero
+            # (NaN*0.0 == NaN, inf*0.0 == NaN), so a non-finite term previously corrupted
+            # self._reward_buf for that env even when task_mode_mask should have zeroed it out or
+            # weight=0.0 should have made it a no-op (see KickSwingFeetClearance's own 2026-09-07 fix
+            # for the concrete case that surfaced this: a missed terrain raycast producing inf,
+            # squared and multiplied by a zero swing_mask -- inf*0.0 -- for one env at global_step
+            # 373). This makes "weight=0.0 cannot affect training" and "task_mode masks a term out"
+            # actually hold unconditionally, for every term, not just ones a bug happens to be found
+            # in. Episodic sums below (_episode_sums_raw) also read the neutralized value, not the
+            # true NaN -- consistent with the same intent: a disabled/off-mode term's bug shouldn't
+            # poison a logged sum either. The probe's own one-shot latch still fires on the FIRST
+            # offending term across a whole run; this doesn't change that, it only stops what happens
+            # after the probe already knows.
+            rew_raw = torch.nan_to_num(rew_raw, nan=0.0, posinf=0.0, neginf=0.0)
+
             # Zero out envs not currently in this term's task mode (no-op unless the env
             # implements task_mode_mask, e.g. UnifiedManager, and the term opts in via task_mode)
             if term_cfg.task_mode is not None and hasattr(self.env, "task_mode_mask"):
-                rew_raw = rew_raw * self.env.task_mode_mask(term_cfg.task_mode).to(rew_raw.dtype)
+                mode_mask = self.env.task_mode_mask(term_cfg.task_mode).to(rew_raw.dtype)
+                # task_mode_floor > 0 turns the {0, 1} gate into {floor, 1}: out-of-mode envs keep
+                # a discounted share of the term instead of exactly none (W1 ablation, see
+                # RewardTermCfg.task_mode_floor). 0.0 (default) skips the clamp entirely, so the
+                # multiply below is bit-identical to what it was before this branch existed.
+                if term_cfg.task_mode_floor > 0.0:
+                    mode_mask = mode_mask.clamp(min=term_cfg.task_mode_floor)
+                rew_raw = rew_raw * mode_mask
 
             # Scale by weight and dt -- a per-skill table (see RewardTermCfg.weight_per_skill),
             # when present, wins over the plain scalar: gather each env's OWN skill's weight,

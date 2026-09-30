@@ -1,0 +1,47 @@
+# Seed/run-to-run noise floor for Table XI's loco-only baseline (2026-09-16).
+#
+# Table XI's claim is an ABSENCE of effect (attaching the skill library must not
+# degrade locomotion), and the original reading used ONE loco-only checkpoint from
+# ONE run -- so a reviewer cannot tell a real delta from run-to-run variation.
+# This sweep measures that variation directly, at the SAME 15k checkpoint the
+# paper's baseline uses, holding every other setting identical:
+#
+#   seed42_a  20260823_035011  the run Table XI already reports (seed 42)
+#   seed42_b  20260915_002653  SAME config, SAME seed 42, re-run -- diverges only
+#                              through GPU nondeterminism (torch_deterministic=false).
+#                              This is a RUN-TO-RUN replicate, not a seed replicate.
+#   seed7     20260916_220122  true seed replicate (--training.seed 7)
+#   seed13    20260916_220347  true seed replicate (--training.seed 13)
+#
+# All four are from-scratch Stage A, checkpoint: null, no skills
+# (skill_ball_configs: []), target_height 0.74, num_envs 2048. Verified against
+# each run's own resolved holosoma_config.yaml before launching.
+#
+# The with-library side is NOT reseeded here: its pipeline is Stage A + 7x Stage B
+# + distillation, which is a multi-day job. So this bounds how much the BASELINE
+# moves under reseeding, not how much the library side does -- report it as such.
+#
+# Eval settings copied from sweep-locomotion-generality.yaml so the numbers are
+# directly comparable to the u7 group already measured there.
+wandb:
+  project: Policy_Evaluation
+  group: sim2sim-eval-sweep
+  run_name: sweep-loco-seed-floor
+  tags: [checkpoint-sweep, locomotion-generality, seed-floor]
+
+iterations: 15
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/LocomotionAndBallKicking/20260823_035011-unified-stageA-locomotion-height-074-locomotion/model_0015000.onnx
+    name: seed42_a
+  - path: logs/LocomotionAndBallKicking/20260915_002653-unified-stageA-locomotion-height-074-locomotion/model_0015000.onnx
+    name: seed42_b
+  - path: logs/LocomotionAndBallKicking/20260916_220122-unified-stageA-locomotion-height-074-seed7-locomotion/model_0015000.onnx
+    name: seed7
+  - path: logs/LocomotionAndBallKicking/20260916_220347-unified-stageA-locomotion-height-074-seed13-locomotion/model_0015000.onnx
+    name: seed13
+
+evaluations:
+  - type: locomotion_metrics
+    num_episodes: 5

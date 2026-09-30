@@ -1,0 +1,159 @@
+# 2026-09-17: THREE-ARM version -- adds floor=0.5 to the hard-zero / floor=0.1 pair,
+# to test whether the locomotion cost GROWS with the floor (dose-response) rather than
+# being specific to 0.1. All three arms resume from the SAME parent
+# (20260827_044728/model_0250000.pt), same seed 42, same num_envs 3300, and differ only
+# in locomotion_tracking_floor applied to the SAME 7 motion-tracking terms (verified:
+# 7 terms floored / 65 at 0.0 in both floored arms' resolved configs).
+#
+# The paper reports the floor=0.1 arm, because 0.1 is RoboNaldo's own locomotion-mode
+# w_motion. This 0.5 arm is supporting evidence for monotonicity, not the headline.
+#
+# 2026-09-17 RE-RUN: the floor=0.1 arm here is 20260917_013536, NOT the earlier
+# 20260916_150736. The earlier one trained with IsaacSim video logging ON while the
+# hard-zero baseline had it OFF, so the reported pair differed in a second way. All
+# three arms in THIS config are video-off (verified in each resolved holosoma_config),
+# leaving locomotion_tracking_floor as the only difference. Video logging should not
+# touch gradients, but the ablation's claim is "one variable", so it is now literally true.
+#
+# W1 ablation: does the task-mode gate have to be a HARD ZERO?
+#
+# Sec. III-A of the paper asserts: "The gate is a hard zero, not a reduced
+# weight ... tracking rewards left active at reduced weight would still shape
+# the reachable gait space, whereas g_tau == 0 optimises locomotion against its
+# own specification alone." That is a counterfactual about a system nobody had
+# trained. Table XI compares loco-only vs with-library WITHIN the proposed
+# design, which shows the library does not hurt this system's locomotion -- it
+# does NOT show that a tracking-shaped substrate would be hurt. This sweep is
+# that missing comparison.
+#
+# TWO onnx_targets groups, one mechanism apart:
+#   - "hardzero_*" -- the reference arm, locomotion_tracking_floor 0.0 (the
+#     paper's design). logs/.../20260908_122248-stageB-skill011-h076-locomotion
+#   - "floor01_*"  -- locomotion_tracking_floor 0.1: the 7 motion-tracking terms
+#     keep task_mode="kick" but LOCOMOTION-mode envs now receive 0.1x of them
+#     instead of exactly 0. Shooting and kick-safety terms stay hard-zeroed, so
+#     the arms differ in the tracking objective ONLY.
+#     logs/.../20260916_150736-stageB-skill011-h076-abl-w1-locomotion
+#
+# Both arms resumed from the SAME parent checkpoint
+# (20260827_044728-stageB-skill011-h076/model_0250000.pt), same 300k budget,
+# same 3300 envs, same mujoco rollout cadence -- verified by diffing the two
+# runs' frozen holosoma_config.yaml, which differ in exactly the one key.
+#
+# SAME 8 checkpoints, evenly spaced 250k-300k, as sweep-ablation-a1b1.yaml --
+# deliberately identical protocol, not merely a similar one: these rows are
+# compared against each other, so both need the same degree of
+# checkpoint-lottery protection (one skill ranged 3.6-45.2% across a sweep;
+# see the paper's Sec. V-B).
+#
+# locomotion_metrics is a PER-TARGET eval (sim2sim_eval.py's own
+# _PER_TARGET_EVAL_TYPES) -- one result per checkpoint, not per skill_id, so
+# skill_ids/kick_aim_enabled are irrelevant here and omitted, exactly as in
+# sweep-locomotion-generality.yaml.
+#
+# Report the MEDIAN across each arm's 8 checkpoints, same house rule as every
+# other sweep in this project. Report the result WHICHEVER WAY IT LANDS: a null
+# result still converts Sec. III-A's assertion into a measured statement, which
+# is the entire point of running this.
+#
+# SCOPE, to be stated wherever this is reported: Stage B, skill_7 (skill011),
+# one seed. It is a real controlled counterfactual for the gate mechanism; it
+# is NOT the deployed N=7 system.
+# ==============================================================================
+# RESULT (2026-09-17, run 20260917_041803). Medians over the 8 matched checkpoints:
+#
+#   metric          hard zero   floor 0.1   floor 0.5
+#   v_x forward       0.337       0.375       0.673     monotone
+#   v_x backward      0.464       0.581       0.791     monotone
+#   v_y lateral       0.351       0.371       0.399     monotone
+#   omega_z yaw       0.140       0.147       0.173     monotone
+#
+#   backward vs hard zero: floor 0.1 -> 7/8, p=0.070 (NOT significant)
+#                          floor 0.5 -> 8/8, p=0.008, delta +0.327
+#
+# ⚠️ TWO FINDINGS NOT IN THE PAPER (operator decision 2026-09-17, recorded so they
+# are not lost, and so nobody re-derives them thinking they are new):
+#
+#  1. PUSH RECOVERY REVERSES. Per checkpoint (250k first, the SHARED parent):
+#       hard zero [100,0,0,0,0,0,0,0]   floor 0.1 [100,0,0,0,0,0,0,0]
+#       floor 0.5 [100,100,100,100,100,100,100,100]
+#     Both low-floor arms lose 80N push recovery entirely after the parent, while
+#     floor 0.5 keeps it. Terrain goes the same way (98.0 / 98.7 / 100.0). So the
+#     tracking-vs-floor story is NOT "hard zero is better on every locomotion axis"
+#     -- it is specific to command tracking. Table X(c) reports tracking MAE only,
+#     which is its stated scope; these are Stage-2 ablation checkpoints, not the
+#     shipped policy (Table XI's deployed push recovery is 100%).
+#
+#  2. THE 0.1 ARM DOES NOT REPRODUCE ACROSS IDENTICAL RE-RUNS. The arm the paper
+#     originally reported (20260916_150736, IsaacSim video logging ON) gave 8/8 and
+#     p=0.008 on backward tracking. This matched re-run (20260917_013536, video OFF,
+#     same seed 42, same parent) gives 7/8 and p=0.070. Same config, diverging only
+#     through GPU nondeterminism (torch_deterministic=false). That is why the paper
+#     now attaches its p=0.008 to the 0.5 arm, where the effect is unambiguous.
+#
+wandb:
+  project: Policy_Evaluation
+  group: sim2sim-eval-sweep
+  run_name: sweep-ablation-w1-trackfloor-3arm
+  tags: [checkpoint-sweep, ablation, w1-tracking-floor, locomotion-generality]
+
+iterations: 15
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0250000.onnx
+    name: hardzero_250000
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0257000.onnx
+    name: hardzero_257000
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0264000.onnx
+    name: hardzero_264000
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0271000.onnx
+    name: hardzero_271000
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0279000.onnx
+    name: hardzero_279000
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0286000.onnx
+    name: hardzero_286000
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0293000.onnx
+    name: hardzero_293000
+  - path: logs/UnifiedBallKickingEnhanced/20260908_122248-stageB-skill011-h076-locomotion/model_0300000.onnx
+    name: hardzero_300000
+
+  - path: logs/UnifiedBallKickingEnhanced/20260917_013536-stageB-skill011-h076-abl-w1-f01-locomotion/model_0250000.onnx
+    name: floor01_250000
+  - path: logs/UnifiedBallKickingEnhanced/20260917_013536-stageB-skill011-h076-abl-w1-f01-locomotion/model_0257000.onnx
+    name: floor01_257000
+  - path: logs/UnifiedBallKickingEnhanced/20260917_013536-stageB-skill011-h076-abl-w1-f01-locomotion/model_0264000.onnx
+    name: floor01_264000
+  - path: logs/UnifiedBallKickingEnhanced/20260917_013536-stageB-skill011-h076-abl-w1-f01-locomotion/model_0271000.onnx
+    name: floor01_271000
+  - path: logs/UnifiedBallKickingEnhanced/20260917_013536-stageB-skill011-h076-abl-w1-f01-locomotion/model_0279000.onnx
+    name: floor01_279000
+  - path: logs/UnifiedBallKickingEnhanced/20260917_013536-stageB-skill011-h076-abl-w1-f01-locomotion/model_0286000.onnx
+    name: floor01_286000
+  - path: logs/UnifiedBallKickingEnhanced/20260917_013536-stageB-skill011-h076-abl-w1-f01-locomotion/model_0293000.onnx
+    name: floor01_293000
+  - path: logs/UnifiedBallKickingEnhanced/20260917_013536-stageB-skill011-h076-abl-w1-f01-locomotion/model_0300000.onnx
+    name: floor01_300000
+
+  - path: logs/UnifiedBallKickingEnhanced/20260917_013034-stageB-skill011-h076-abl-w1-f05-locomotion/model_0250000.onnx
+    name: floor05_250000
+  - path: logs/UnifiedBallKickingEnhanced/20260917_013034-stageB-skill011-h076-abl-w1-f05-locomotion/model_0257000.onnx
+    name: floor05_257000
+  - path: logs/UnifiedBallKickingEnhanced/20260917_013034-stageB-skill011-h076-abl-w1-f05-locomotion/model_0264000.onnx
+    name: floor05_264000
+  - path: logs/UnifiedBallKickingEnhanced/20260917_013034-stageB-skill011-h076-abl-w1-f05-locomotion/model_0271000.onnx
+    name: floor05_271000
+  - path: logs/UnifiedBallKickingEnhanced/20260917_013034-stageB-skill011-h076-abl-w1-f05-locomotion/model_0279000.onnx
+    name: floor05_279000
+  - path: logs/UnifiedBallKickingEnhanced/20260917_013034-stageB-skill011-h076-abl-w1-f05-locomotion/model_0286000.onnx
+    name: floor05_286000
+  - path: logs/UnifiedBallKickingEnhanced/20260917_013034-stageB-skill011-h076-abl-w1-f05-locomotion/model_0293000.onnx
+    name: floor05_293000
+  - path: logs/UnifiedBallKickingEnhanced/20260917_013034-stageB-skill011-h076-abl-w1-f05-locomotion/model_0300000.onnx
+    name: floor05_300000
+
+evaluations:
+  # -> Table XI's own six metrics: v_x fwd/bwd MAE, v_y lateral MAE,
+  #    omega_z yaw MAE, terrain_traversal_success, push_recovery_rate.
+  - type: locomotion_metrics
+    num_episodes: 5

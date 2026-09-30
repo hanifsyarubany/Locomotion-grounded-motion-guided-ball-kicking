@@ -1,0 +1,387 @@
+{
+  "run_timestamp": "20260906_070733",
+  "generated_at": "2026-09-06T07:10:40",
+  "config_path": "configs/sim2sim_eval/example.yaml",
+  "iterations": 100,
+  "max_concurrent_scans": 6,
+  "logged_count": 246,
+  "wandb": {
+    "project": "Policy_Evaluation",
+    "entity": null,
+    "group": "sim2sim-eval",
+    "run_name": "20260906_070733-skill011-vs-skill015",
+    "mode": "online",
+    "run_id": "inwrvm65",
+    "url": "https://wandb.ai/humanoid-research/Policy_Evaluation/runs/inwrvm65"
+  },
+  "targets": [
+    {
+      "name": "skill011",
+      "path": "logs/UnifiedBallKickingEnhanced/20260827_044728-stageB-skill011-h076-locomotion/model_0250000.onnx",
+      "base_step": 250000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    },
+    {
+      "name": "skill015",
+      "path": "logs/UnifiedBallKickingEnhanced/20260828_000158-stageB-skill015-h074-locomotion/model_0250000.onnx",
+      "base_step": 250000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    }
+  ],
+  "results": {
+    "skill011": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 6,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 6,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "ball_speed_n": {
+            "n": 6,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0,
+            "max": 0,
+            "last": 0
+          },
+          "shot_error_n": {
+            "n": 6,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0,
+            "max": 0,
+            "last": 0
+          },
+          "success_rate_0.5": {
+            "n": 6,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "success_rate_1": {
+            "n": 6,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "kick_to_loco": {
+          "strike/alive_rate": {
+            "n": 6,
+            "mean": 0.5,
+            "std": 0.2516611478423583,
+            "min": 0.2,
+            "max": 0.8,
+            "last": 0.8
+          },
+          "strike/pre_flip_fail_rate": {
+            "n": 6,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/alive_rate": {
+            "n": 6,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "nonstrike/pre_flip_fail_rate": {
+            "n": 6,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 6,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 6,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 6,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "tracking_error_early": {
+            "n": 6,
+            "mean": 0.8123333333333332,
+            "std": 0.001451053257311915,
+            "min": 0.8103,
+            "max": 0.814,
+            "last": 0.8132
+          },
+          "tracking_error_late": {
+            "n": 6,
+            "mean": 0.9094666666666668,
+            "std": 0.0008881941729649313,
+            "min": 0.9081,
+            "max": 0.9105,
+            "last": 0.9104
+          },
+          "jerk_early": {
+            "n": 6,
+            "mean": 0.5930166666666666,
+            "std": 0.0022549328642383743,
+            "min": 0.5906,
+            "max": 0.5964,
+            "last": 0.5911
+          },
+          "jerk_late": {
+            "n": 6,
+            "mean": 0.027933333333333334,
+            "std": 0.0007226494462892925,
+            "min": 0.0267,
+            "max": 0.0288,
+            "last": 0.0283
+          },
+          "drift": {
+            "n": 6,
+            "mean": 0.14983333333333335,
+            "std": 0.0014499042113954364,
+            "min": 0.1482,
+            "max": 0.1518,
+            "last": 0.1494
+          }
+        }
+      }
+    },
+    "skill015": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 6,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 6,
+            "mean": 0.9,
+            "std": 0.09999999999999998,
+            "min": 0.8,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "direction_success_rate": {
+            "n": 6,
+            "mean": 0.3,
+            "std": 0.11180339887498948,
+            "min": 0.2,
+            "max": 0.5,
+            "last": 0.2
+          },
+          "ball_speed_mean": {
+            "n": 6,
+            "mean": 1.9297000000000002,
+            "std": 0.387978122235434,
+            "min": 1.3157,
+            "max": 2.4035,
+            "last": 1.9865
+          },
+          "ball_speed_std": {
+            "n": 6,
+            "mean": 0.7478333333333333,
+            "std": 0.27594135649123386,
+            "min": 0.3401,
+            "max": 1.2055,
+            "last": 0.7108
+          },
+          "ball_speed_n": {
+            "n": 6,
+            "mean": 4.5,
+            "std": 0.5,
+            "min": 4,
+            "max": 5,
+            "last": 5
+          },
+          "shot_error_mean": {
+            "n": 6,
+            "mean": 2.0326166666666667,
+            "std": 0.48824113378762163,
+            "min": 1.4659,
+            "max": 2.9864,
+            "last": 1.8929
+          },
+          "shot_error_std": {
+            "n": 6,
+            "mean": 1.2620333333333333,
+            "std": 0.31120714787563747,
+            "min": 0.8646,
+            "max": 1.7108,
+            "last": 1.0864
+          },
+          "shot_error_n": {
+            "n": 6,
+            "mean": 4.5,
+            "std": 0.5,
+            "min": 4,
+            "max": 5,
+            "last": 5
+          },
+          "success_rate_0.5": {
+            "n": 6,
+            "mean": 0.13333333333333333,
+            "std": 0.09428090415820634,
+            "min": 0.0,
+            "max": 0.2,
+            "last": 0.0
+          },
+          "success_rate_1": {
+            "n": 6,
+            "mean": 0.26666666666666666,
+            "std": 0.09428090415820634,
+            "min": 0.2,
+            "max": 0.4,
+            "last": 0.2
+          }
+        },
+        "kick_to_loco": {
+          "strike/alive_rate": {
+            "n": 6,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "strike/pre_flip_fail_rate": {
+            "n": 6,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "nonstrike/alive_rate": {
+            "n": 6,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "nonstrike/pre_flip_fail_rate": {
+            "n": 6,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          }
+        },
+        "loco_to_kick": {
+          "fall_rate": {
+            "n": 6,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 6,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "pre_handoff_fail_rate": {
+            "n": 6,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "tracking_error_early": {
+            "n": 6,
+            "mean": 1.28745,
+            "std": 4.999999999999449e-05,
+            "min": 1.2874,
+            "max": 1.2875,
+            "last": 1.2875
+          },
+          "tracking_error_late": {
+            "n": 6,
+            "mean": 1.1239000000000001,
+            "std": 0.0001414213562373986,
+            "min": 1.1237,
+            "max": 1.1241,
+            "last": 1.1238
+          },
+          "jerk_early": {
+            "n": 6,
+            "mean": 0.5955,
+            "std": 0.0006582805886043783,
+            "min": 0.5946,
+            "max": 0.5965,
+            "last": 0.595
+          },
+          "jerk_late": {
+            "n": 6,
+            "mean": 0.05706666666666666,
+            "std": 4.7140452079101245e-05,
+            "min": 0.057,
+            "max": 0.0571,
+            "last": 0.057
+          },
+          "drift": {
+            "n": 6,
+            "mean": 0.07435,
+            "std": 0.0002692582403567269,
+            "min": 0.074,
+            "max": 0.0747,
+            "last": 0.0744
+          }
+        }
+      }
+    }
+  }
+}

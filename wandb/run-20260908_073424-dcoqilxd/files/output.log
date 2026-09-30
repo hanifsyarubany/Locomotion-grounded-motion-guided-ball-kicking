@@ -1,0 +1,694 @@
+[32m2026-09-08 07:34:25.730[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1012[0m - [1m[sim2sim-eval] target='skill011-v1' base_step=180000 skills=[0][0m
+[32m2026-09-08 07:34:25.738[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1012[0m - [1m[sim2sim-eval] target='skill011-v2' base_step=250000 skills=[0][0m
+[32m2026-09-08 07:34:25.738[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=0/100[0m
+[32m2026-09-08 07:34:25.738[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:34:25.745[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:35:31.351[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:35:31.711[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 0.8667, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:35:31.711[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=1/100[0m
+[32m2026-09-08 07:35:31.712[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:35:31.712[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:36:39.588[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:36:39.588[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:36:39.589[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=2/100[0m
+[32m2026-09-08 07:36:39.589[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:36:39.589[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:37:46.022[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:37:46.022[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:37:46.022[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=3/100[0m
+[32m2026-09-08 07:37:46.023[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:37:46.023[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:38:52.645[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:38:52.645[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:38:52.646[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=4/100[0m
+[32m2026-09-08 07:38:52.646[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:38:52.646[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:40:00.517[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 0.9333333333333333, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:40:02.763[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 0.9333, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:40:02.763[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=5/100[0m
+[32m2026-09-08 07:40:02.763[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:40:02.763[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:41:08.544[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 0.9333, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:41:09.773[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 0.9333, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:41:09.774[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=6/100[0m
+[32m2026-09-08 07:41:09.774[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:41:09.774[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:42:16.717[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:42:17.732[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 0.8667, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:42:17.732[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=7/100[0m
+[32m2026-09-08 07:42:17.732[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:42:17.732[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:43:26.238[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:43:27.363[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 0.9333, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 0.9333333333333333, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:43:27.363[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=8/100[0m
+[32m2026-09-08 07:43:27.363[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:43:27.364[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:44:34.527[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:44:36.032[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 0.8667, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:44:36.033[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=9/100[0m
+[32m2026-09-08 07:44:36.033[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:44:36.033[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:45:45.371[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 0.9333, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:45:45.957[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 0.9333, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:45:45.958[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=10/100[0m
+[32m2026-09-08 07:45:45.958[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:45:45.958[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:46:55.582[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:46:56.828[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:46:56.828[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=11/100[0m
+[32m2026-09-08 07:46:56.828[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:46:56.828[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:48:03.442[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 0.9333, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:48:04.995[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:48:04.995[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=12/100[0m
+[32m2026-09-08 07:48:04.995[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:48:04.995[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:49:11.409[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 0.9333333333333333, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:49:12.366[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 0.9333, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:49:12.366[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=13/100[0m
+[32m2026-09-08 07:49:12.366[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:49:12.366[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:50:21.899[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:50:22.053[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:50:22.053[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=14/100[0m
+[32m2026-09-08 07:50:22.053[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:50:22.054[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:51:28.111[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:51:29.157[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 0.8667, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:51:29.158[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=15/100[0m
+[32m2026-09-08 07:51:29.158[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:51:29.158[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:52:36.885[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:52:38.275[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:52:38.275[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=16/100[0m
+[32m2026-09-08 07:52:38.276[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:52:38.276[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:53:45.521[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:53:45.660[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:53:45.660[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=17/100[0m
+[32m2026-09-08 07:53:45.660[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:53:45.661[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:54:52.466[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:54:52.467[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 0.9333, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:54:52.467[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=18/100[0m
+[32m2026-09-08 07:54:52.467[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:54:52.467[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:55:42.499[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260906_103402-stageB-skill011-h074-locomotion/model_0180000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[31m09-08 07:55:41.651 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[36m09-08 07:55:41.670 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-08 07:55:41.671 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-08 07:55:41.671 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:55:41.671 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:55:41.672 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 204, in run
+    inner.post_step_callback([trigger_cmd])
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1055, in post_step_callback
+    self._request_kick(skill_id=self._selected_skill_id)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'UnifiedLocoKickPolicy' object has no attribute '_request_kick'
+[0m
+[32m2026-09-08 07:55:42.501[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:55:44.421[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260906_131907-stageB-skill011-h074-locomotion/model_0250000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[36m09-08 07:55:41.742 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-08 07:55:41.743 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-08 07:55:41.743 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:55:41.743 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:55:41.751 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-08 07:55:43.436 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 204, in run
+    inner.post_step_callback([trigger_cmd])
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1055, in post_step_callback
+    self._request_kick(skill_id=self._selected_skill_id)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'UnifiedLocoKickPolicy' object has no attribute '_request_kick'
+[0m
+[32m2026-09-08 07:55:44.423[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 0.9333, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:55:44.423[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=19/100[0m
+[32m2026-09-08 07:55:44.423[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:55:44.424[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:55:49.204[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260906_131907-stageB-skill011-h074-locomotion/model_0250000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[36m09-08 07:55:46.590 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-08 07:55:46.590 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-08 07:55:46.590 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:55:46.590 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:55:46.597 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-08 07:55:48.284 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 204, in run
+    inner.post_step_callback([trigger_cmd])
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1055, in post_step_callback
+    self._request_kick(skill_id=self._selected_skill_id)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'UnifiedLocoKickPolicy' object has no attribute '_request_kick'
+[0m
+[32m2026-09-08 07:55:49.290[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260906_103402-stageB-skill011-h074-locomotion/model_0180000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[36m09-08 07:55:46.625 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-08 07:55:46.626 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-08 07:55:46.626 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:55:46.626 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:55:46.627 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-08 07:55:48.323 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 204, in run
+    inner.post_step_callback([trigger_cmd])
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1055, in post_step_callback
+    self._request_kick(skill_id=self._selected_skill_id)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'UnifiedLocoKickPolicy' object has no attribute '_request_kick'
+[0m
+[32m2026-09-08 07:55:53.755[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260906_131907-stageB-skill011-h074-locomotion/model_0250000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[36m09-08 07:55:51.091 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-08 07:55:51.091 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-08 07:55:51.091 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:55:51.091 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:55:51.092 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-08 07:55:52.774 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 204, in run
+    inner.post_step_callback([trigger_cmd])
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1055, in post_step_callback
+    self._request_kick(skill_id=self._selected_skill_id)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'UnifiedLocoKickPolicy' object has no attribute '_request_kick'
+[0m
+[32m2026-09-08 07:55:53.845[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260906_103402-stageB-skill011-h074-locomotion/model_0180000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[36m09-08 07:55:51.366 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-08 07:55:51.366 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-08 07:55:51.366 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:55:51.366 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:55:51.367 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-08 07:55:53.015 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 204, in run
+    inner.post_step_callback([trigger_cmd])
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1055, in post_step_callback
+    self._request_kick(skill_id=self._selected_skill_id)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'UnifiedLocoKickPolicy' object has no attribute '_request_kick'
+[0m
+[32m2026-09-08 07:55:58.434[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260906_131907-stageB-skill011-h074-locomotion/model_0250000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[36m09-08 07:55:55.701 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-08 07:55:55.702 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-08 07:55:55.702 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:55:55.702 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:55:55.703 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-08 07:55:57.286 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 204, in run
+    inner.post_step_callback([trigger_cmd])
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1055, in post_step_callback
+    self._request_kick(skill_id=self._selected_skill_id)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'UnifiedLocoKickPolicy' object has no attribute '_request_kick'
+[0m
+[32m2026-09-08 07:55:58.474[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260906_103402-stageB-skill011-h074-locomotion/model_0180000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[36m09-08 07:55:57.127 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-08 07:55:57.127 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-08 07:55:57.128 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:55:57.128 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[31m09-08 07:55:57.285 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+[32m09-08 07:55:57.287 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 204, in run
+    inner.post_step_callback([trigger_cmd])
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1055, in post_step_callback
+    self._request_kick(skill_id=self._selected_skill_id)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'UnifiedLocoKickPolicy' object has no attribute '_request_kick'
+[0m
+[32m2026-09-08 07:55:58.475[0m | [33m[1mWARNING [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1094[0m - [33m[1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 produced no usable result (busy lock, timeout, or crash inside the scan -- see warnings above)[0m
+[32m2026-09-08 07:55:58.476[0m | [33m[1mWARNING [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1094[0m - [33m[1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 produced no usable result (busy lock, timeout, or crash inside the scan -- see warnings above)[0m
+[32m2026-09-08 07:55:58.476[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=20/100[0m
+[32m2026-09-08 07:55:58.476[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:55:58.476[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:56:03.361[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260906_131907-stageB-skill011-h074-locomotion/model_0250000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[36m09-08 07:56:00.742 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-08 07:56:00.743 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-08 07:56:00.743 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:56:00.743 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:56:00.744 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-08 07:56:02.446 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 204, in run
+    inner.post_step_callback([trigger_cmd])
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1055, in post_step_callback
+    self._request_kick(skill_id=self._selected_skill_id)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'UnifiedLocoKickPolicy' object has no attribute '_request_kick'
+[0m
+[32m2026-09-08 07:56:03.406[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260906_103402-stageB-skill011-h074-locomotion/model_0180000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[36m09-08 07:56:00.690 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-08 07:56:00.690 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-08 07:56:00.690 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:56:00.691 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:56:00.697 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-08 07:56:02.369 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 204, in run
+    inner.post_step_callback([trigger_cmd])
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1055, in post_step_callback
+    self._request_kick(skill_id=self._selected_skill_id)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'UnifiedLocoKickPolicy' object has no attribute '_request_kick'
+[0m
+[32m2026-09-08 07:56:08.183[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260906_103402-stageB-skill011-h074-locomotion/model_0180000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[31m09-08 07:56:07.286 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+[36m09-08 07:56:07.288 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-08 07:56:07.288 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-08 07:56:07.288 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:56:07.289 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:56:07.292 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 204, in run
+    inner.post_step_callback([trigger_cmd])
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1055, in post_step_callback
+    self._request_kick(skill_id=self._selected_skill_id)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'UnifiedLocoKickPolicy' object has no attribute '_request_kick'
+[0m
+[32m2026-09-08 07:56:08.217[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260906_131907-stageB-skill011-h074-locomotion/model_0250000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[36m09-08 07:56:05.575 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-08 07:56:05.576 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-08 07:56:05.576 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:56:05.576 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:56:05.577 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-08 07:56:07.268 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 204, in run
+    inner.post_step_callback([trigger_cmd])
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1055, in post_step_callback
+    self._request_kick(skill_id=self._selected_skill_id)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'UnifiedLocoKickPolicy' object has no attribute '_request_kick'
+[0m
+[32m2026-09-08 07:56:13.259[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260906_103402-stageB-skill011-h074-locomotion/model_0180000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[36m09-08 07:56:10.462 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-08 07:56:10.463 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-08 07:56:10.463 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:56:10.463 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:56:10.464 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-08 07:56:12.174 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 204, in run
+    inner.post_step_callback([trigger_cmd])
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1055, in post_step_callback
+    self._request_kick(skill_id=self._selected_skill_id)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'UnifiedLocoKickPolicy' object has no attribute '_request_kick'
+[0m
+[32m2026-09-08 07:56:13.260[0m | [33m[1mWARNING [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1094[0m - [33m[1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 produced no usable result (busy lock, timeout, or crash inside the scan -- see warnings above)[0m
+[32m2026-09-08 07:56:13.306[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260906_131907-stageB-skill011-h074-locomotion/model_0250000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[36m09-08 07:56:10.467 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-08 07:56:10.468 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-08 07:56:10.468 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:56:10.468 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:56:10.473 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-08 07:56:12.162 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 204, in run
+    inner.post_step_callback([trigger_cmd])
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1055, in post_step_callback
+    self._request_kick(skill_id=self._selected_skill_id)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'UnifiedLocoKickPolicy' object has no attribute '_request_kick'
+[0m
+[32m2026-09-08 07:56:13.307[0m | [33m[1mWARNING [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1094[0m - [33m[1m[sim2sim-eval]   kick_to_loco_flip skill_id=0 produced no usable result (busy lock, timeout, or crash inside the scan -- see warnings above)[0m
+[32m2026-09-08 07:56:13.307[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=21/100[0m
+[32m2026-09-08 07:56:13.307[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:56:13.307[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:56:17.993[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260906_103402-stageB-skill011-h074-locomotion/model_0180000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[36m09-08 07:56:15.426 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-08 07:56:15.426 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-08 07:56:15.426 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:56:15.426 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:56:15.428 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-08 07:56:17.100 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 204, in run
+    inner.post_step_callback([trigger_cmd])
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1055, in post_step_callback
+    self._request_kick(skill_id=self._selected_skill_id)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'UnifiedLocoKickPolicy' object has no attribute '_request_kick'
+[0m
+[32m2026-09-08 07:56:18.259[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited 1 for logs/UnifiedBallKickingEnhanced/20260906_131907-stageB-skill011-h074-locomotion/model_0250000.onnx
+stdout(tail): ls.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.][0m
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.controller] JoystickCtrl, total: 2
+[Controller] Dynamic import of controller: JoystickCtrl
+[Registry][robojudo.policy] UnifiedLocoKickPolicy, total: 1
+[Policy] Dynamic import of policy: UnifiedLocoKickPolicy
+[36m09-08 07:56:15.512 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0, -0.312, 0.0, 0.0, 0.669, -0.363, 0.0, 0.0, 0.0, 0.0, 0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0, 0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0][0m
+[36m09-08 07:56:15.513 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 99.098427777, 40.179238471, 99.098427777, 28.501246196, 28.501246196, 40.179238471, 28.501246196, 28.501246196, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 14.250623098, 16.778327481, 16.778327481][0m
+[36m09-08 07:56:15.513 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 6.308801854, 2.557889765, 6.308801854, 1.814445687, 1.814445687, 2.557889765, 1.814445687, 1.814445687, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:56:15.513 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:56:15.515 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-08 07:56:17.140 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 204, in run
+    inner.post_step_callback([trigger_cmd])
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/policy/unified_loco_kick_policy.py", line 1055, in post_step_callback
+    self._request_kick(skill_id=self._selected_skill_id)
+    ^^^^^^^^^^^^^^^^^^
+AttributeError: 'UnifiedLocoKickPolicy' object has no attribute '_request_kick'
+[0m
+[32m2026-09-08 07:56:52.005[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:56:52.757[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:56:52.758[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=22/100[0m
+[32m2026-09-08 07:56:52.758[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:56:52.758[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:57:59.222[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:57:59.222[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 0.8667, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:57:59.223[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=23/100[0m
+[32m2026-09-08 07:57:59.223[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:57:59.223[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:59:04.877[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v1/0/kick_to_loco/strike/alive_rate': 0.8, 'skill011-v1/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v1/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v1/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:59:04.878[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1092[0m - [1m[sim2sim-eval]   -> {'skill011-v2/0/kick_to_loco/strike/alive_rate': 0.8, 'skill011-v2/0/kick_to_loco/strike/pre_flip_fail_rate': 0.0, 'skill011-v2/0/kick_to_loco/nonstrike/alive_rate': 1.0, 'skill011-v2/0/kick_to_loco/nonstrike/pre_flip_fail_rate': 0.0}[0m
+[32m2026-09-08 07:59:04.878[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1030[0m - [1m[sim2sim-eval] iteration=24/100[0m
+[32m2026-09-08 07:59:04.879[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v1') ...[0m
+[32m2026-09-08 07:59:04.879[0m | [1mINFO    [0m | [36m__main__[0m:[36mrun_eval[0m:[36m1058[0m - [1m[sim2sim-eval]   submitting kick_to_loco_flip skill_id=0 (target='skill011-v2') ...[0m
+[32m2026-09-08 07:59:17.956[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited -2 for logs/UnifiedBallKickingEnhanced/20260906_131907-stageB-skill011-h074-locomotion/model_0250000.onnx
+stdout(tail): 07222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:59:07.061 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:59:07.063 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-08 07:59:08.711 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+[32m09-08 07:59:09.009 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] kick triggered (skill_id=0)[0m
+[32m09-08 07:59:09.699 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] returned to locomotion[0m
+RESULT 250000/iter24/strike 0 237 -1 -1 0.7261 0.7261
+[32m09-08 07:59:10.745 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] kick triggered (skill_id=0)[0m
+[32m09-08 07:59:11.480 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] returned to locomotion[0m
+RESULT 250000/iter24/strike 1 234 -1 -1 0.7264 0.7264
+[32m09-08 07:59:12.501 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] kick triggered (skill_id=0)[0m
+[32m09-08 07:59:13.264 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] returned to locomotion[0m
+RESULT 250000/iter24/strike 2 253 -1 -1 0.7222 0.7222
+[32m09-08 07:59:14.324 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] kick triggered (skill_id=0)[0m
+[32m09-08 07:59:15.083 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] returned to locomotion[0m
+RESULT 250000/iter24/strike 3 238 -1 -1 0.7261 0.7261
+[32m09-08 07:59:16.131 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] kick triggered (skill_id=0)[0m
+[32m09-08 07:59:16.929 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] returned to locomotion[0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 237, in run
+    step_zero_vel()
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 197, in step_zero_vel
+    pl.step()
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/pipeline/rl_pipeline.py", line 283, in step
+    obs, extras = self.policy.get_observation(env_data, ctrl_data)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/pipeline/rl_pipeline.py", line 42, in get_observation
+    env_data_adapted = env_data.copy()
+                       ^^^^^^^^^^^^^^^
+  File "box/box.py", line 474, in box.box.Box.copy
+  File "box/box.py", line 290, in box.box.Box.__init__
+  File "<frozen abc>", line 117, in __instancecheck__
+KeyboardInterrupt
+[0m
+[32m2026-09-08 07:59:17.989[0m | [33m[1mWARNING [0m | [36mholosoma.record_mujoco_kick_to_loco_flip_scan[0m:[36mrecord_kick_to_loco_flip_scan[0m:[36m113[0m - [33m[1m[sim2sim] MuJoCo kick-to-loco-flip scan worker exited -2 for logs/UnifiedBallKickingEnhanced/20260906_103402-stageB-skill011-h074-locomotion/model_0180000.onnx
+stdout(tail): 07222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 0.907222843, 1.068141502, 1.068141502][0m
+[32m09-08 07:59:07.016 [INFO] [robojudo.pipeline.rl_pipeline] Pipeline reset[0m
+[32m09-08 07:59:07.022 [INFO] [robojudo.utils.rotation] base set to pos: [-3.48965243e-23 -1.59972551e-23  0.00000000e+00], quat: [0. 0. 0. 1.][0m
+[31m09-08 07:59:08.692 [ERROR] [robojudo.controller.utils.joystick] No joystick connected. Try to fix with: export SDL_JOYSTICK_DEVICE=/dev/input/js0[0m
+[32m09-08 07:59:08.943 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] kick triggered (skill_id=0)[0m
+[32m09-08 07:59:09.632 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] returned to locomotion[0m
+RESULT 180000/iter24/strike 0 237 -1 -1 0.7285 0.7285
+[32m09-08 07:59:10.634 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] kick triggered (skill_id=0)[0m
+[32m09-08 07:59:11.327 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] returned to locomotion[0m
+RESULT 180000/iter24/strike 1 234 -1 -1 0.7281 0.7281
+[32m09-08 07:59:12.304 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] kick triggered (skill_id=0)[0m
+[32m09-08 07:59:13.059 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] returned to locomotion[0m
+RESULT 180000/iter24/strike 2 253 -1 -1 0.7232 0.7232
+[32m09-08 07:59:14.069 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] kick triggered (skill_id=0)[0m
+[32m09-08 07:59:14.788 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] returned to locomotion[0m
+RESULT 180000/iter24/strike 3 238 -1 -1 0.7288 0.7288
+[32m09-08 07:59:15.795 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] kick triggered (skill_id=0)[0m
+[32m09-08 07:59:16.590 [INFO] [robojudo.policy.unified_loco_kick_policy] [UnifiedLocoKick] returned to locomotion[0m
+
+stderr(tail): ALSA lib pcm_dmix.c:1000:(snd_pcm_dmix_open) unable to open slave
+Traceback (most recent call last):
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 286, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 282, in main
+    return run(_parse_args())
+           ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 237, in run
+    step_zero_vel()
+  File "/workspaces/isaaclab_arena/submodules/workspaces/playground/unified_ball_kick_enhanced/src/holosoma/holosoma/mujoco_kick_loco_flip_scan.py", line 197, in step_zero_vel
+    pl.step()
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/pipeline/rl_pipeline.py", line 274, in step
+    self.env.update()
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/environment/mujoco_env.py", line 359, in update
+    fk_info = self.fk()
+              ^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/environment/base_env.py", line 88, in fk
+    fk_info = self.kinematics.forward(
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/isaaclab_arena/submodules/workspaces/humanoid_deployment/RoboJuDo/robojudo/tools/kinematics.py", line 133, in forward
+    lin_vel = self.data.cvel[i].copy()[3:]  # cvel = [ang, lin]
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+[0m
+[34m[1mwandb[0m: [33mWARNING[0m The get_url method is deprecated and will be removed in a future release. Please use `run.url` instead.

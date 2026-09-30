@@ -1,0 +1,43 @@
+# Checkpoint sweep: 8 checkpoints at 2000-step spacing, centred on the checkpoint
+# previously reported (387000), clamped to this run's available range.
+# Report the MEDIAN across these 8, not any single one -- see benchmark_plan.md sec 5.
+wandb:
+  project: Policy_Evaluation
+  group: sim2sim-eval-sweep
+  run_name: sweep-skill-018
+  tags: [checkpoint-sweep]
+
+iterations: 30
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260901_232152-stageC-skill018-h074-locomotion/model_0380000.onnx
+    name: s018_380000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260901_232152-stageC-skill018-h074-locomotion/model_0382000.onnx
+    name: s018_382000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260901_232152-stageC-skill018-h074-locomotion/model_0384000.onnx
+    name: s018_384000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260901_232152-stageC-skill018-h074-locomotion/model_0386000.onnx
+    name: s018_386000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260901_232152-stageC-skill018-h074-locomotion/model_0388000.onnx
+    name: s018_388000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260901_232152-stageC-skill018-h074-locomotion/model_0390000.onnx
+    name: s018_390000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260901_232152-stageC-skill018-h074-locomotion/model_0392000.onnx
+    name: s018_392000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260901_232152-stageC-skill018-h074-locomotion/model_0394000.onnx
+    name: s018_394000
+    kick_aim_enabled: true
+
+evaluations:
+  - type: kick_survival
+    num_trials: 10
+    success_sigma_m: [0.5, 1.0]
+    ball_pos_randomization: [0.1, 0.1]

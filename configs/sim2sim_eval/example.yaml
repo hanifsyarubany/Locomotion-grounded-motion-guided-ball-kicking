@@ -1,0 +1,127 @@
+# ===============================================================================================
+# sim2sim_eval.py config template. Run with:
+#     python src/holosoma/holosoma/sim2sim_eval.py --config configs/sim2sim_eval/example.yaml
+#
+# Verify the whole pipeline (config parsing, skill auto-discovery, the real MuJoCo scans, wandb
+# logging) WITHOUT publishing to the real team wandb project first:
+#     python src/holosoma/holosoma/sim2sim_eval.py --config configs/sim2sim_eval/example.yaml \
+#         --wandb-mode offline
+#
+# Copy this file rather than editing it in place if you want a reusable, version-controlled eval
+# recipe for a specific comparison -- e.g. configs/sim2sim_eval/flip_vs_naive.yaml.
+#
+# Every run, on top of wandb, also writes its results locally to
+# output/<run_timestamp>-<run_name>/ (--output-dir to change the "output" base, "" to disable):
+# sim2sim_eval.csv (every logged data point, long format) and sim2sim_eval.json (per-metric
+# mean/std/min/max/last summary + run metadata). "<run_timestamp>-<run_name>" is the SAME string
+# stamped onto the wandb run's own name -- see the `wandb.run_name` comment below -- so a wandb
+# run and its local output folder are trivially paired up by matching name to folder name.
+# ===============================================================================================
+
+wandb:
+  project: Policy_Evaluation   # same project training itself logs to -- not a separate
+                                         # eval-only project, so these are easy to find alongside
+                                         # the training runs they evaluate.
+  # entity: humanoid-research            # optional; omit to use your wandb default entity
+  group: sim2sim-eval                   # tags these runs as evaluation, not training, within
+                                         # that shared project
+  run_name: skill011-vs-skill015         # optional -- the ACTUAL wandb run name is always
+                                         # "<run_timestamp>-<this>" (e.g.
+                                         # "20260906_064355-skill011-vs-skill015"), timestamp
+                                         # auto-generated fresh each invocation, so re-running this
+                                         # same file never collides on one wandb run name. Omit
+                                         # this key entirely and the run name is just the bare
+                                         # timestamp.
+  tags: []                              # optional extra wandb tags
+
+# Repeat the WHOLE `evaluations` list below this many times against the SAME fixed checkpoint(s),
+# each repeat drawing a fresh, independently seeded batch of `num_trials` trials, all logged under
+# the SAME metric keys at step=<iteration index> -- so this shows up in wandb as an ordinary line
+# chart progressing across iterations (one line per target/eval/skill), letting you watch e.g.
+# kick_fall_rate settle or reveal its trial-to-trial spread instead of getting a single point.
+# Omit or set to 1 for the old one-shot behavior (step = the checkpoint's own training step,
+# useful for comparing several DIFFERENT checkpoints on one meaningful x-axis instead).
+#
+# COST WARNS MULTIPLICATIVELY: total trials run = iterations x len(onnx_targets) x
+# len(evaluations) x skills-per-target -- EXCEPT locomotion_metrics below, which is checkpoint-
+# level (once per target regardless of skill count, see that eval's own comment). This template now
+# has 4 targets and 4 evaluations (up from the original 2x3 this file's own timing note below was
+# measured against, back when only the 3 kick-focused evals existed) -- start with a small
+# iterations (e.g. 5) to gauge wall-clock time on your own machine before committing to 100.
+iterations: 100
+
+# 2026-09-06: this whole pipeline is CPU-only (no GPU path exists anywhere in it -- confirmed:
+# RoboJuDo hardcodes CPUExecutionProvider, CUDAExecutionProvider isn't even installed in either
+# conda env this project uses, and mujoco/mujoco.mjx is a different simulator, not a library
+# flag). Every (target, eval, skill) combination WITHIN one iteration is an independent subprocess
+# launch, though, so on a machine with idle cores this is a real lever: max_concurrent_scans runs
+# that many of them at once via a thread pool instead of one at a time (1 = exact old sequential
+# behavior, the default -- nothing changes unless you raise this). Measured on an earlier 2-target,
+# 3-evaluation version of this file: 1 -> 107s/iteration, 6 -> 31s/iteration (~3.5x) on a 128-core
+# box that was otherwise mostly idle -- indicative of the speedup shape, not a current number (this
+# file now has 4 targets and 4 evaluations, not re-measured at that size). The natural ceiling is
+# len(onnx_targets) x len(evaluations) (now 4 x 4 = 16, though locomotion_metrics only contributes
+# one dispatch per target, not one per skill) -- scale it up further if you add more targets. Every
+# scan call already gets its own
+# never-reused lock file regardless of this setting, so raising it is never less safe than 1 --
+# only ever a matter of how much CPU you're willing to hand it (and leaving headroom for whatever
+# else is running on the same machine, e.g. an actual training process).
+max_concurrent_scans: 6
+
+# ------------------------------------------------------------------------------
+# ONNX TARGETS -- one or more checkpoints to evaluate, all against the SAME `evaluations` list
+# below (that's what makes this useful for comparing checkpoints side by side in one wandb run).
+# ------------------------------------------------------------------------------
+onnx_targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260827_044728-stageB-skill011-h076-locomotion/model_0250000.onnx 
+    name: skill011            # optional; defaults to "<run_dir>/<checkpoint_stem>"
+    kick_aim_enabled: true              # REQUIRED per-target -- not embedded in the ONNX export
+                                         # at all (only a live training env carries it; see
+                                         # sim2sim_eval.py's own module docstring). Every project
+                                         # checkpoint as of 2026-08-22 trains with this True.
+    # skill_ids: [0, 1, 2]               # optional; omit to auto-discover every skill this
+                                         # checkpoint's own embedded metadata declares
+                                         # (skill_motion_start_idx) -- no need to know the count
+                                         # up front.
+
+  - path: logs/UnifiedBallKickingEnhanced/20260828_000158-stageB-skill015-h074-locomotion/model_0250000.onnx
+    name: skill015
+    kick_aim_enabled: true
+
+  # Table 5 pair (documents/proposal/benchmark_plan.md) -- "Locomotion generality with the skill
+  # library attached", the paired comparison the locomotion_metrics eval below is built for.
+  # locomotion_only is a stageB checkpoint (skill012's own lineage) with no distillation ever
+  # applied; with_skill_library is the 6-skill (012/016/017/018/019/020) distilled checkpoint built
+  # on top of specialists trained from that same stageB lineage -- so the two share a base rather
+  # than being two unrelated policies. kick_aim_enabled is set True on both for consistency with
+  # every other target here, though locomotion_metrics itself never reads it (see that eval's own
+  # comment below).
+  - path: logs/UnifiedBallKickingEnhanced/20260831_230318-stageB-skill012-h074-locomotion/model_0300000.onnx
+    name: locomotion_only
+    kick_aim_enabled: true
+
+  - path: logs/UnifiedBallKickingEnhanced/20260905_100147-distill-6skills-121617181920-distill/model_0600000.onnx
+    name: with_skill_library
+    kick_aim_enabled: true
+
+# ------------------------------------------------------------------------------
+# EVALUATIONS -- which scan(s) to run, applied to EVERY target above and EVERY one of that
+# target's skills. Mix and match freely; each block's own defaults match its underlying scan
+# script's own CLI defaults (see that script's own --help for the full parameter list -- only
+# the most commonly-tuned ones are surfaced here).
+# ------------------------------------------------------------------------------
+evaluations:
+  - type: locomotion_metrics
+    num_episodes: 5            # independent episodes per axis + per push trial (5 axes/tests x 5 =
+                                # 25 short MuJoCo episodes per target -- a few minutes, not hours).
+    forward_speed: 0.8         # matches mujoco_locomotion_rollout_worker.py's own documented
+                                # "falls stopping from a fast walk" probe speed.
+    backward_speed: -0.8
+    lateral_speed: 0.5
+    yaw_rate: 0.5
+    push_force_n: 80.0         # = body_push_force_max (task_config's PUSH RANDOMIZATION CONFIG) --
+                                # the hardest push magnitude the policy actually trained against.
+    push_duration_s: 0.20      # = body_push_duration_max_s, same section.
+    fall_height_m: 0.70        # matches this project's own locomotion "low_height" termination
+                                # floor elsewhere (see MultiSkillConfig.kick_state_init_prob's own
+                                # docstring for that same 0.70 m reference point).

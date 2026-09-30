@@ -1,0 +1,19 @@
+wandb:
+  project: Policy_Evaluation 
+  group: sim2sim-eval                   
+  run_name: test-skill-011   
+  tags: []                           
+
+iterations: 100
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260907_014111-stageC-skill011-h074-locomotion/model_0275000.onnx
+    name: test-skill-011               
+    kick_aim_enabled: true              
+
+evaluations:
+  - type: kick_survival
+    num_trials: 10
+    success_sigma_m: [0.5, 1.0]          
+    ball_pos_randomization: [0.1, 0.1]   

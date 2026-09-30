@@ -6,8 +6,8 @@ motion_skill_1:
   motion_npz: ../../locomotion_and_motion_tracking/video2robot/data/video_011/npz_holosoma/robot_motion_track_1.npz
   x: 1.276
   y: 0.072
-  target_x: 6.122
-  target_y: 1.287
+  target_x: 6.030
+  target_y: 4.646
   strike_start_frame: 170
   stand_start_frame: 215    
   motion_training_ratio: 0.9

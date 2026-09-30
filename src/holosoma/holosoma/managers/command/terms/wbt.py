@@ -2482,7 +2482,7 @@ class MotionCommand(CommandTermBase):
         dof_pos_noise = self.init_pose_cfg.dof_pos * scale
         root_pos_noise = torch.tensor(self.init_pose_cfg.root_pos, device=self.device) * scale
         root_rot_noise_rpy = torch.tensor(self.init_pose_cfg.root_rot, device=self.device) * scale
-        root_vel_noise = torch.tensor(self.init_pose_cfg.root_vel, device=self.device) * scale
+        root_vel_noise = torch.tensor(self.init_pose_cfg.root_lin_vel, device=self.device) * scale
         root_ang_vel_noise_rpy = torch.tensor(self.init_pose_cfg.root_ang_vel, device=self.device) * scale
 
         target_dof_pos = dof_pos + (torch.rand(dof_pos.shape, device=self.device) - 0.5) * 2 * dof_pos_noise

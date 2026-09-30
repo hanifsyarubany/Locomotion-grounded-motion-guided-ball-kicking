@@ -1176,6 +1176,50 @@ _kick_swing_stability_terms = {
     ),
 }
 
+# 2026-09-14: LOCOMOTION-mode counterpart to kick_feet_slip above. KickFeetSlip's own __call__ is
+# NOT actually kick-specific -- it just penalizes a body's horizontal (xy) velocity while it's
+# carrying ground contact force (i.e. literal slip), reading `env.simulator.contact_forces_history`
+# / `_rigid_body_vel`, neither of which is kick-only state. The "kick" scoping above is purely the
+# `task_mode="kick"` tag on THAT registration, dispatched by the reward manager -- nothing stops
+# registering the SAME class again under a different key with task_mode="locomotion" to get an
+# independently-tunable locomotion counterpart, with zero new Python code.
+#
+# Motivated by a real deployment finding (RoboJuDo humanoid_deployment, 2026-09-13/14): sustained
+# lateral/rotational (vy/wz) locomotion commands widen stance and cause visible foot slip,
+# specifically once foot<->floor friction is at or below the low end of this checkpoint's own
+# trained randomization range ([0.3, 1.6] static / [0.3, 1.2] dynamic,
+# randomize_robot_rigid_body_material_startup.params) -- reproduced on demand in MuJoCo sim2sim by
+# lowering foot<->floor friction and confirmed on the real robot at that same friction value. NO
+# existing locomotion-mode term penalizes literal slip directly: penalty_stand_feet_width /
+# penalty_stance_asymmetry only measure the GEOMETRIC RESULT (stance width, hip_roll asymmetry),
+# and both are gated toward zero by penalty_curriculum's command-magnitude fade under any active
+# command anyway (see that term's own history in this file) -- so neither one fires during the
+# exact sustained-command locomotion this was observed in. This term is a direct, dense penalty on
+# the underlying mechanism itself (the foot sliding), not a downstream geometric proxy, gated only
+# by task_mode="locomotion" (never fades with command magnitude, unlike the two terms above).
+#
+# weight set directly to -0.5 (NOT the usual weight=0.0-then-task_config-opt-in this codebase uses
+# for new kick terms) -- checked first, not assumed: REWARD_TUNING_CATEGORIES
+# (config_types/reward_tuning.py) is a HARDCODED 5-tuple of kick-only categories
+# ("motion_tracking_reward"/"shooting_reward"/"kick_recovery_posture_reward"/
+# "kick_safety_reward"/"kick_alive_reward") that task_config_*.yaml's per-term weight overrides
+# resolve against -- there is NO equivalent per-task_config override path for a locomotion-mode
+# term at all, so weight=0.0 here would be a PERMANENT no-op, not a "not yet opted in" placeholder
+# the way it is for kick_feet_slip. Setting it directly is the only mechanism that actually exists.
+# -0.5 is a reasoned-but-UNVALIDATED starting point, matching kick_feet_slip's P0-regularization
+# siblings' own starting magnitude -- retune against a real training run's telemetry before
+# trusting it, not against this comment's guess. This value is now live for every unified-project
+# training run built from this file (stageA/B/C, any skill) -- a NEW training run is required for
+# it to have any effect; it cannot retroactively change an already-trained checkpoint.
+_locomotion_feet_slip_term = {
+    "locomotion_feet_slip": RewardTermCfg(
+        func="holosoma.managers.reward.terms.wbt:KickFeetSlip",
+        params={"foot_body_names": ["left_ankle_roll_link", "right_ankle_roll_link"], "threshold": 1.0},
+        weight=-0.5,
+        task_mode="locomotion",
+    ),
+}
+
 # 2026-08-05, ported from RoboNaldo (arXiv:2606.11092) -- the "P0" regularization block per
 # ROBONALDO_PORT_SCOPE.md Sec 3b/5: this project has ~4 real equivalents of RoboNaldo's 20
 # regularization terms; these 4 are the highest-priority of the remaining gap. See each term's own
@@ -1513,6 +1557,16 @@ _pre_kick_reward_ramp_steps = (
     if _multi_skill_cfg_for_contact_penalty is not None
     else 0.0
 )
+
+# W1 ablation arm (2026-09-16). Max over skills for the same reason
+# _post_flip_reward_decay_steps_for_registration takes a max: the floor is stamped onto the term
+# cfg at config-build time, so it has to be the ANY-skill-active signal. 0.0 (no skill asks for a
+# floor, the universal case) leaves _apply_locomotion_tracking_floor a no-op.
+_locomotion_tracking_floor = (
+    max((sc.locomotion_tracking_floor for sc in _multi_skill_cfg_for_contact_penalty.skills), default=0.0)
+    if _multi_skill_cfg_for_contact_penalty is not None
+    else 0.0
+)
 # "Simultaneous per-skill task configs" (2026-08-15, Tier 3 Group B) -- None (the common case)
 # unless skills genuinely diverge. No registration-gate concern here (unlike post_flip_reward_
 # decay_steps above): _pre_kick_reward_ramp_multiplier's own docstring confirms no task_mode
@@ -1644,6 +1698,28 @@ def _apply_post_flip_reward_decay(
     return out
 
 
+def _apply_locomotion_tracking_floor(terms: dict[str, RewardTermCfg], floor: float) -> dict[str, RewardTermCfg]:
+    """W1 ablation arm (2026-09-16): stamps ``task_mode_floor=floor`` onto JUST the 7 motion-
+    tracking terms, so RewardManager multiplies them by ``floor`` (rather than 0.0) in
+    LOCOMOTION-mode envs. Same name set and same must-run-after-``_tagged`` ordering as
+    ``_apply_post_flip_reward_decay`` above; unlike that one this leaves ``task_mode="kick"``
+    in place, since the point is to keep the mask and only soften it.
+
+    floor <= 0.0 (default) is a true no-op: ``terms`` is returned untouched, so the hard zero
+    Sec. III-A describes is exactly what every existing run still gets.
+
+    Why only these 7: the claim under test is specifically about the *tracking* objective
+    ("switched off or merely discounted while locomotion trains"). Shooting and kick-safety terms
+    stay hard-zeroed, so this arm differs from the reference arm in one mechanism only."""
+    if floor <= 0.0:
+        return terms
+    out = dict(terms)
+    for name in _MOTION_TRACKING_SCALED_FUNC:
+        if name in out:
+            out[name] = replace(out[name], task_mode_floor=floor)
+    return out
+
+
 # Per-term reward-WEIGHT overrides, loaded unconditionally from configs/kicking_motion_reward_
 # tuning.yaml (config_types/reward_tuning.py -- see that file's own docstring and the yaml's own
 # header comment for the full design). One level more granular than the per-skill, per-category
@@ -1769,11 +1845,16 @@ def _apply_reward_sigma_overrides(
 
 _g1_29dof_unified_reward_terms = {
     **_tagged(g1_29dof_loco_fast_sac.terms, "locomotion"),
-    **_apply_post_flip_reward_decay(
-        _tagged(_scale_kick_motion_tracking(_sharpen_orientation_tracking(g1_29dof_wbt_fast_sac_reward.terms)), "kick"),
-        # "Simultaneous per-skill task configs": use the ANY-skill-active signal, not the raw
-        # global scalar -- see _post_flip_reward_decay_steps_for_registration's own comment.
-        _post_flip_reward_decay_steps_for_registration,
+    **_apply_locomotion_tracking_floor(
+        _apply_post_flip_reward_decay(
+            _tagged(
+                _scale_kick_motion_tracking(_sharpen_orientation_tracking(g1_29dof_wbt_fast_sac_reward.terms)), "kick"
+            ),
+            # "Simultaneous per-skill task configs": use the ANY-skill-active signal, not the raw
+            # global scalar -- see _post_flip_reward_decay_steps_for_registration's own comment.
+            _post_flip_reward_decay_steps_for_registration,
+        ),
+        _locomotion_tracking_floor,
     ),
     **_penalty_stance_asymmetry_term,
     **_penalty_yaw_drift_term,
@@ -1788,6 +1869,7 @@ _g1_29dof_unified_reward_terms = {
     **_kick_balance_potential_term,
     **_motion_strike_dof_pos_term,
     **_kick_swing_stability_terms,
+    **_locomotion_feet_slip_term,
     **_p0_regularization_terms,
     # Must come AFTER the locomotion spread above -- overrides its "alive" entry when
     # post_flip_alive_scale != 1.0 (empty dict, i.e. no-op, at the 1.0 default).

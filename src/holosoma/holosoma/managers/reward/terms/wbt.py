@@ -784,6 +784,19 @@ class KickSwingFeetClearance(RewardTermBase):
         swing_mask = ~in_contact
 
         feet_heights = env.terrain_manager.get_state("locomotion_terrain").feet_heights  # type: ignore[attr-defined]
+        # 2026-09-07: warp_utils.ray_cast returns float('inf') (its own documented behavior, not a
+        # bug there) for a foot whose downward ray never hits the terrain mesh -- e.g. flung
+        # outside the mesh bounds by an early, not-yet-converged policy. clamp() alone leaves that
+        # as +inf, still finite-adjacent; the actual NaN trap is downstream, where that foot's
+        # square(inf) gets multiplied by swing_mask -- if the SAME foot is also flagged in-contact
+        # (mask 0.0), inf*0.0 is the textbook IEEE-754 indeterminate form, NaN, which then survives
+        # both the task_mode mask and this term's own weight=0.0 (NaN * 0.0 is NaN, not 0.0) and
+        # corrupts the env's entire reward via RewardManager._reward_buf. Treat a missed raycast as
+        # "no valid clearance data" rather than "infinite clearance error": nan_to_num to
+        # target_height makes clearance_error exactly 0 for that foot, i.e. no penalty, instead of inf.
+        feet_heights = torch.nan_to_num(
+            feet_heights, nan=self.target_height, posinf=self.target_height, neginf=self.target_height
+        )
         clearance_error = torch.clamp(self.target_height - feet_heights, min=0.0)
         penalty = torch.sum(torch.square(clearance_error) * swing_mask.float(), dim=-1)
         penalty = torch.clamp(penalty, max=self.max_penalty)

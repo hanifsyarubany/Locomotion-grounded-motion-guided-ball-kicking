@@ -1967,6 +1967,7 @@ class FastSACAgent(BaseAlgo):
         be missing (e.g. an unparseable line, or -- for direction_success_rate specifically -- a
         non-kick_aim-enabled skill or zero trials that hit the ball) without losing the others."""
         from holosoma.record_mujoco_survival_scan import (
+            EXTRA_METRIC_WANDB_KEYS,
             MUJOCO_SURVIVAL_SCAN_DIRECTION_WANDB_KEY,
             MUJOCO_SURVIVAL_SCAN_HIT_WANDB_KEY,
             MUJOCO_SURVIVAL_SCAN_WANDB_KEY,
@@ -1983,6 +1984,14 @@ class FastSACAgent(BaseAlgo):
             hit_wandb_key = f"Kick_skills_{skill_idx}/{MUJOCO_SURVIVAL_SCAN_HIT_WANDB_KEY}"
             direction_wandb_key = f"Kick_skills_{skill_idx}/{MUJOCO_SURVIVAL_SCAN_DIRECTION_WANDB_KEY}"
             row = skill_idx if skill_idx < len(pos_rand_per_motion) else 0
+            # 2026-09-07: requests the EXTRA METRICS record_survival_scan has supported since
+            # 2026-09-05 (success_rate_0.5/_1, shot_error_mean/_std, ball_speed_mean/_max) but no
+            # training call site had opted into yet -- see that function's own EXTRA METRICS
+            # docstring section. A non-None dict here is what turns on --success-sigma-m on the
+            # subprocess call at all; omitting it (as this call site did before) silently left those
+            # metrics uncomputed, not just unlogged. success_sigma_m itself is left at the function's
+            # own default ([0.5, 1.0]) -- exactly the two radii wanted here, so no need to pass it.
+            extra_metrics: dict[str, float | None] = {}
             try:
                 fall_rate, hit_rate, direction_success_rate = record_survival_scan(
                     onnx_path=onnx_path,
@@ -1995,6 +2004,7 @@ class FastSACAgent(BaseAlgo):
                     kick_aim_theta_max_deg=float(kick_aim_theta_max_deg_per_motion[row]),
                     kick_aim_theta_ref_deg=kick_aim_theta_ref_deg,
                     kick_aim_nominal_distance_m=kick_aim_nominal_distance_m,
+                    extra_metrics_out=extra_metrics,
                 )
             except Exception:
                 logger.exception(
@@ -2015,6 +2025,27 @@ class FastSACAgent(BaseAlgo):
                 self._survival_scan_result_queue.put((global_step, hit_wandb_key, hit_rate))
             if direction_success_rate is not None:
                 self._survival_scan_result_queue.put((global_step, direction_wandb_key, direction_success_rate))
+
+            # 2026-09-07: same queue, same per-skill "Kick_skills_{i}/..." prefixing as the three
+            # rates above -- the drain loop is already generic over how many metrics one scan
+            # produces (see _drain_mujoco_survival_scan_queue's own docstring), so no changes needed
+            # there. Two independent sources: EXTRA_METRIC_WANDB_KEYS (fixed keys: ball speed, shot
+            # error) and success_rate_{sigma:g} (dynamic, one per configured radius -- built from
+            # extra_metrics_out's own keys rather than a static mapping, since the radius list is a
+            # config choice, not a constant). Both silently skip a None value (e.g. shot_error_* on a
+            # non-kick_aim-enabled skill, or every _rate on zero hit trials) -- same "missing one
+            # metric doesn't lose the others" contract the three calls above already have.
+            for metric_key, wandb_suffix in EXTRA_METRIC_WANDB_KEYS.items():
+                value = extra_metrics.get(metric_key)
+                if value is not None:
+                    self._survival_scan_result_queue.put(
+                        (global_step, f"Kick_skills_{skill_idx}/{wandb_suffix}", value)
+                    )
+            for metric_key, value in extra_metrics.items():
+                if metric_key.startswith("success_rate_") and value is not None:
+                    self._survival_scan_result_queue.put(
+                        (global_step, f"Kick_skills_{skill_idx}/sim2sim/kick_{metric_key}", value)
+                    )
 
     def _drain_mujoco_survival_scan_queue(self) -> None:
         """Logs any finished scan's rate(s) to wandb as scalars. Runs on the MAIN thread only --

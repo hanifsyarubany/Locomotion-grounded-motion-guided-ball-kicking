@@ -1,0 +1,167 @@
+\relax 
+\citation{haarnoja2024soccer,robonaldo,paid,striker,humanx,reactive,goalkeeper}
+\citation{robonaldo}
+\citation{gvhmr,gmr}
+\citation{deepmimic,amp,beyondmimic}
+\citation{robonaldo}
+\citation{robonaldo}
+\citation{paid,striker}
+\citation{robonaldo}
+\citation{robonaldo}
+\citation{isaaclab}
+\citation{sac,fastsac}
+\citation{dagger,policydistillation}
+\citation{mujoco}
+\@writefile{toc}{\contentsline {section}{\numberline {I}INTRODUCTION}{1}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {Substrate inversion.} Prior work derives locomotion from a ball-steered anchor; ours is the commandable base.}}{1}{}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:overview}{{1}{1}{}{}{}}
+\citation{haarnoja2024soccer}
+\citation{stoft}
+\citation{goalkeeper}
+\citation{reactive}
+\citation{striker}
+\citation{paid}
+\citation{humanx}
+\citation{skillx}
+\citation{robonaldo}
+\citation{haarnoja2024soccer}
+\citation{stoft}
+\citation{reactive}
+\citation{striker}
+\citation{goalkeeper}
+\citation{humanx}
+\citation{paid}
+\citation{robonaldo}
+\citation{skillx}
+\citation{deepmimic,amp}
+\citation{beyondmimic,gvhmr,gmr}
+\citation{robonaldo}
+\citation{isaaclab}
+\citation{sac,fastsac}
+\citation{falcon}
+\citation{robonaldo}
+\citation{options}
+\citation{dagger,policydistillation}
+\citation{haarnoja2024soccer}
+\citation{robonaldo}
+\citation{robonaldo}
+\@writefile{toc}{\contentsline {section}{\numberline {II}RELATED WORK}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II-A}Humanoid Soccer and Robot Sports}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II-B}Motion Tracking, Locomotion and Object Interaction as Primitives}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II-C}Skill Libraries, Composition and Transitions}{2}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {III}PROBLEM FORMULATION}{2}{}\protected@file@percent }
+\newlabel{eq:taskmode}{{1}{2}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-A}Task-mode gating}{2}{}\protected@file@percent }
+\newlabel{sec:gating}{{III-A}{2}{}{}{}}
+\newlabel{eq:gating}{{2}{2}{}{}{}}
+\citation{robonaldo}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Training pipeline and deployed architecture.} \textbf  {Training (left).} Stages A--C are Stages 1--3 of Sec.~\ref {sec:method}: locomotion first and alone, then motion tracking, then motion-guided kicking, with specialist distillation (Stage 4) below. \textbf  {Deployment (right).} The same distilled, task-mode-gated network, with the perception hardware of Sec.~\ref {sec:setup} supplying ball position.}}{3}{}\protected@file@percent }
+\newlabel{fig:pipeline}{{2}{3}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Capability comparison against prior humanoid soccer systems. Lateral and rearward targets require the strike bearing to be an explicit command input spanning that range; systems that reach such bearings only emergently score \textcolor {black!60}{$\circ $}.}}{3}{}\protected@file@percent }
+\newlabel{tab:capabilities}{{I}{3}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-B}Skill conditioning}{3}{}\protected@file@percent }
+\newlabel{eq:target}{{3}{3}{}{}{}}
+\newlabel{eq:aim}{{4}{3}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-C}Handoff}{3}{}\protected@file@percent }
+\citation{gvhmr}
+\citation{gmr}
+\citation{ng1999shaping}
+\citation{robonaldo}
+\citation{robonaldo}
+\citation{robonaldo}
+\citation{ppo}
+\citation{amp}
+\citation{paid}
+\citation{robonaldo}
+\citation{robonaldo}
+\citation{robonaldo}
+\citation{dagger,policydistillation}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Actor observation space, $261$ dimensions.}}{4}{}\protected@file@percent }
+\newlabel{tab:obs}{{II}{4}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}METHOD}{4}{}\protected@file@percent }
+\newlabel{sec:method}{{IV}{4}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {IV-A}Stage 1: locomotion substrate}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {IV-B}Stage 2: motion tracking}{4}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {IV-C}Stage 3: motion-guided ball kicking}{4}{}\protected@file@percent }
+\newlabel{sec:stage3}{{IV-C}{4}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces Kick-mode reward terms and weights. Twenty-two standard safety and regularisation terms (weights $-100$ to $50$) are omitted for space.}}{4}{}\protected@file@percent }
+\newlabel{tab:rewards}{{III}{4}{}{}{}}
+\newlabel{eq:shaping}{{5}{4}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {IV}{\ignorespaces Skill library geometry.}}{4}{}\protected@file@percent }
+\newlabel{tab:skills}{{IV}{4}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {IV-D}Stage 4: specialist distillation}{4}{}\protected@file@percent }
+\citation{sac,fastsac}
+\citation{isaaclab}
+\citation{mujoco}
+\citation{robonaldo}
+\@writefile{lot}{\contentsline {table}{\numberline {V}{\ignorespaces Shooting quality in context. PPO, AMP and PAiD rows are the free-kick simulation baselines as reported in \cite  {robonaldo}.}}{5}{}\protected@file@percent }
+\newlabel{tab:context}{{V}{5}{}{}{}}
+\newlabel{eq:dagger}{{6}{5}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {IV-E}Learning algorithm}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {IV-F}Domain randomisation}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {V}EXPERIMENTAL SETUP}{5}{}\protected@file@percent }
+\newlabel{sec:setup}{{V}{5}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {V-A}Platform, simulation and skill library}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {V-B}Metrics and protocol}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VI}RESULTS}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {VI-A}Shooting quality}{5}{}\protected@file@percent }
+\newlabel{sec:hardware}{{VI-A}{5}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {Hardware experiments on the Unitree G1.} \textbf  {Top:} commanded locomotion and two library strikes, each a multi-exposure composite of one trial. \textbf  {Bottom:} a kick-to-locomotion handoff, from the mode switch through contact to locomotion resuming with no scripted stabilisation tail (Sec.~\ref {sec:handoff-results}).}}{6}{}\protected@file@percent }
+\newlabel{fig:hardware-setup}{{3}{6}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {VI-B}Kicking skill coverage}{6}{}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {VI}{\ignorespaces Per-skill performance of the unified policy.}}{6}{}\protected@file@percent }
+\newlabel{tab:perskill}{{VI}{6}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {VII}{\ignorespaces Negative transfer: specialist vs.\ unified.}}{6}{}\protected@file@percent }
+\newlabel{tab:negtransfer}{{VII}{6}{}{}{}}
+\newlabel{fig:coverage}{{4a}{7}{}{}{}}
+\newlabel{sub@fig:coverage}{{a}{7}{}{}{}}
+\newlabel{fig:hitmap}{{4b}{7}{}{}{}}
+\newlabel{sub@fig:hitmap}{{b}{7}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {What the library covers, and how far the ball may sit from where a skill expects it.}}}{7}{}\protected@file@percent }
+\newlabel{fig:polar}{{4}{7}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {VI-C}Handoff}{7}{}\protected@file@percent }
+\newlabel{sec:handoff-results}{{VI-C}{7}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {VIII}{\ignorespaces Handoff robustness, both directions.}}{7}{}\protected@file@percent }
+\newlabel{tab:handoff}{{VIII}{7}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {IX}{\ignorespaces Hardware results.}}{7}{}\protected@file@percent }
+\newlabel{tab:hardware}{{IX}{7}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {X}{\ignorespaces Ablations on skill\_7, medians over eight matched Stage-2 checkpoints per arm.}}{7}{}\protected@file@percent }
+\newlabel{tab:ablations}{{X}{7}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {VI-D}Locomotion generality}{7}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VII}LIMITATIONS AND CONCLUSION}{7}{}\protected@file@percent }
+\newlabel{sec:limitations}{{VII}{7}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {VII-A}Limitations}{7}{}\protected@file@percent }
+\bibstyle{IEEEtran}
+\bibdata{references}
+\bibcite{haarnoja2024soccer}{1}
+\bibcite{robonaldo}{2}
+\bibcite{paid}{3}
+\bibcite{striker}{4}
+\bibcite{humanx}{5}
+\bibcite{reactive}{6}
+\bibcite{goalkeeper}{7}
+\bibcite{gvhmr}{8}
+\bibcite{gmr}{9}
+\bibcite{deepmimic}{10}
+\bibcite{amp}{11}
+\bibcite{beyondmimic}{12}
+\bibcite{isaaclab}{13}
+\bibcite{sac}{14}
+\bibcite{fastsac}{15}
+\bibcite{dagger}{16}
+\bibcite{policydistillation}{17}
+\bibcite{mujoco}{18}
+\bibcite{stoft}{19}
+\bibcite{skillx}{20}
+\bibcite{falcon}{21}
+\bibcite{options}{22}
+\bibcite{ng1999shaping}{23}
+\bibcite{ppo}{24}
+\@writefile{lot}{\contentsline {table}{\numberline {XI}{\ignorespaces Locomotion generality with the skill library attached. Both policies build on the seed-$42$ substrate, and $\Delta $ is that paired difference, computed before rounding. The s.d.\ row is the spread of three Stage-1 seeds ($42/7/13$), a noise floor rather than an interval around the row above: their terrain rates are $98.7/97.3/62.7$.}}{8}{}\protected@file@percent }
+\newlabel{tab:loco}{{XI}{8}{}{}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {XII}{\ignorespaces Per-skill angular calibration, medians over Table~\ref {tab:perskill}'s $16$ checkpoints, on a separate $250$-trial scan. $\delta $ is fitted on half of each checkpoint's trials and scored on the other, then swapped.}}{8}{}\protected@file@percent }
+\newlabel{tab:calib}{{XII}{8}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {VII-B}Conclusion}{8}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{References}{8}{}\protected@file@percent }
+\gdef \@abspage@last{8}

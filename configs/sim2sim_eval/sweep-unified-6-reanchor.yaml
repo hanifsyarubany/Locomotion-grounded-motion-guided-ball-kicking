@@ -1,0 +1,49 @@
+# Checkpoint sweep: 8 checkpoints at 2000-step spacing, centred on the checkpoint
+# previously reported (474000), clamped to this run's available range.
+# Report the MEDIAN across these 8, not any single one -- see benchmark_plan.md sec 5.
+wandb:
+  project: Policy_Evaluation
+  group: sim2sim-eval-sweep
+  run_name: sweep-unified-6-reanchor
+  tags: [checkpoint-sweep]
+
+iterations: 30
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260907_101005-distill-6skills-121617181920-distill/model_0467000.onnx
+    name: u6_467000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_101005-distill-6skills-121617181920-distill/model_0469000.onnx
+    name: u6_469000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_101005-distill-6skills-121617181920-distill/model_0471000.onnx
+    name: u6_471000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_101005-distill-6skills-121617181920-distill/model_0473000.onnx
+    name: u6_473000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_101005-distill-6skills-121617181920-distill/model_0475000.onnx
+    name: u6_475000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_101005-distill-6skills-121617181920-distill/model_0477000.onnx
+    name: u6_477000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_101005-distill-6skills-121617181920-distill/model_0479000.onnx
+    name: u6_479000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260907_101005-distill-6skills-121617181920-distill/model_0481000.onnx
+    name: u6_481000
+    kick_aim_enabled: true
+
+evaluations:
+  - type: kick_survival
+    num_trials: 10
+    success_sigma_m: [0.5, 1.0]
+    ball_pos_randomization: [0.1, 0.1]
+    # 2026-09-12: re-anchor the ball to the robot's ACTUAL pose at the kick trigger instead of
+    # leaving it at the world point it was spawned at before the 1.5s settle (during which the
+    # robot drifts ~4.2cm backward, measured). Required for Table VII: its teacher, N=2, N=4,
+    # N=6 and N=7 columns must all be measured under the SAME placement protocol or the
+    # specialist-vs-unified deltas mix two conventions. See sweep-unified-7-reanchor.yaml.
+    reanchor_ball_at_trigger: true

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 import pathlib
+import time
 from typing import Any
 
 import numpy as np
@@ -140,7 +141,30 @@ class Terrain(TerrainInterface):
         vertices, triangles = terrain_utils.convert_heightfield_to_trimesh(
             self._height_field_raw, self._horizontal_scale, self._vertical_scale, self._slope_threshold
         )
-        mesh: trimesh.Trimesh = trimesh.Trimesh(vertices=vertices, faces=triangles)
+        # process=False: convert_heightfield_to_trimesh emits exactly one vertex per heightfield
+        # grid point (shared across adjacent triangles by construction), so there is nothing for
+        # trimesh's default process=True -> merge_vertices() to merge. For this experiment's
+        # terrain_unified_mix (num_rows=10, num_cols=20, horizontal_scale=0.1 -> ~1600x2400 grid,
+        # ~3.84M vertices) that redundant merge_vertices dominates startup time -- observed via
+        # py-spy live sampling it as the sole bottleneck before the simulator/GPU is ever touched.
+        # _initialize_obj_config just above already does this (trimesh.load(..., process=False)).
+        _t0 = time.monotonic()
+        mesh: trimesh.Trimesh = trimesh.Trimesh(vertices=vertices, faces=triangles, process=False)
+        _elapsed = time.monotonic() - _t0
+        # 2026-09-07: this step is pure single-threaded CPU work, done before Isaac Sim ever
+        # touches a GPU -- on an uncontended host it's sub-second even at ~3.84M vertices. If it's
+        # NOT sub-second, that's a real signal worth surfacing rather than leaving silent: measured
+        # live on this project's own shared host, a noisy-neighbor container (invisible to us --
+        # nvidia-smi shows load on GPUs we don't own with "No running processes found", i.e. a
+        # DIFFERENT container) can inflate this from <1s to open-ended minutes purely via host-wide
+        # CPU scheduler contention that no setting in this repo can fix. This log line exists so
+        # that shows up immediately as a stall symptom instead of requiring a live py-spy attach
+        # (as this exact stall did) to even locate which line is slow.
+        if _elapsed > 5.0:
+            print(
+                f"[WARN] terrain mesh construction took {_elapsed:.1f}s (normally <1s) -- likely "
+                "host-wide CPU contention from another process/container, not this training run"
+            )
         mesh.vertices[..., :2] -= self._border_size
         return mesh
 

@@ -1,0 +1,98 @@
+# Checkpoint sweep for Table XI(b)'s "Reference-clip pose only" row -- the arm
+# trained from task_config_stageB2-abl-b2-refclip.yaml (kick_state_transplant_prob:
+# 0.3 -> 0.0 -- locomotion envs still reset-seeded into kick poses, but ONLY from
+# authored-clip kinematics, no live-donor path -- see that config's own header).
+#
+# Run: logs/UnifiedBallKickingEnhanced/20260909_132212-stageB-skill011-h076-abl-b2-locomotion
+# Resumed from the SAME model_0250000.pt as the "ours" run
+# (20260908_122248-stageB-skill011-h076), same --num-learning-iterations 300000
+# budget (confirmed: holosoma_config.yaml's own num_learning_iterations: 300000,
+# resume: null but train.log's first checkpoint write is model_0250000.pt) --
+# so it shares the exact 250k-300k range sweep-ablation-a1b1.yaml uses.
+#
+# SAME 8 checkpoints, evenly spaced 250k-300k, as sweep-ablation-a1b1.yaml/a2/a3 --
+# deliberately identical protocol: this row is compared against "ours" (and
+# against b3) in the same table, so all three need the same degree of
+# checkpoint-lottery protection (see sweep-ablation-a1b1.yaml's own header for
+# the full reasoning -- this file exists specifically so that reasoning holds).
+#
+# STILL TRAINING as of 2026-09-09 14:5x (only up to model_0276000.onnx exists at
+# the time this file was written) -- confirm model_0279000.onnx through
+# model_0300000.onnx have all landed before running this config, same
+# not-done-yet caveat sweep-ablation-a2.yaml carried for its own model_0300000.
+#
+# BOTH evaluation types, unlike a2/a3 (which needed only kick_to_loco_flip for
+# Table XI(a)) -- b2/b3 exist specifically to fill Table XI(b)'s TWO alive
+# columns for each arm, so both eval types are required here, matching
+# sweep-ablation-a1b1.yaml's own "ours" row:
+#
+#   1. ref_clip_recovery -> Table XI(b) "Alive, ref.-clip (%)" for this row.
+#      Same motion_npz/frame_max as sweep-ablation-a1b1.yaml (skill_011's own
+#      clip, frame_max=215 = skill_011.yaml's own stand_start_frame) -- the
+#      seed-pose SOURCE differs between arms (that's the whole point of this
+#      ablation), but the recovery TEST administered here is identical across
+#      every row of Table XI(b): teleport into the authored clip's own
+#      kinematics, no physics ever run to reach it, start in ordinary
+#      locomotion mode, measure alive/fall. Using a different frame window per
+#      arm would confound the ablation with a protocol difference.
+#   2. kick_to_loco_flip (split_by_strike_phase: true) -> Table XI(b) "Alive,
+#      live donor (%)" for this row -- a random in-rollout flip tick IS a live
+#      donor pose (the policy's own dynamics produced it), same reasoning as
+#      sweep-ablation-a1b1.yaml's own header. Also incidentally reproduces
+#      Table XI(a)-shaped Alive/Topple/Recovery(steps) numbers for this arm,
+#      though this arm is not itself a Table XI(a) row (a1/a2/a3 are a
+#      SEPARATE set of training runs from b1/b2/b3, testing a different
+#      mechanism -- post-strike stabilisation reward vs pose-injection source).
+#
+# recovered_rate/mean_recovery_steps come along for free from both eval types
+# (2026-09-09 addition, see sweep-ablation-a1b1.yaml's own header) -- not
+# currently a column in Table XI(b), kept anyway since there is no extra cost.
+wandb:
+  project: Policy_Evaluation
+  group: sim2sim-eval-sweep
+  run_name: sweep-ablation-b2
+  tags: [checkpoint-sweep, ablation]
+
+iterations: 25
+max_concurrent_scans: 10
+
+onnx_targets:
+  - path: logs/UnifiedBallKickingEnhanced/20260909_132212-stageB-skill011-h076-abl-b2-locomotion/model_0250000.onnx
+    name: abl_b2_250000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_132212-stageB-skill011-h076-abl-b2-locomotion/model_0257000.onnx
+    name: abl_b2_257000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_132212-stageB-skill011-h076-abl-b2-locomotion/model_0264000.onnx
+    name: abl_b2_264000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_132212-stageB-skill011-h076-abl-b2-locomotion/model_0271000.onnx
+    name: abl_b2_271000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_132212-stageB-skill011-h076-abl-b2-locomotion/model_0279000.onnx
+    name: abl_b2_279000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_132212-stageB-skill011-h076-abl-b2-locomotion/model_0286000.onnx
+    name: abl_b2_286000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_132212-stageB-skill011-h076-abl-b2-locomotion/model_0293000.onnx
+    name: abl_b2_293000
+    kick_aim_enabled: true
+  - path: logs/UnifiedBallKickingEnhanced/20260909_132212-stageB-skill011-h076-abl-b2-locomotion/model_0300000.onnx
+    name: abl_b2_300000
+    kick_aim_enabled: true
+
+evaluations:
+  # -> Table XI(b) "Alive, ref.-clip (%)" for the "Reference-clip pose only" row.
+  - type: ref_clip_recovery
+    motion_npz: /workspaces/isaaclab_arena/submodules/workspaces/locomotion_and_motion_tracking/video2robot/data/video_011/npz_holosoma/robot_motion_track_1.npz
+    frame_min: 0
+    frame_max: 215
+    num_trials: 32
+    hold_s: 5.0
+
+  # -> Table XI(b) "Alive, live donor (%)" for the "Reference-clip pose only" row.
+  - type: kick_to_loco_flip
+    split_by_strike_phase: true
+    num_trials: 32
+    timeout_s: 300.0

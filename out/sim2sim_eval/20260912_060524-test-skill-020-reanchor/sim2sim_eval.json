@@ -1,0 +1,148 @@
+{
+  "run_timestamp": "20260912_060524",
+  "generated_at": "2026-09-12T06:40:03",
+  "config_path": "configs/sim2sim_eval/test-skill-020-reanchor.yaml",
+  "iterations": 100,
+  "max_concurrent_scans": 10,
+  "logged_count": 1400,
+  "wandb": {
+    "project": "Policy_Evaluation",
+    "entity": null,
+    "group": "sim2sim-eval",
+    "run_name": "20260912_060524-test-skill-020-reanchor",
+    "mode": "online",
+    "run_id": "klkjlrob",
+    "url": "https://wandb.ai/humanoid-research/Policy_Evaluation/runs/klkjlrob"
+  },
+  "targets": [
+    {
+      "name": "test-skill-020",
+      "path": "logs/UnifiedBallKickingEnhanced/20260903_020808-stageC-skill020-h074-locomotion/model_0366000.onnx",
+      "base_step": 366000,
+      "skill_ids": [
+        0
+      ],
+      "kick_aim_enabled": true
+    }
+  ],
+  "results": {
+    "test-skill-020": {
+      "0": {
+        "kick": {
+          "fall_rate": {
+            "n": 100,
+            "mean": 0.0,
+            "std": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "last": 0.0
+          },
+          "hit_rate": {
+            "n": 100,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "direction_success_rate": {
+            "n": 100,
+            "mean": 0.769,
+            "std": 0.14676171162806737,
+            "min": 0.3,
+            "max": 1.0,
+            "last": 0.8
+          },
+          "ball_speed_mean": {
+            "n": 100,
+            "mean": 2.381915,
+            "std": 0.12946901202604427,
+            "min": 2.0538,
+            "max": 2.7363,
+            "last": 2.5864
+          },
+          "ball_speed_std": {
+            "n": 100,
+            "mean": 0.405401,
+            "std": 0.09315589138106081,
+            "min": 0.143,
+            "max": 0.6016,
+            "last": 0.3932
+          },
+          "ball_speed_n": {
+            "n": 100,
+            "mean": 10.0,
+            "std": 0.0,
+            "min": 10,
+            "max": 10,
+            "last": 10
+          },
+          "ball_speed_max": {
+            "n": 100,
+            "mean": 2.893888,
+            "std": 0.09274482872915342,
+            "min": 2.627,
+            "max": 3.1946,
+            "last": 2.9741
+          },
+          "shot_error_mean": {
+            "n": 100,
+            "mean": 0.704269,
+            "std": 0.17376613058648685,
+            "min": 0.3619,
+            "max": 1.2372,
+            "last": 0.5298
+          },
+          "shot_error_std": {
+            "n": 100,
+            "mean": 0.48853499999999994,
+            "std": 0.19860754838374095,
+            "min": 0.1563,
+            "max": 1.3318,
+            "last": 0.3365
+          },
+          "shot_error_n": {
+            "n": 100,
+            "mean": 10.0,
+            "std": 0.0,
+            "min": 10,
+            "max": 10,
+            "last": 10
+          },
+          "handoff_reached_rate": {
+            "n": 100,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "post_handoff_alive_rate": {
+            "n": 100,
+            "mean": 1.0,
+            "std": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "last": 1.0
+          },
+          "success_rate_0.5": {
+            "n": 100,
+            "mean": 0.418,
+            "std": 0.15898427595205758,
+            "min": 0.0,
+            "max": 0.8,
+            "last": 0.5
+          },
+          "success_rate_1": {
+            "n": 100,
+            "mean": 0.769,
+            "std": 0.14676171162806737,
+            "min": 0.3,
+            "max": 1.0,
+            "last": 0.8
+          }
+        }
+      }
+    }
+  }
+}
